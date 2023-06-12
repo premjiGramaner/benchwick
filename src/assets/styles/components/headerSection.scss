@@ -1,0 +1,26 @@
+.header-section {
+    .bg-placeholder {
+      width:auto;
+      height:100px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-image: url(../../assets/svg/headerImage.svg);
+      .fs-12 {
+        font-size: 1.75rem;
+      }
+      .icon-size {
+        font-size: 1.375rem;
+        padding-left: 0.5rem;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      .user-align{
+        height: 18.69px;
+        font-family: $font-family;
+      }
+      .user-section{
+        padding-top: 35px;
+      }
+    }
+  }

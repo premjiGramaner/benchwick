@@ -1,0 +1,51 @@
+.textbox-field {
+  .label-style {
+    color: $labelColor;
+    font-family: $font-family;
+    font-size: 12px;
+    display: inline-block;
+
+    .text-color4 {
+      color: $formColor !important;
+    }
+  }
+  .fs-14 {
+    font-size: 14px !important;
+  }
+
+  .form-control {
+    &:focus {
+      border-color: $primaryTableColor !important;
+      -webkit-box-shadow: 0 0.063rem 0.063rem -0.063rem $primaryTableColor !important;
+      -moz-box-shadow: 0 0.063rem 0.063rem -0.063rem $primaryTableColor !important;
+      box-shadow: 0 0.063rem 0.063rem -0.063rem $primaryTableColor !important;
+    }
+  }
+
+  &:focus-within {
+    .label-style {
+      color: $defaultTextColor !important;
+    }
+  }
+
+  .input-wrapper {
+    &:focus {
+      background-color: unset !important;
+    }
+  }
+
+  .eye-icon {
+    float: right;
+    right: 0;
+    margin-top: 0.25rem;
+    position: absolute;
+    z-index: 99;
+    color: $labelColor;
+    font-size: 2.125rem;
+    cursor: pointer;
+  }
+
+  .fs-12 {
+    font-size: 12px !important;
+  }
+}

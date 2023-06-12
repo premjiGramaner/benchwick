@@ -1,0 +1,67 @@
+.sidebar-section {
+  padding: 50px 73px !important;
+  .upload-image {
+    padding-top: 14px;
+  }
+  .btn-gramener {
+    background-color: $defaultTextColor !important;
+    border-radius: 15px !important;
+    color: $white !important;
+    width: 100% !important;
+    padding: 8px 10px !important;
+    text-transform: uppercase;
+  }
+  .btn-gramener-border {
+    box-sizing: border-box;
+    height: 36px;
+    border: 2px solid $defaultTextColor !important;
+    border-radius: 15px;
+    color: $defaultTextColor !important;
+    font-family: $font-family;
+    background-color: $white !important;
+    width: 100% !important;
+    padding: 0.25rem 0.625rem !important;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .card-section {
+    height: 286px;
+    border-radius: 8px;
+    background-color: $white;
+    box-shadow: 0 1px 4px 0 $card-bx-shadow;
+    padding: 34px 34px !important;
+  }
+  .inner-card-section {
+    height: 221px;
+    width: 187px;
+  }
+  .fs-10 {
+    opacity: 0.5;
+    font-family: $font-family;
+    font-size: 10px;
+    text-align: center !important;
+  }
+  .fs-13 {
+    font-family: $font-family;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center !important;
+  }
+  .fs-19 {
+    font-family: $font-family;
+    font-size: 19px;
+    font-weight: 600;
+    text-align: center !important;
+  }
+  .btn-height {
+    padding-top: 10px;
+  }
+  .view-history{
+    padding-top: 40px;
+  }
+  .opacity{
+    opacity: 0.2;
+  }
+}

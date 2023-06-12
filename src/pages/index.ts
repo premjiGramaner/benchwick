@@ -1,9 +1,11 @@
 import Login from "./Login/login";
-import Dashboard from "./Dashboard";
+import Dashboard from "./Dashboard/Dashboard";
 import pageNotFound from "./PageNotFound";
+import Viewhistory from "./Viewhistory/Viewhistory";
 
 export {
     Login as LoginComponent,
     Dashboard as DashboardComponent,
-    pageNotFound
+    Viewhistory as ViewhistoryComponent,
+    pageNotFound,
 }
