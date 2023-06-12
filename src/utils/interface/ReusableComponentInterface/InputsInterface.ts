@@ -6,10 +6,15 @@
 
 export interface ITextBoxProps {
     type: string
-    labelName: string
-    placeHolder: string
-    handelChange: (event: any) => void
-}
+    value?: string | number | null
+    labelname?: string
+    placeholder?: string
+    handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    handleIconClick?: (e: React.MouseEvent<HTMLElement>) => void
+    icon?: string
+    name: string
+  }
+
 
 export interface ISearchBoxProps {
     width: string

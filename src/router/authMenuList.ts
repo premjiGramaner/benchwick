@@ -2,7 +2,9 @@ import { IMenuItem } from '@Interface/index';
 import { URLS } from "@Utils/constants";
 import {
     DashboardComponent,
-    pageNotFound
+    pageNotFound,
+    ViewhistoryComponent
+    
 } from "@Pages/index";
 
 export default [
@@ -26,6 +28,14 @@ export default [
         path: URLS.DASHBOARD,
         routeName: 'Dashboard Component',
         component: DashboardComponent,
+        icon: '',
+        permissions: [],
+        children: []
+    },
+    {
+        path: URLS.VIEWHISTORY,
+        routeName: 'Viewhistory Component',
+        component: ViewhistoryComponent,
         icon: '',
         permissions: [],
         children: []

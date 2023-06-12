@@ -13,4 +13,5 @@ export const enum URLS {
     LOGIN = '/login',
     PAGE_NOT_FOUND = '*',
     DASHBOARD = '/dashboard',
+    VIEWHISTORY='/Viewhistory',
 }
