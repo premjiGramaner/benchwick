@@ -77,6 +77,8 @@ $mq-retina: "(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)";
 @import './pages/login.scss';
 @import './pages/dashboard.scss';
 @import './pages/pageNotFound.scss';
+@import './pages/signUp.scss';
+@import './pages/forgotPassword.scss';
 
 @import './components/headerSection.scss';
 @import './components/sideBarSection.scss';
