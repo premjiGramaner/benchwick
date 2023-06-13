@@ -12,7 +12,9 @@ import {
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/loginValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
+import { Cookies } from 'react-cookie'
 const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
+  const cookies = new Cookies()
   const result = useSelector((state: IReducerState) => state.loginReducer)
   const [rememberMe, setRememberMe] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -26,9 +28,22 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
   const handleLoginSubmit = data => {
     IS_USER_AUTHENTICATED(true)
     props.navigate(URLS.DASHBOARD)
+
+    if (rememberMe === true) {
+      cookies.set('isRemember', 'true')
+    } else {
+      cookies.set('isRemember', 'false')
+    }
     setLogIn('')
     setSpin('spinner-border')
   }
+  const handleSignup = () => {
+    props.navigate(URLS.SIGNUP)
+  }
+  const handleForgotPassword = () => {
+    props.navigate(URLS.FORGOTPASSWORD)
+  }
+
   const onShowPassword = () => {
     setShowPassword(!showPassword)
   }
@@ -45,7 +60,7 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
     <div className="bg-login vh-100">
       <section className="container d-flex w-100 align-items-center justify-content-xl-start justify-content-center h-100">
         <div className="row w-100 justify-content-xl-start justify-content-center">
-          <div className="col-12 col-sm-12 col-md-8 col-lg-5 col-xl-5 col-xxl-4">
+          <div>
             <div className="card rounded p-4 mt-0 card-width">
               <div className="card-header px-2 pt-4 pb-5 bg-transparent border-0">
                 <figure className="mb-0 pb-3">
@@ -106,7 +121,10 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
                         Remember me.
                       </label>
                     </div>
-                    <span className="fs-14 text-decoration-none text-color3 cursor-pointer">
+                    <span
+                      className="fs-14 text-decoration-none forgot-password cursor-pointer"
+                      onClick={handleForgotPassword}
+                    >
                       Forget Password?
                     </span>
                   </div>
@@ -133,9 +151,9 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
                 </form>
               </div>
               <div>
-                <div className="pb-2 pt-4 text-center">
+                <div className="pb-2 pt-4 text-center" onClick={handleSignup}>
                   Don’t have an account?
-                  <a className="px-1 mt-1" href="#" type="file">
+                  <a className="px-1" onClick={handleSignup}>
                     Sign Up
                   </a>
                 </div>
