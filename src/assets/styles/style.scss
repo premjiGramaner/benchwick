@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Varela+Round&display=swap');
 
 // Base color codes
-$defaultTextColor: #5506ED;
+$defaultTextColor: #5506ed;
 $blue: #526fd6;
 $light-blue: #e0e5f8;
 $grey: #767676;
@@ -40,14 +40,17 @@ $table-shadow-color: rgba(90, 90, 90, 0.15);
 $buttonBorderColor: rgb(204, 204, 204);
 $box-shadow: rgba(0, 0, 0, 0.27);
 $high-light-color: rgba(255, 82, 0, 0.16);
-$card-bx-shadow:rgba(0, 0, 0, 0.2);
+$card-bx-shadow: rgba(0, 0, 0, 0.2);
+$image-box-shadow: rgba(0, 0, 0, 0.5);
+$sidebar-bg: #eff2f6;
+$outline: #ddd;
+$modal-color: #c7c7c7;
 
 /* ----- TODO update the below item with requirement ----- */
 // Font family declarations
 $font-default: 'Roboto', sans-serif;
 $font-family: 'Poppins', sans-serif;
 $font-optional: 'Varela Round', sans-serif;
-
 
 // media Breakpoints - Make sure to use rem not PX
 $bp-768: 48em; // 768px
@@ -59,19 +62,17 @@ $bp-1600: 100em; // 1600
 $bp-1920: 120em; // 1920
 $bp-2560: 160em; // 2560px
 
-
 // Media Queries
-$mq-768: "(min-width: #{$bp-768})";
-$mq-1024: "(min-width: #{$bp-1024})";
-$mq-1366: "(min-width: #{$bp-1366})";
-$mq-1440: "(min-width: #{$bp-1440})";
-$mq-1536: "(min-width: #{$bp-1536})";
-$mq-1600: "(min-width: #{$bp-1600})";
-$mq-1920: "(min-width: #{$bp-1920})";
-$mq-2560: "(min-width: #{$bp-2560})";
+$mq-768: '(min-width: #{$bp-768})';
+$mq-1024: '(min-width: #{$bp-1024})';
+$mq-1366: '(min-width: #{$bp-1366})';
+$mq-1440: '(min-width: #{$bp-1440})';
+$mq-1536: '(min-width: #{$bp-1536})';
+$mq-1600: '(min-width: #{$bp-1600})';
+$mq-1920: '(min-width: #{$bp-1920})';
+$mq-2560: '(min-width: #{$bp-2560})';
 
-$mq-retina: "(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)";
-
+$mq-retina: '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)';
 
 /* =======----------- Page Styles are must be imported here --------============ */
 @import './pages/login.scss';

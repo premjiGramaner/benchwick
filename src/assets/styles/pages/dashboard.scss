@@ -1,1 +1,140 @@
-.dashboard-page-main-container {}
+.dashboard-page-main-container {
+  .original-image-container {
+    padding: 40px 30px !important;
+  }
+  .image-holder {
+    padding-right: 55px;
+  }
+  .original-image {
+    box-sizing: border-box;
+    height: 177px;
+    width: 177px;
+    border: 1px solid $white;
+    border-radius: 8px;
+    box-shadow: 0 0 1px 0 $image-box-shadow;
+  }
+  .image-style {
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .image-text {
+    padding-top: 15px;
+    font-family: $font-family;
+    font-size: 17px;
+    font-weight: bold;
+  }
+  .variation-text {
+    font-family: $font-family;
+    font-size: 13px;
+    padding-top: 15px;
+  }
+  .save-button {
+    padding-top: 55px;
+    height: 41px;
+    width: 210px;
+  }
+  .btn-gramener {
+    background-color: $defaultTextColor !important;
+    border-radius: 15px !important;
+    color: $white !important;
+    width: 100% !important;
+    padding: 8px 10px !important;
+    text-transform: uppercase;
+  }
+  .btn-gramener-border {
+    box-sizing: border-box;
+    height: 36px;
+    border: 2px solid $defaultTextColor !important;
+    border-radius: 15px;
+    color: $defaultTextColor !important;
+    font-family: $font-family;
+    background-color: $white !important;
+    width: 100% !important;
+    padding: 0.25rem 0.625rem !important;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .btn-height {
+    padding-top: 20px;
+  }
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    input[type='range'] {
+      overflow: hidden;
+      width: 235px;
+      -webkit-appearance: none;
+      border-radius: 5px;
+      padding: 0.01px !important;
+    }
+
+    input[type='range']::-webkit-slider-runnable-track {
+      height: 2px !important;
+      -webkit-appearance: none;
+      padding: 3px;
+    }
+
+    input[type='range']::-webkit-slider-thumb {
+      width: 5px;
+      -webkit-appearance: none;
+      height: 1.5px !important;
+      cursor: ew-resize;
+      background: $white;
+      box-shadow: -130px 0 0 130px $defaultTextColor !important;
+      padding: 4px;
+      border-radius: 50px;
+    }
+  }
+  .form-control {
+    height: 1.1rem;
+  }
+  .card-details {
+    font-family: $font-family;
+    padding: 40px 37px !important;
+  }
+  .variation-image-container {
+    padding: 40px 7px !important;
+  }
+  .variationcontent {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+  }
+  .modal {
+    z-index: 999;
+  }
+.modal-dialog{
+pointer-events:fill !important;
+}
+  .modal-container {
+    margin-top: 70px;
+    padding: 30px 30px !important;
+    height: 303px;
+    width: 578px;
+    border-radius: 8px;
+    background-color:$white;
+    box-shadow: 0 1px 4px 0 $card-bx-shadow;
+  }
+  .modalbody {
+    margin-top: 39px;
+    box-sizing: border-box;
+    height: 57px;
+    width: 439px;
+    border: 1px solid $modal-color;
+    border-radius: 4px;
+    background-color: $white;
+  }
+  .name-style {
+    border: none;
+    height: 25px;
+    font-family: $font-family;
+    font-size: 18px;
+    &:focus {
+      outline:0px !important; 
+      box-shadow: none !important;
+    }
+  }
+
+}

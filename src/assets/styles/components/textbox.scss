@@ -14,11 +14,12 @@
   }
 
   .form-control {
+    box-shadow: inset 0 -1px 0 $outline;
     &:focus {
-      border-color: $primaryTableColor !important;
-      -webkit-box-shadow: 0 0.063rem 0.063rem -0.063rem $primaryTableColor !important;
-      -moz-box-shadow: 0 0.063rem 0.063rem -0.063rem $primaryTableColor !important;
-      box-shadow: 0 0.063rem 0.063rem -0.063rem $primaryTableColor !important;
+      border-color: $defaultTextColor !important;
+      -webkit-box-shadow: 0 0.063rem 0.063rem -0.063rem $defaultTextColor !important;
+      -moz-box-shadow: 0 0.063rem 0.063rem -0.063rem $defaultTextColor !important;
+      box-shadow: 0 0.063rem 0.063rem -0.063rem $defaultTextColor !important;
     }
   }
 

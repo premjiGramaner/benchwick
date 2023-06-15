@@ -1,5 +1,7 @@
 .sidebar-section {
-  padding: 50px 73px !important;
+  padding: 40px 42px !important;
+  background-color: $sidebar-bg;
+  box-shadow: 0 1px 4px 0 $card-bx-shadow;
   .upload-image {
     padding-top: 14px;
   }
@@ -58,10 +60,15 @@
   .btn-height {
     padding-top: 10px;
   }
-  .view-history{
+  .view-history {
     padding-top: 40px;
   }
-  .opacity{
+  .opacity {
     opacity: 0.2;
+  }
+  .upload-text {
+    text-decoration: underline;
+    color: $defaultTextColor !important;
+    padding-top: 10px;
   }
 }
