@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "",
-    "database": "req_res_mgmnt",
+    "database": "benchwick_db",
     "host": "localhost",
     "dialect": "mysql",
     "timezone": "-05:00"
@@ -10,7 +10,7 @@
   "production": {
     "username": "root",
     "password": "",
-    "database": "test",
+    "database": "benchwick_db",
     "host": "localhost",
     "dialect": "mysql",
     "timezone": "-05:00"
