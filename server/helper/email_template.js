@@ -37,18 +37,30 @@ module.exports = {
                <label>If you have lost your password or wish to reset it,</label>
                <label>use the link below to get started.</label>
             </p>
-            <button style="
-               border: none;
-               outline: none;
-               padding: 1rem;
-               background: #a67ff5;
-               color: white;
-               font-size: 14px;
-               font-weight: bold;
-               font-weight: 700;
-               cursor: pointer;
-               border-radius: 4px;
-               ">Reset Your Password</button>
+            <table width="100%" cellspacing="0" cellpadding="0">
+               <tr>
+                  <td>
+                  <table width="100%" cellspacing="0" cellpadding="0">
+                     <tr>
+                        <td style="border-radius: 2px;">
+                        <a href="{url}" target="_blank" style="border: none;
+                        outline: none;
+                        padding: 1rem;
+                        background: #a67ff5;
+                        color: white;
+                        font-size: 14px;
+                        font-weight: 700;
+                        cursor: pointer;
+                        text-decoration: none;
+                        border-radius: 4px;">
+                           Reset Your Password             
+                        </a>
+                        </td>
+                     </tr>
+                  </table>
+                  </td>
+               </tr>
+            </table>
             <p style="
                display: flex;
                justify-content: center;

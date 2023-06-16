@@ -1,10 +1,10 @@
-var atob = require('atob');
+var btoa = require('btoa');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET_KEY } = require('../global_keys')
 
 const { User } = require("../models");
-const { encryptPassword, validatePassword, response, errorLogger, sendEmail } = require('../helper/utils')
+const { encryptPassword, validatePassword, response, getDatesObj, errorLogger, sendEmail } = require('../helper/utils')
 
 const login = async (req, res, next) => {
     const { userName, password } = req.body;
@@ -56,15 +56,18 @@ const signUp = async (req, res, next) => {
                     email: email,
                     name: name,
                     password: encPass,
-                    role: role || 'user'
+                    role: role || 'user',
+                    ...(getDatesObj() || {})
                 }
-                const createRequest = User.createUser(userObj);
-                response({ res, code: 200, data: createRequest, message: 'User created Successfully!' })
+
+                console.log('req***8', userObj)
+                const createRequest = await User.createUser(userObj);
+                response({ res, code: 200, data: { user: createRequest }, message: 'User created Successfully!' })
             } else {
-                response({ res, code: 400, data: false, message: 'User email already exists!' })
+                response({ res, code: 400, data: { user: false }, message: 'User email already exists!' })
             }
         } else {
-            response({ res, code: 400, data: null, message: 'User form is not valid!' })
+            response({ res, code: 400, data: { user: null }, message: 'User form is not valid!' })
         }
     } catch (e) {
         errorLogger(next, 'user/createUserInfo', e)
@@ -77,16 +80,17 @@ const forgotPassword = async (req, res, next) => {
         const isUserValid = await User.getUserByUserEmail(email)
         if (isUserValid) {
             let tokenReq = {
-                id: userData.dataValues.id,
-                name: userData.dataValues.name
+                id: isUserValid.dataValues.id,
+                name: isUserValid.dataValues.name,
+                email: email
             }
 
             const token = jwt.sign(tokenReq, JWT_SECRET_KEY);
-            const userToken = atob(`${token}`);
+            const userToken = btoa(`${token}`);
             await sendEmail(email, `${redirect_URL}/${userToken}`)
-            response({ res, code: 200, data: true, message: 'Password update request sent to the Email.' })
+            response({ res, code: 200, data: { status: userToken, token: token }, message: 'Password update request sent to the Email.' })
         } else {
-            response({ res, code: 400, data: null, message: 'User is invalid!' })
+            response({ res, code: 400, data: { status: null }, message: 'User is invalid!' })
         }
     } catch (e) {
         next(e);
@@ -99,7 +103,7 @@ const passwordUpdate = async (req, res, next) => {
         if (user_id && password) {
             const encPass = await encryptPassword(password);
             const updateRequest = User.updateUser(encPass);
-            response({ res, code: 200, data: updateRequest, message: 'Password updated Successfully!' })
+            response({ res, code: 200, data: { status: updateRequest}, message: 'Password updated Successfully!' })
         } else {
             response({ res, code: 400, data: null, message: 'UserId or password is not valid!' })
         }

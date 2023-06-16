@@ -1,5 +1,6 @@
 /* Password section */
 const bcrypt = require("bcrypt")
+const moment = require('moment');
 const nodemailer = require('nodemailer');
 const { HASH_SALT_ROUND, DEBUGGER_MODE } = require('../global_keys')
 const { template } = require('./email_template')
@@ -83,10 +84,12 @@ const response = ({ res, code, data, optionalData, message }) => {
 const sendEmail = (sendTo, token) => {
     return new Promise((resolve, reject) => {
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
-                user: 'premkumar.t@gramenerit.com',
-                pass: 'Prem$hree1528'
+                user: 'premkumar1528@gmail.com',
+                pass: 'arwyzhmkiixeauxz'
             }
         });
 
@@ -109,6 +112,13 @@ const sendEmail = (sendTo, token) => {
     })
 }
 
+const getDatesObj = () => {
+    return ({
+        created_on: moment().format(),
+        updated_on: moment().format()
+    })
+}
+
 module.exports = {
     encryptPassword,
     convertCircular,
@@ -116,5 +126,6 @@ module.exports = {
     validatePassword,
     errorHandler,
     sendEmail,
+    getDatesObj,
     response
 };
