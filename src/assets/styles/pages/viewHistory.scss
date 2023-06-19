@@ -87,7 +87,7 @@
     }
     .pagination-total-count {
       margin: 0;
-      color: red;
+      color: $black;
     }
     .pagination-nav-arrow {
       width: 1.25rem;
@@ -118,11 +118,35 @@
     padding: 15px;
     line-height: 1.42857143;
     vertical-align: top;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid $outline;
   }
   .sort-icon {
     width: 10px;
     height: 16px;
     margin-left: 0.375rem;
+  }
+  .variation-modal-container {
+    padding: 40px 50px !important;
+    height: 530px;
+    width: 578px;
+    border-radius: 8px;
+    background-color: $white;
+    box-shadow: 0 1px 4px 0 $card-bx-shadow;
+  }
+  .variation-modal {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+  }
+  .variation-style {
+    box-sizing: border-box;
+    height: 129px;
+    width: 154px;
+    border: 1px solid $white;
+    border-radius: 8px;
+    box-shadow: 0 0 1px 0 $card-bx-shadow;
+  }
+  .modal-dialog {
+    pointer-events: fill !important;
   }
 }

@@ -5,6 +5,7 @@ import RightArrowIcon from './right.png'
 import RightLastArrowIcon from './right-last.png'
 import CloseIcon from './close.png'
 import SortIcon from './sort.png'
+import Download from './Download.png';
 export {
     SearchIcon,
     LeftArrowIcon,
@@ -12,5 +13,6 @@ export {
     RightArrowIcon,
     RightLastArrowIcon,
     CloseIcon,
-    SortIcon
+    SortIcon,
+    Download
 }

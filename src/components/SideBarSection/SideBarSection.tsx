@@ -3,7 +3,7 @@ import { ISideBarInterface } from '@Utils/interface/ReusableComponentInterface/S
 import upload from '@Assets/svg/upload.svg'
 import { useRef } from 'react'
 const SideBarSection: React.FC<ISideBarInterface> = props => {
-  const fileInput = useRef()
+  const fileInput = useRef();
   const handleUpload = event => {
     props.handleImage(URL.createObjectURL(event.target.files[0]))
   }
@@ -26,6 +26,7 @@ const SideBarSection: React.FC<ISideBarInterface> = props => {
                   upload
                 </label>
                 <input
+                  value=''
                   ref={fileInput}
                   id="input-file"
                   type="file"

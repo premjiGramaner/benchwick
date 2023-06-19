@@ -12,13 +12,25 @@
     border: 1px solid $white;
     border-radius: 8px;
     box-shadow: 0 0 1px 0 $image-box-shadow;
+    position: relative;
   }
   .image-style {
     height: 100%;
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
-  } 
+  }
+  .close-style {
+    float: right;
+    right: 0;
+    margin-top: -0.9rem;
+    margin-right: -0.7rem;
+    position: absolute;
+    z-index: 99;
+    color: $labelColor;
+    font-size: 2.125rem;
+    cursor: pointer;
+  }
   .variation-image {
     box-sizing: border-box;
     height: 177px;
@@ -26,6 +38,19 @@
     border: 1px solid $white;
     border-radius: 8px;
     box-shadow: 0 0 1px 0 $image-box-shadow;
+    position: relative;
+  }
+  .circle-style {
+    display: inline-block;
+    align-items: center !important;
+    height: 28px;
+    width: 28px;
+    background-color: $white;
+    position: absolute;
+    z-index: 99;
+    margin-top: 137px;
+    margin-left: 10px;
+    border-radius: 50%;
   }
   .vimage-style {
     height: 100%;
@@ -119,16 +144,16 @@
   .modal {
     z-index: 999;
   }
-.modal-dialog{
-pointer-events:fill !important;
-}
+  .modal-dialog {
+    pointer-events: fill !important;
+  }
   .modal-container {
     margin-top: 70px;
     padding: 30px 30px !important;
     height: 303px;
     width: 578px;
     border-radius: 8px;
-    background-color:$white;
+    background-color: $white;
     box-shadow: 0 1px 4px 0 $card-bx-shadow;
   }
   .modalbody {
@@ -146,9 +171,42 @@ pointer-events:fill !important;
     font-family: $font-family;
     font-size: 18px;
     &:focus {
-      outline:0px !important; 
+      outline: 0px !important;
       box-shadow: none !important;
     }
   }
-
+  input[type='checkbox'] {
+    margin: 7px 7px 0;
+    margin-top: 1px\9;
+    line-height: normal;
+    align-items: center !important;
+    cursor: pointer;
+  }
+  .download-style {
+    padding-bottom: 6.5px;
+    margin-right: 10px;
+    height: 30x;
+    width: 20px;
+    border-radius: 8px;
+  }
+  .variation-modal-container {
+    padding: 40px 50px !important;
+    height: 530px;
+    width: 578px;
+    border-radius: 8px;
+    background-color: $white;
+    box-shadow: 0 1px 4px 0 $card-bx-shadow;
+  }
+  .variation-modal {
+    // height: 400px;
+    // width: 200px;
+  }
+  .variation-style {
+    box-sizing: border-box;
+    height: 400px;
+    width: 479px;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 1px 0 $image-box-shadow;
+  }
 }

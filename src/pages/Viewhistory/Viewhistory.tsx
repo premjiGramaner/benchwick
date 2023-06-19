@@ -14,6 +14,44 @@ import {
 } from '@Assets/images'
 import actions from '@Store/viewHistory/actions'
 const Viewhistory: React.FC<IDefaultPageProps> = props => {
+  const variationdummyData = [
+    {
+      id: 1,
+      image: SortIcon,
+    },
+    {
+      id: 2,
+      image: SortIcon,
+    },
+    {
+      id: 3,
+      image: SortIcon,
+    },
+    {
+      id: 4,
+      image: SortIcon,
+    },
+    {
+      id: 5,
+      image: SortIcon,
+    },
+    {
+      id: 6,
+      image: SortIcon,
+    },
+    {
+      id: 7,
+      image: SortIcon,
+    },
+    {
+      id: 8,
+      image: SortIcon,
+    },
+    {
+      id: 9,
+      image: SortIcon,
+    },
+  ]
   const arrayDummyData = [
     {
       Name: 'Selection Name 1',
@@ -118,11 +156,9 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const [searchInput, setSearchInput] = useState<string>('')
   const [handlePageCount, setHandlePageCount] = useState<number>(10)
   const [selectedPage, setSelectedPage] = useState<number>(1)
-
+  const [variationmodal, setvariationModal] = useState(false)
   useEffect(() => {
-    props.dispatch(actions.fetchViewhistoryRequested
-      (`page=${selectedPage}`) 
-    )
+    props.dispatch(actions.fetchViewhistoryRequested(`page=${selectedPage}`))
   }, [selectedPage])
   const handleLogout = () => {
     // Do the logout API call and get the success result
@@ -187,7 +223,14 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const sortHandle = () => {
     console.log('sort is clicked')
   }
-
+  const handleViewClick = (value, e) => {
+    e.preventDefault()
+    setvariationModal(!variationmodal)
+  }
+  const handleVariationCancel = e => {
+    // e.preventDefault()
+    setvariationModal(!variationmodal)
+  }
   const Pagination = () => {
     return (
       <div className="pt-2">
@@ -291,7 +334,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   return (
     <div className="viewhistory-page-main-container">
       <HeaderSection handleLogout={handleLogout} />
-      <div className="d-flex vh-100">
+      <div className="d-flex">
         <SideBarSection enable={false} />
         <div className="history-table-container">
           <div className="d-flex justify-content-between">
@@ -338,7 +381,9 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                       <td>{value.Time}</td>
                       <td>{value.Image}</td>
                       <td>{value.SavedVariation}</td>
-                      <td>{value.View}</td>
+                      <td onClick={e => handleViewClick(value, e)}>
+                        {value.View}
+                      </td>
                       <td>{value.Action}</td>
                     </tr>
                   </tbody>
@@ -348,6 +393,57 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
           </div>
           <div className="pb-5">
             <Pagination />
+          </div>
+        </div>
+      </div>
+      <div
+        className="modal mt-5"
+        style={{ display: variationmodal ? 'block' : 'none' }}
+      >
+        <div className="modal-dialog ">
+          <div className="variation-modal-container">
+            <div className="d-flex justify-content-between">
+              <div className="">
+                <div>
+                  <h5
+                    className="modal-title fs-12 fw-bold"
+                    id="exampleModalLabel"
+                  >
+                    <u>SelectionName 1</u>
+                  </h5>
+                </div>
+                <div className="d-flex">
+                  <div className="fs-12">Number of variations :</div>
+                  <div className="fs-12 fw-bold">4</div>
+                </div>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  onClick={handleVariationCancel}
+                ></button>
+              </div>
+            </div>
+           
+            <div className="variation-modal mt-3">
+            {
+             variationdummyData.map(value => {
+                return (
+                  <div>
+                     {/* {value.id} */}
+                  <img
+                  className="variation-style"
+                  src={LeftArrowIcon}
+                  alt="original image"
+                /></div>
+                 
+                )
+              })},
+             
+            </div>
           </div>
         </div>
       </div>
