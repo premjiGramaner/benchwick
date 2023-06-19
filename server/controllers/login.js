@@ -41,7 +41,7 @@ const login = async (req, res, next) => {
             }
         }
     } catch (e) {
-        errorLogger(next, 'user/login', e)
+        errorLogger(next, 'image/login', e)
     }
 };
 
@@ -60,7 +60,6 @@ const signUp = async (req, res, next) => {
                     ...(getDatesObj() || {})
                 }
 
-                console.log('req***8', userObj)
                 const createRequest = await User.createUser(userObj);
                 response({ res, code: 200, data: { user: createRequest }, message: 'User created Successfully!' })
             } else {
@@ -70,7 +69,7 @@ const signUp = async (req, res, next) => {
             response({ res, code: 400, data: { user: null }, message: 'User form is not valid!' })
         }
     } catch (e) {
-        errorLogger(next, 'user/createUserInfo', e)
+        errorLogger(next, 'image/createUserInfo', e)
     }
 };
 
@@ -93,7 +92,7 @@ const forgotPassword = async (req, res, next) => {
             response({ res, code: 400, data: { status: null }, message: 'User is invalid!' })
         }
     } catch (e) {
-        next(e);
+        errorLogger(next, 'image/passwordUpdate', e)
     }
 };
 
@@ -103,12 +102,12 @@ const passwordUpdate = async (req, res, next) => {
         if (user_id && password) {
             const encPass = await encryptPassword(password);
             const updateRequest = User.updateUser(encPass);
-            response({ res, code: 200, data: { status: updateRequest}, message: 'Password updated Successfully!' })
+            response({ res, code: 200, data: { status: updateRequest }, message: 'Password updated Successfully!' })
         } else {
             response({ res, code: 400, data: null, message: 'UserId or password is not valid!' })
         }
     } catch (e) {
-        next(e);
+        errorLogger(next, 'image/passwordUpdate', e)
     }
 };
 

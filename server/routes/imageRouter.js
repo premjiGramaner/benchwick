@@ -9,6 +9,6 @@ const {
 
 router.post("/image-envision", imageEnvision);
 router.post("/save-envision", saveEnvision);
-router.post("/get-envision-variants/:id", getEnvisionVariants);
+router.get("/get-envision-variants/:id", getEnvisionVariants);
 
 module.exports = router;
