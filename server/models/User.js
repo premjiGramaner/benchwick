@@ -29,15 +29,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         created_on: {
             type: DataTypes.DATE,
-            get() {
-                return moment(this.getDataValue('created_on')).format('DD/MM/YYYY h:mm:ss');
-            }
+            allowNull: true
         },
         updated_on: {
             type: DataTypes.DATE,
-            get() {
-                return moment(this.getDataValue('updated_on')).format('DD/MM/YYYY h:mm:ss');
-            }
+            allowNull: true
         }
     }, {
         tableName: 'user',
@@ -49,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         return this.findOne({ where: { email } });
     }
 
-    User.createUser = function (email) {
+    User.createUser = function (Obj) {
         return this.create(Obj);
     }
 

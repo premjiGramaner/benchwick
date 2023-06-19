@@ -11,19 +11,15 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(52),
             allowNull: true
         },
-        varients: {
+        variants: {
             type: DataTypes.STRING(2),
             allowNull: true
         },
-        varient_list: {
-            type: DataTypes.STRING(1000),
+        variant_list: {
+            type: DataTypes.STRING(3000),
             allowNull: true
         },
         original_url: {
-            type: DataTypes.STRING(255),
-            allowNull: true
-        },
-        thumb_url: {
             type: DataTypes.STRING(255),
             allowNull: true
         },
@@ -43,24 +39,24 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true
         },
+        isActive: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         create_by: {
             type: DataTypes.INTEGER,
-            references:  {
+            references: {
                 model: 'user',
                 key: 'id'
             }
         },
         created_on: {
             type: DataTypes.DATE,
-            get() {
-                return moment(this.getDataValue('created_on')).format('DD/MM/YYYY h:mm:ss');
-            }
+            allowNull: true
         },
         updated_on: {
             type: DataTypes.DATE,
-            get() {
-                return moment(this.getDataValue('updated_on')).format('DD/MM/YYYY h:mm:ss');
-            }
+            allowNull: true
         }
     }, {
         tableName: 'image_table',
@@ -70,6 +66,28 @@ module.exports = (sequelize, DataTypes) => {
 
     Images.getImageByID = function (id) {
         return this.findOne({ where: { id: id } });
+    }
+
+    Images.getByUserID = function (id) {
+
+        // Extra check is needed - subQuery: false
+        // user.findAll({
+        //     offset: 5, 
+        //     limit: 5,
+        //     order: [
+        //         // Will escape full_name and validate DESC against a list of valid direction parameters
+        //         ['full_name', 'DESC']]
+        // }).then(function (result) { })
+
+        return this.findAll({ where: { create_by: id } });
+    }
+
+    Images.getHistoryByAdmin = function (id) {
+        return this.findAll();
+    }
+
+    Images.createHistory = function (Obj) {
+        return this.create(Obj);
     }
 
     return Images;
