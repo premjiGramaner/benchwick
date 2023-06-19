@@ -82,12 +82,20 @@ module.exports = (sequelize, DataTypes) => {
         return this.findAll({ where: { create_by: id } });
     }
 
-    Images.getHistoryByAdmin = function (id) {
+    Images.getHistoryByAdmin = function () {
         return this.findAll();
     }
 
     Images.createHistory = function (Obj) {
         return this.create(Obj);
+    }
+
+    Images.deleteHistory = function (id) {
+        return this.destroy({ where: { id: id } });
+    }
+
+    Images.softDeleteHistory = function (id) {
+        return this.update({ isActive: 'false' }, { where: { id: id } });
     }
 
     return Images;

@@ -15,6 +15,25 @@ const getUserInfo = async (req, res, next) => {
     }
 };
 
+const deleteUserHistory = async (req, res, next) => {
+    try {
+        const imageID = (req.params ? req.params.id : '');
+        const id = (res.locals.tokenInfo && res.locals.tokenInfo.user_info) ? res.locals.tokenInfo.user_info.id : "";
+        const role = (res.locals.tokenInfo && res.locals.tokenInfo.user_info) ? res.locals.tokenInfo.user_info.role : "";
+
+        let data = null;
+        if (role === 'admin') {
+            data = await Images.deleteHistory(imageID)
+        } else {
+            data = await Images.softDeleteHistory(imageID)
+        }
+
+        response({ res, code: 200, data: { imageList: data }, message: 'User history deleted successfully.' })
+    } catch (e) {
+        errorLogger(next, 'user/deleteUserHistory', e)
+    }
+};
+
 const getUserHistory = async (req, res, next) => {
     try {
         const id = (res.locals.tokenInfo && res.locals.tokenInfo.user_info) ? res.locals.tokenInfo.user_info.id : "";
@@ -22,7 +41,7 @@ const getUserHistory = async (req, res, next) => {
 
         let data = null;
         if (role === 'admin') {
-            data = await Images.getHistoryByAdmin(id)
+            data = await Images.getHistoryByAdmin()
         } else {
             data = await Images.getByUserID(id)
         }
@@ -46,5 +65,6 @@ const userLogout = async (req, res, next) => {
 module.exports = {
     getUserInfo,
     getUserHistory,
+    deleteUserHistory,
     userLogout
 };

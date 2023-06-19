@@ -47,6 +47,7 @@ const saveEnvision = async (req, res, next) => {
             original_url: "https://previews.123rf.com/images/weedezign/weedezign1503/weedezign150300696/38084134-plain-wood-texture-background.jpg",
             image_name: image.name,
             image_size: image.size,
+            isActive: 'true',
             created_date: moment().format('DD/MM/YYYY'),
             created_time: moment().format('h:mm:ss'),
             ...(getDatesObj() || {})

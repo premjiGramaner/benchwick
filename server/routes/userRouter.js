@@ -9,6 +9,7 @@ const {
 
 router.get("/self", getUserInfo);
 router.get("/user-history", getUserHistory);
+router.get("/delete-history/:id", getUserHistory);
 router.get("/logout", userLogout);
 
 module.exports = router;
