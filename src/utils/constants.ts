@@ -1,5 +1,5 @@
 export const API_URL = {
-  baseURL: 'https://jsonplaceholder.typicode.com',
+  baseURL: 'https://reqres.in/api/',
 }
 
 export const STORAGE_KEY = {

@@ -11,6 +11,9 @@ const api = {
   login: {
     get: () => instance.get('/users'),
   },
+  viewTable:{
+    get:(arg)=>instance.get(`users?${arg}`)
+  }
 }
 
 const getAuthHeader = async () => {

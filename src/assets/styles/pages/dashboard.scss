@@ -18,6 +18,20 @@
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
+  } 
+  .variation-image {
+    box-sizing: border-box;
+    height: 177px;
+    width: 177px;
+    border: 1px solid $white;
+    border-radius: 8px;
+    box-shadow: 0 0 1px 0 $image-box-shadow;
+  }
+  .vimage-style {
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
   }
   .image-text {
     padding-top: 15px;

@@ -32,6 +32,45 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     setModal(!modal)
   }
 
+  const variationdummyData = [
+    {
+      id: 1,
+      image: file,
+    },
+    {
+      id: 2,
+      image: file,
+    },
+    {
+      id: 3,
+      image: file,
+    },
+    {
+      id: 4,
+      image: file,
+    },
+    {
+      id: 5,
+      image: file,
+    },
+    {
+      id: 6,
+      image: file,
+    },
+    {
+      id: 7,
+      image: file,
+    },
+    {
+      id: 8,
+      image: file,
+    },
+    {
+      id: 9,
+      image: file,
+    },
+  ]
+
   return (
     <div className="dashboard-page-main-container">
       <HeaderSection handleLogout={handleLogout} />
@@ -97,51 +136,67 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
         </div>
         <div className="variation-image-container">
           <div className="variationcontent">
-            <div className="original-image">
-              <div className="text-center card-details fs-14">
-                Variation will appear here
+            {variationdummyData.length > 0 ? (
+              variationdummyData.map(value => {
+                return (
+                  <div className="variation-image">
+                    <img
+                      className="vimage-style"
+                      src={value.image}
+                      alt="original image"
+                    />
+                  </div>
+                )
+              })
+            ) : (
+              <div className="variationcontent">
+                <div className="original-image">
+                  <div className="text-center card-details fs-14">
+                    Variation will appear here
+                  </div>
+                </div>
+                <div className="original-image">
+                  <div className="text-center card-details fs-14">
+                    Variation will appear here
+                  </div>
+                </div>
+                <div className="original-image">
+                  <div className="text-center card-details fs-14">
+                    Variation will appear here
+                  </div>
+                </div>
+                <div className="original-image">
+                  <div className="text-center card-details fs-14">
+                    Variation will appear here
+                  </div>
+                </div>
+                <div className="original-image">
+                  <div className="text-center card-details fs-14">
+                    Variation will appear here
+                  </div>
+                </div>
+                <div className="original-image">
+                  <div className="text-center card-details fs-14">
+                    Variation will appear here
+                  </div>
+                </div>
+                <div className="original-image">
+                  <div className="text-center card-details fs-14">
+                    Variation will appear here
+                  </div>
+                </div>
+                <div className="original-image">
+                  <div className="text-center card-details fs-14">
+                    Variation will appear here
+                  </div>
+                </div>
+                <div className="original-image">
+                  <div className="text-center card-details fs-14">
+                    Variation will appear here
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="original-image">
-              <div className="text-center card-details fs-14">
-                Variation will appear here
-              </div>
-            </div>
-            <div className="original-image">
-              <div className="text-center card-details fs-14">
-                Variation will appear here
-              </div>
-            </div>
-            <div className="original-image">
-              <div className="text-center card-details fs-14">
-                Variation will appear here
-              </div>
-            </div>
-            <div className="original-image">
-              <div className="text-center card-details fs-14">
-                Variation will appear here
-              </div>
-            </div>
-            <div className="original-image">
-              <div className="text-center card-details fs-14">
-                Variation will appear here
-              </div>
-            </div>
-            <div className="original-image">
-              <div className="text-center card-details fs-14">
-                Variation will appear here
-              </div>
-            </div>
-            <div className="original-image">
-              <div className="text-center card-details fs-14">
-                Variation will appear here
-              </div>
-            </div>
-            <div className="original-image">
-              <div className="text-center card-details fs-14">
-                Variation will appear here
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
