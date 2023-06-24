@@ -17,16 +17,16 @@ const RouterComponent: React.FC<IRouterProps> = props => {
   const navigate = useNavigate()
   let isRemember = cookies.get('isRemember')
   useEffect(() => {
-    if (isRemember === 'true') return
-    navigate(URLS.DEFAULT)
-    console.log('RouterComponent Initial props', UnAuthMenuList)
+    // if (isRemember === 'true') return
+    // navigate(URLS.DEFAULT)
+    // console.log('RouterComponent Initial props', UnAuthMenuList)
   }, [])
 
   let authRoutes = null
 
   if (!IS_USER_AUTHENTICATED()) {
     authRoutes = (
-      <CookiesProvider>
+      // <CookiesProvider>
         <AuthWrapper {...props}>
           <Routes>
             {UnAuthMenuList.map(route => {
@@ -39,14 +39,14 @@ const RouterComponent: React.FC<IRouterProps> = props => {
               )
             })}
           </Routes>
-        </AuthWrapper>{' '}
-      </CookiesProvider>
+        </AuthWrapper>
+      // </CookiesProvider>
     )
   }
 
   if (IS_USER_AUTHENTICATED()) {
     authRoutes = (
-      <CookiesProvider>
+      // <CookiesProvider>
         <AuthWrapper {...props}>
           <Routes>
             {AuthMenuList.map(route => {
@@ -60,7 +60,7 @@ const RouterComponent: React.FC<IRouterProps> = props => {
             })}
           </Routes>
         </AuthWrapper>
-      </CookiesProvider>
+      //  </CookiesProvider> 
     )
   }
 

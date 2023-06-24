@@ -12,7 +12,6 @@ import {
   CloseIcon,
   SortIcon,
 } from '@Assets/images'
-import actions from '@Store/viewHistory/actions'
 const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const variationdummyData = [
     {
@@ -157,12 +156,12 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const [handlePageCount, setHandlePageCount] = useState<number>(10)
   const [selectedPage, setSelectedPage] = useState<number>(1)
   const [variationmodal, setvariationModal] = useState(false)
-  useEffect(() => {
-    props.dispatch(actions.fetchViewhistoryRequested(`page=${selectedPage}`))
-  }, [selectedPage])
+  // useEffect(() => {
+  //   props.dispatch(actions.fetchViewhistoryRequested(`page=${selectedPage}`))
+  // }, [selectedPage])
   const handleLogout = () => {
     // Do the logout API call and get the success result
-    localStorage.clear()
+    // localStorage.clear()
     props.navigate(URLS.LOGIN)
   }
   const handleBackToDashBoard = () => {

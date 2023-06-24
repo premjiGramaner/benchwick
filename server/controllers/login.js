@@ -86,7 +86,7 @@ const forgotPassword = async (req, res, next) => {
 
             const token = jwt.sign(tokenReq, JWT_SECRET_KEY);
             const userToken = btoa(`${token}`);
-            await sendEmail(email, `${redirect_URL}/${userToken}`)
+            await sendEmail(email, `${redirect_URL}?token=${userToken}`)
             response({ res, code: 200, data: { status: userToken, token: token }, message: 'Password update request sent to the Email.' })
         } else {
             response({ res, code: 400, data: { status: null }, message: 'User is invalid!' })

@@ -7,15 +7,25 @@ import close from '@Assets/svg/close.svg'
 import 
   Download
 from '@Assets/images/Download.png';
+import { login } from 'src/reducers'
+import { useDispatch } from 'react-redux'
 const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [file, setFile] = useState('')
   const [range, setRange] = useState(9)
   const [name, setName] = useState('')
   const [modal, setModal] = useState(false)
   const [variationmodal, setvariationModal] = useState(false)
+  const dispatch=useDispatch();
   const handleLogout = () => {
     // Do the logout API call and get the success result
-    localStorage.clear()
+    // localStorage.clear()
+    // dispatch(
+    //   login({
+    //     userName: "",
+    //     password: "",
+    //   })
+    // )
+    
     props.navigate(URLS.LOGIN)
   }
   const handleViewHistory = e => {

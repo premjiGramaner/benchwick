@@ -10,14 +10,24 @@ import {
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/signUpValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
+import { useDispatch } from 'react-redux'
+import { signUp } from 'src/reducers/signUpReducer'
 const SignupComponent: React.FC<
   IDefaultPageProps & ILoginPageProps
 > = props => {
   const result = useSelector((state: IReducerState) => state.loginReducer)
-
+  const dispatch = useDispatch()
   const handleSignUpSubmit = data => {
     // IS_USER_AUTHENTICATED(true)
-    props.navigate(URLS.DASHBOARD)
+    dispatch(
+      signUp({
+        email: data.email,
+        name: data.user,
+        password: data.password,
+        role: 'admin', // optional - if empty consider as an user
+      })
+    )
+    props.navigate(URLS.LOGIN)
   }
 
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({

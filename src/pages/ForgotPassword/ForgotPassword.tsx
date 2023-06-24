@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import { URLS } from '@Utils/constants'
+import { useDispatch } from 'react-redux'
 import {
   IDefaultPageProps,
-  ILoginPageProps,
+  IForgotPasswordProps,
   IReducerState,
 } from '@Utils/interface'
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/forgotPasswordValidation'
+import { forgotPassword } from 'src/reducers/forgotPasswordReducer'
 const ForgotPasswordComponent: React.FC<
-  IDefaultPageProps & ILoginPageProps
+  IDefaultPageProps & IForgotPasswordProps
 > = props => {
-
+  const dispatch = useDispatch()
   const handleLinkSubmit = data => {
-    props.navigate(URLS.DASHBOARD)
+    dispatch(
+      forgotPassword({
+        email: data.email,
+        redirect_URL: 'http://localhost:8080/resetPassword',
+      })
+    )
   }
- 
+
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues: { email: '' },
     validationSchema: schema,

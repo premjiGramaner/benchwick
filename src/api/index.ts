@@ -1,4 +1,5 @@
-import { IS_USER_AUTHENTICATED } from './../utils/storage/index';
+import { forgotPassword } from './../reducers/forgotPasswordReducer'
+import { IS_USER_AUTHENTICATED } from './../utils/storage/index'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { API_URL, STORAGE_KEY } from '@Utils/constants'
 
@@ -9,11 +10,20 @@ const instance = axios.create({
 
 const api = {
   login: {
-    get: () => instance.get('/users'),
+    post: arg => instance.post('/login', arg),
   },
-  viewTable:{
-    get:(arg)=>instance.get(`users?${arg}`)
-  }
+  forgotPassword: {
+    post: arg => instance.post('/login/forgot-password', arg),
+  },
+  resetPassword: {
+    post: arg => instance.post('/login/password-update', arg),
+  },
+  signUp: {
+    post: arg => instance.post('/login/signup', arg),
+  },
+  // viewTable:{
+  //   get:(arg)=>instance.get(`users?${arg}`)
+  // }
 }
 
 const getAuthHeader = async () => {
@@ -37,7 +47,7 @@ export const tokenRequestInterceptor = async (req: AxiosRequestConfig) => {
 }
 
 // If you want any optimization or custom response pleas make changes here
-const responseSuccessHandler = (response: AxiosResponse<any>) => (response);
+const responseSuccessHandler = (response: AxiosResponse<any>) => response
 
 /**
  * Todo
@@ -45,11 +55,11 @@ const responseSuccessHandler = (response: AxiosResponse<any>) => (response);
  */
 const responseErrorHandler = (error: any) => {
   if (error?.response?.status === 401) {
-    localStorage.clear();
+    localStorage.clear()
     window.location.reload()
   }
 
-  return Promise.reject(error);
+  return Promise.reject(error)
 }
 
 instance.interceptors.request.use(tokenRequestInterceptor)
