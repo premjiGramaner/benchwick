@@ -5,6 +5,7 @@ import {
   pageNotFound,
   SignupComponent,
   ForgotPasswordComponent,
+  ResetPasswordComponent,
 } from '@Pages/index'
 
 export default [
@@ -44,6 +45,14 @@ export default [
     path: URLS.FORGOTPASSWORD,
     routeName: 'ForgotPassword Component',
     component: ForgotPasswordComponent,
+    icon: '',
+    permissions: [],
+    children: [],
+  },
+  {
+    path: URLS.RESETPASSWORD,
+    routeName: 'ResetPassword Component',
+    component: ResetPasswordComponent,
     icon: '',
     permissions: [],
     children: [],

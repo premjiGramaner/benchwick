@@ -2,7 +2,6 @@ import { useSelector } from 'react-redux'
 import React, { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import { URLS } from '@Utils/constants'
-import actions from '@Store/logIn/actions'
 import { getAuthToken, IS_USER_AUTHENTICATED } from '@Utils/storage'
 import {
   IDefaultPageProps,
@@ -12,30 +11,38 @@ import {
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/loginValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
-import { Cookies } from 'react-cookie'
+// import { Cookies } from 'react-cookie'
+import { useDispatch } from 'react-redux'
+import { login } from '../../reducers/loginReducer'
 const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
-  const cookies = new Cookies()
-  const result = useSelector((state: IReducerState) => state.loginReducer)
+  // const cookies = new Cookies()
+  const { userInfo, isError, statusCode } = useSelector(
+    (state: IReducerState) => state.loginReducer
+  )
   const [rememberMe, setRememberMe] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [logIn, setLogIn] = useState<string>('LOGIN')
-  const [spin, setSpin] = useState<string>('')
-  // const { status, error } = useSelector(
-  //   (state: ILoginState) => state?.loginReducer
-  // )
-  const { users: totalUsers, textCount } = result
+  const [invalidUser, setInvalidUser] = useState<boolean>(false)
 
-  const handleLoginSubmit = data => {
-    IS_USER_AUTHENTICATED(true)
-    props.navigate(URLS.DASHBOARD)
-
-    if (rememberMe === true) {
-      cookies.set('isRemember', 'true')
+  useEffect(() => {
+    if (statusCode === 200) {
+      IS_USER_AUTHENTICATED(true)
+      props.navigate(URLS.DASHBOARD)
     } else {
-      cookies.set('isRemember', 'false')
+      setInvalidUser(!invalidUser)
     }
-    setLogIn('')
-    setSpin('spinner-border')
+  }, [statusCode])
+  const handleLoginSubmit = data => {
+    // if (rememberMe === true) {
+    //   cookies.set('isRemember', 'true')
+    // } else {
+    //   cookies.set('isRemember', 'false')
+    // }
+    props.dispatch(
+      login({
+        userName: data.user,
+        password: data.password,
+      })
+    )
   }
   const handleSignup = () => {
     props.navigate(URLS.SIGNUP)
@@ -148,6 +155,13 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
                       Login
                     </button>
                   </div>
+                  {/* {
+                    invalidUser ? <p className="form-error">
+                    <i className="fa fa-info-circle"></i>
+                    <span className="error-msg-txt"> Invalid user</span>
+                  </p> : ""
+
+                  } */}
                 </form>
               </div>
               <div>

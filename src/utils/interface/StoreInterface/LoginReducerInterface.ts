@@ -1,18 +1,11 @@
-/*
-* TODO::
-* Make sure to remove the IUser on the actual development 
- */
-
-export interface IUsers {
-    id: string
-    name: string
-    website: string
-    phone: number
+export interface ILoginReducerState {
+  userInfo: any
+  statusCode:null
+  isLoading: boolean
+  isError: boolean
 }
-
-export interface ILoginState {
-    textCount: number;
-    fetchUserLoading: boolean;
-    users: IUsers[];
-    fetchUserFailed: string;
+export interface IUsersReducerState {
+  users: any
+  isLoading: boolean
+  isError: boolean
 }

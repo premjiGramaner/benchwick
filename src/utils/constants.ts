@@ -1,5 +1,5 @@
 export const API_URL = {
-  baseURL: 'https://jsonplaceholder.typicode.com',
+  baseURL: 'http://localhost:5001/api',
 }
 
 export const STORAGE_KEY = {
@@ -15,5 +15,6 @@ export const enum URLS {
   DASHBOARD = '/dashboard',
   VIEWHISTORY = '/viewhistory',
   SIGNUP = '/signup',
-  FORGOTPASSWORD = 'forgotpassword',
+  FORGOTPASSWORD = '/forgotpassword',
+  RESETPASSWORD='/resetPassword',
 }
