@@ -3,9 +3,9 @@ import { ISideBarInterface } from '@Utils/interface/ReusableComponentInterface/S
 import upload from '@Assets/svg/upload.svg'
 import { useRef } from 'react'
 const SideBarSection: React.FC<ISideBarInterface> = props => {
-  const fileInput = useRef();
+  const fileInput = useRef()
   const handleUpload = event => {
-    props.handleImage(URL.createObjectURL(event.target.files[0]))
+    props.handleImage(event.target.files[0])
   }
 
   return (
@@ -26,7 +26,7 @@ const SideBarSection: React.FC<ISideBarInterface> = props => {
                   upload
                 </label>
                 <input
-                  value=''
+                  value=""
                   ref={fileInput}
                   id="input-file"
                   type="file"
@@ -38,7 +38,7 @@ const SideBarSection: React.FC<ISideBarInterface> = props => {
             </div>
 
             <p className="card-text fs-10">Limit 200MB per file | PNG</p>
-            <div className="btn-height">
+            <div className="btn-height" onClick={props.envisionUploadHandle}>
               <a href="#" className="btn btn-gramener">
                 ENVISION
               </a>

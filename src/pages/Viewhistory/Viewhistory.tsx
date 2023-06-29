@@ -12,150 +12,26 @@ import {
   CloseIcon,
   SortIcon,
 } from '@Assets/images'
+import icon from '../../assets/svg/fa-eye.svg'
+import { useDispatch } from 'react-redux'
+import { userHistory } from 'src/reducers/userHistoryReducer'
+import { useSelector } from 'react-redux'
+import {
+  IGetEnvisionVariantsReducerState,
+  IReducerState,
+} from '@Interface/StoreInterface'
+import { getEnvisionVariants } from 'src/reducers/getEnvisionVariantsReducer'
 const Viewhistory: React.FC<IDefaultPageProps> = props => {
-  const variationdummyData = [
-    {
-      id: 1,
-      image: SortIcon,
-    },
-    {
-      id: 2,
-      image: SortIcon,
-    },
-    {
-      id: 3,
-      image: SortIcon,
-    },
-    {
-      id: 4,
-      image: SortIcon,
-    },
-    {
-      id: 5,
-      image: SortIcon,
-    },
-    {
-      id: 6,
-      image: SortIcon,
-    },
-    {
-      id: 7,
-      image: SortIcon,
-    },
-    {
-      id: 8,
-      image: SortIcon,
-    },
-    {
-      id: 9,
-      image: SortIcon,
-    },
-  ]
-  const arrayDummyData = [
-    {
-      Name: 'Selection Name 1',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 2',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 3',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 4',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 5',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 6',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 7',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 8',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 9',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 10',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-    {
-      Name: 'Selection Name 11',
-      Date: '2023-01-01',
-      Time: '23:40:10',
-      Image: 'file',
-      SavedVariation: '4',
-      View: 'icon binding',
-      Action: 'actions',
-    },
-  ]
   const [searchInput, setSearchInput] = useState<string>('')
   const [handlePageCount, setHandlePageCount] = useState<number>(10)
   const [selectedPage, setSelectedPage] = useState<number>(1)
   const [variationmodal, setvariationModal] = useState(false)
+  const { data, isError } = useSelector(
+    (state: IReducerState) => state.userHistoryReducer
+  )
+  const { variantData } = useSelector(
+    (state: IReducerState) => state.getEnvisionVariantsReducer
+  )
   // useEffect(() => {
   //   props.dispatch(actions.fetchViewhistoryRequested(`page=${selectedPage}`))
   // }, [selectedPage])
@@ -225,6 +101,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const handleViewClick = (value, e) => {
     e.preventDefault()
     setvariationModal(!variationmodal)
+    props.dispatch(getEnvisionVariants(value.id))
   }
   const handleVariationCancel = e => {
     // e.preventDefault()
@@ -330,6 +207,9 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
       </div>
     )
   }
+  useEffect(() => {
+    props.dispatch(userHistory())
+  }, [])
   return (
     <div className="viewhistory-page-main-container">
       <HeaderSection handleLogout={handleLogout} />
@@ -371,19 +251,27 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                   <th scope="col">Action</th>
                 </tr>
               </thead>
-              {arrayDummyData.map(value => {
+              {data.map(value => {
                 return (
                   <tbody>
                     <tr className="body-style">
-                      <td>{value.Name}</td>
-                      <td>{value.Date}</td>
-                      <td>{value.Time}</td>
-                      <td>{value.Image}</td>
-                      <td>{value.SavedVariation}</td>
-                      <td onClick={e => handleViewClick(value, e)}>
-                        {value.View}
+                      <td>{value.name}</td>
+                      <td>{value.created_date}</td>
+                      <td>{value.created_time}</td>
+                      <td>
+                        {' '}
+                        <img
+                          className="vimage-style"
+                          src={value.original_url}
+                          alt="original image"
+                        />
                       </td>
-                      <td>{value.Action}</td>
+
+                      <td>{value.variants}</td>
+                      <td onClick={e => handleViewClick(value, e)}>
+                        <img className="eye-icon" src={icon} alt="eye image" />
+                      </td>
+                      <td>Action</td>
                     </tr>
                   </tbody>
                 )
@@ -408,12 +296,12 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     className="modal-title fs-12 fw-bold"
                     id="exampleModalLabel"
                   >
-                    <u>SelectionName 1</u>
+                    <u>SelectionName : {variantData.name}</u>
                   </h5>
                 </div>
                 <div className="d-flex">
                   <div className="fs-12">Number of variations :</div>
-                  <div className="fs-12 fw-bold">4</div>
+                  <div className="fs-12 fw-bold">{variantData.variants}</div>
                 </div>
               </div>
               <div>
@@ -426,22 +314,21 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                 ></button>
               </div>
             </div>
-           
+
             <div className="variation-modal mt-3">
-            {
-             variationdummyData.map(value => {
-                return (
-                  <div>
-                     {/* {value.id} */}
-                  <img
-                  className="variation-style"
-                  src={LeftArrowIcon}
-                  alt="original image"
-                /></div>
-                 
-                )
-              })},
-             
+              {variantData?.variant_list &&
+                variantData?.variant_list.map(value => {
+                  return (
+                    <div>
+                      <img
+                        className="variation-style"
+                        src={value.image_url}
+                        alt="original image"
+                      />
+                    </div>
+                  )
+                })}
+              ,
             </div>
           </div>
         </div>

@@ -2,14 +2,19 @@ import { IResourceReducerState } from './ResourceReducerInterface'
 import {
   ICoreReducerState,
   ILoginReducerState,
-  IUsersReducerState,
+  IUserHistoryReducerState,
+  IGetEnvisionVariantsReducerState,
+  IImageVariationReducerState,
+
 } from './index'
 
 export interface IReducerState {
   coreReducer: ICoreReducerState
   loginReducer: ILoginReducerState
-  userReducer: IUsersReducerState
-  resource: IResourceReducerState
+  userHistoryReducer:IUserHistoryReducerState
+  getEnvisionVariantsReducer:IGetEnvisionVariantsReducerState
+  imageVariationReducer:IImageVariationReducerState
+  
 }
 
 export interface IDispatchState {

@@ -1,5 +1,6 @@
 export interface ILoginReducerState {
   userInfo: any
+  statusCode:null
   isLoading: boolean
   isError: boolean
 }

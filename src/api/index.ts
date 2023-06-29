@@ -7,7 +7,9 @@ const instance = axios.create({
   baseURL: API_URL.baseURL,
   timeout: 0, // no timeout
 })
-
+const config = {
+  headers: { 'content-type': 'multipart/form-data' },
+}
 const api = {
   login: {
     post: arg => instance.post('/login', arg),
@@ -21,9 +23,18 @@ const api = {
   signUp: {
     post: arg => instance.post('/login/signup', arg),
   },
-  // viewTable:{
-  //   get:(arg)=>instance.get(`users?${arg}`)
-  // }
+  imageEnvision: {
+    post: arg => instance.post('/image/image-envision', arg, config),
+  },
+  saveEnvision: {
+    post: arg => instance.post('/image/save-envision', arg, config),
+  },
+  getEnvisionVariations: {
+    get: arg => instance.get(`/image/get-envision-variants/${arg}`),
+  },
+  userHistory: {
+    get: () => instance.get('/user/user-history'),
+  },
 }
 
 const getAuthHeader = async () => {

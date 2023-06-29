@@ -23,7 +23,7 @@ export const resetPassword: any = createAsyncThunk(
 )
 
 export const resetPasswordReducerInitialState: IResetPasswordReducerState = {
-  status: null,
+  status:  [],
   isError: false,
   isLoading: false,
 }

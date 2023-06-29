@@ -1,7 +1,7 @@
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ILoginReducerState, IDispatchState } from '@Interface/index'
-// import { setToken } from "@Utils/storage";
+import { getAuthToken } from '@Utils/storage'
 
 export const login: any = createAsyncThunk(
   'loginReducer/login',
@@ -12,7 +12,7 @@ export const login: any = createAsyncThunk(
         .then((response: any) => {
           const { data, error } = response
           if (!error) {
-            // setToken(data?.jwt)
+            getAuthToken(data?.data?.user_token)
             resolve({
               data: data || null,
             })
@@ -24,11 +24,11 @@ export const login: any = createAsyncThunk(
     })
   }
 )
-
 export const loginReducerInitialState: ILoginReducerState = {
-  userInfo: null,
+  userInfo: [],
   isError: false,
   isLoading: false,
+  statusCode: null,
 }
 
 const loginReducer = createSlice({
@@ -41,6 +41,7 @@ const loginReducer = createSlice({
     },
     [login.fulfilled]: (state: ILoginReducerState, action: IDispatchState) => {
       state.userInfo = action.payload || null
+      state.statusCode = action?.payload?.data?.statusCode
       state.isLoading = false
       state.isError = false
     },

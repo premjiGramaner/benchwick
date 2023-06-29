@@ -6,16 +6,16 @@ import AuthWrapper from './AuthWrapper'
 import { IS_USER_AUTHENTICATED } from '@Utils/storage'
 import { IRouterProps } from '@Utils/interface/PagesInterface'
 import { getKey } from '@Utils/utils'
-import { CookiesProvider } from 'react-cookie'
-import { Cookies } from 'react-cookie'
+// import { CookiesProvider } from 'react-cookie'
+// import { Cookies } from 'react-cookie'
 
 import AuthMenuList from './authMenuList'
 import UnAuthMenuList from './unAuthMenuList'
 
 const RouterComponent: React.FC<IRouterProps> = props => {
-  const cookies = new Cookies()
+  // const cookies = new Cookies()
   const navigate = useNavigate()
-  let isRemember = cookies.get('isRemember')
+  // let isRemember = cookies.get('isRemember')
   useEffect(() => {
     // if (isRemember === 'true') return
     // navigate(URLS.DEFAULT)
@@ -23,7 +23,6 @@ const RouterComponent: React.FC<IRouterProps> = props => {
   }, [])
 
   let authRoutes = null
-
   if (!IS_USER_AUTHENTICATED()) {
     authRoutes = (
       // <CookiesProvider>

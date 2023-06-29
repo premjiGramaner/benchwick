@@ -1,11 +1,11 @@
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { IForgotPasswordReducerState, IDispatchState } from '@Interface/index'
-export const forgotPassword: any = createAsyncThunk(
-  'forgotPasswordReducer/forgotPassword',
+import { IImageVariationReducerState, IDispatchState } from '@Interface/index'
+export const imageVariation: any = createAsyncThunk(
+  'imageVariationReducer/imageVariation',
   async (payload: any = {}) => {
     return new Promise((resolve: any) => {
-      api.forgotPassword
+      api.imageEnvision
         .post(payload)
         .then((response: any) => {
           const { data, error } = response
@@ -21,38 +21,37 @@ export const forgotPassword: any = createAsyncThunk(
     })
   }
 )
-
-export const forgotPasswordReducerInitialState: IForgotPasswordReducerState = {
-  token:  [],
+export const imageVariationInitialState: IImageVariationReducerState = {
+  imageInfo:  [],
   isError: false,
   isLoading: false,
 }
 
-const forgotPasswordReducer = createSlice({
-  name: 'forgotPasswordReducer',
-  initialState: forgotPasswordReducerInitialState,
+const imageVariationReducer = createSlice({
+  name: 'imageVariationReducer',
+  initialState: imageVariationInitialState,
   reducers: {},
   extraReducers: {
-    [forgotPassword.pending]: (state: IForgotPasswordReducerState) => {
+    [imageVariation.pending]: (state: IImageVariationReducerState) => {
       state.isLoading = true
     },
-    [forgotPassword.fulfilled]: (
-      state: IForgotPasswordReducerState,
+    [imageVariation.fulfilled]: (
+      state: IImageVariationReducerState,
       action: IDispatchState
     ) => {
-      state.token = action.payload || null
+      state.imageInfo = action.payload || null
       state.isLoading = false
       state.isError = false
     },
-    [forgotPassword.failed]: (
-      state: IForgotPasswordReducerState,
+    [imageVariation.failed]: (
+      state: IImageVariationReducerState,
       action: IDispatchState
     ) => {
-      state.token = null
+      state.imageInfo = null
       state.isLoading = false
       state.isError = true
     },
   },
 })
 
-export default forgotPasswordReducer.reducer
+export default imageVariationReducer.reducer

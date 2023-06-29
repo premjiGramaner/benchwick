@@ -1,11 +1,11 @@
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { IForgotPasswordReducerState, IDispatchState } from '@Interface/index'
-export const forgotPassword: any = createAsyncThunk(
-  'forgotPasswordReducer/forgotPassword',
+import { ISaveEnvisionReducerState, IDispatchState } from '@Interface/index'
+export const saveEnvision: any = createAsyncThunk(
+  'saveEnvisionReducer/saveEnvision',
   async (payload: any = {}) => {
     return new Promise((resolve: any) => {
-      api.forgotPassword
+      api.saveEnvision
         .post(payload)
         .then((response: any) => {
           const { data, error } = response
@@ -22,37 +22,37 @@ export const forgotPassword: any = createAsyncThunk(
   }
 )
 
-export const forgotPasswordReducerInitialState: IForgotPasswordReducerState = {
-  token:  [],
+export const saveEnvisionReducerInitialState: ISaveEnvisionReducerState = {
+  envisionData:  [],
   isError: false,
   isLoading: false,
 }
 
-const forgotPasswordReducer = createSlice({
-  name: 'forgotPasswordReducer',
-  initialState: forgotPasswordReducerInitialState,
+const saveEnvisionReducer = createSlice({
+  name: 'saveEnvisionReducer',
+  initialState: saveEnvisionReducerInitialState,
   reducers: {},
   extraReducers: {
-    [forgotPassword.pending]: (state: IForgotPasswordReducerState) => {
+    [saveEnvision.pending]: (state: ISaveEnvisionReducerState) => {
       state.isLoading = true
     },
-    [forgotPassword.fulfilled]: (
-      state: IForgotPasswordReducerState,
+    [saveEnvision.fulfilled]: (
+      state: ISaveEnvisionReducerState,
       action: IDispatchState
     ) => {
-      state.token = action.payload || null
+      state.envisionData = action.payload || null
       state.isLoading = false
       state.isError = false
     },
-    [forgotPassword.failed]: (
-      state: IForgotPasswordReducerState,
+    [saveEnvision.failed]: (
+      state: ISaveEnvisionReducerState,
       action: IDispatchState
     ) => {
-      state.token = null
+      state.envisionData = null
       state.isLoading = false
       state.isError = true
     },
   },
 })
 
-export default forgotPasswordReducer.reducer
+export default saveEnvisionReducer.reducer

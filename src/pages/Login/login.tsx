@@ -11,48 +11,38 @@ import {
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/loginValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
-import { Cookies } from 'react-cookie'
+// import { Cookies } from 'react-cookie'
 import { useDispatch } from 'react-redux'
-import { login } from 'src/reducers'
+import { login } from '../../reducers/loginReducer'
 const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
-  const cookies = new Cookies()
-  const dispatch = useDispatch()
-  const loginStore = useSelector((state: IReducerState) => state.loginReducer)
+  // const cookies = new Cookies()
+  const { userInfo, isError, statusCode } = useSelector(
+    (state: IReducerState) => state.loginReducer
+  )
   const [rememberMe, setRememberMe] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [invalidUser, setInvalidUser] = useState<boolean>(false)
-  const { userInfo, isError } = loginStore
 
-  // useEffect(() => {
-  //   if (!isError) {
-  //     IS_USER_AUTHENTICATED(true)
-  //     props.navigate(URLS.DASHBOARD)
-  //   }
-  //   else {
-  //     setInvalidUser(!invalidUser)
-  //   }
-  // }, [ isError])
+  useEffect(() => {
+    if (statusCode === 200) {
+      IS_USER_AUTHENTICATED(true)
+      props.navigate(URLS.DASHBOARD)
+    } else {
+      setInvalidUser(!invalidUser)
+    }
+  }, [statusCode])
   const handleLoginSubmit = data => {
     // if (rememberMe === true) {
     //   cookies.set('isRemember', 'true')
     // } else {
     //   cookies.set('isRemember', 'false')
     // }
-    dispatch(
+    props.dispatch(
       login({
         userName: data.user,
         password: data.password,
       })
     )
-    IS_USER_AUTHENTICATED(true)
-    props.navigate(URLS.DASHBOARD)
-    // if (!isError) {
-    //   IS_USER_AUTHENTICATED(true)
-    //   props.navigate(URLS.DASHBOARD)
-    // }
-    // else {
-    //   setInvalidUser(!invalidUser)
-    // }
   }
   const handleSignup = () => {
     props.navigate(URLS.SIGNUP)

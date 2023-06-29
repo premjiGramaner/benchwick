@@ -23,7 +23,7 @@ export const signUp: any = createAsyncThunk(
 )
 
 export const signUpReducerInitialState: ISignUpReducerState = {
-  signupDetails: null,
+  signupDetails:  [],
   isError: false,
   isLoading: false,
 }

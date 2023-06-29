@@ -4,18 +4,27 @@ import SideBarSection from '@Components/SideBarSection/SideBarSection'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS } from '@Utils/constants'
 import close from '@Assets/svg/close.svg'
-import 
-  Download
-from '@Assets/images/Download.png';
+import Download from '@Assets/images/Download.png'
 import { login } from 'src/reducers'
 import { useDispatch } from 'react-redux'
+import { imageVariation } from 'src/reducers/imageVariationReducer'
+import {
+  IImageVariationReducerState,
+  IReducerState,
+} from '@Interface/StoreInterface'
+import { useSelector } from 'react-redux'
+import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
 const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [file, setFile] = useState('')
-  const [range, setRange] = useState(9)
+  const [image, setImage] = useState('')
+  const [range, setRange] = useState('9')
   const [name, setName] = useState('')
   const [modal, setModal] = useState(false)
   const [variationmodal, setvariationModal] = useState(false)
-  const dispatch=useDispatch();
+  const [saveVariationDetails, setsaveVariationDetails] = useState([])
+  const { imageInfo } = useSelector(
+    (state: IReducerState) => state.imageVariationReducer
+  )
   const handleLogout = () => {
     // Do the logout API call and get the success result
     // localStorage.clear()
@@ -25,15 +34,20 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     //     password: "",
     //   })
     // )
-    
+
     props.navigate(URLS.LOGIN)
   }
   const handleViewHistory = e => {
     e.preventDefault()
     props.navigate(URLS.VIEWHISTORY)
   }
+  const envisionUploadHandle = () => {
+    let formData = new FormData()
+    props.dispatch(imageVariation(formData))
+  }
   const handleImage = data => {
-    setFile(data)
+    setFile(URL.createObjectURL(data))
+    setImage(data)
   }
   const handleRange = e => {
     setRange(e.target.value)
@@ -49,31 +63,32 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const handleImageClose = () => {
     setFile('')
   }
-  var selectedVariation = []
+  let selectedVariation = saveVariationDetails
   const handleSelectedVariation = event => {
     var formData
     if (event.target.checked) {
       formData = {
-        image_id: event?.target?.value,
-        checked: true,
+        image_url: event?.target?.name,
+        key: event?.target?.value,
       }
       selectedVariation.push(formData)
     } else {
       selectedVariation = selectedVariation.filter(
-        item => item.image_id !== event?.target?.value
+        item => item.key !== event?.target?.value
       )
     }
+    setsaveVariationDetails(selectedVariation)
   }
-  const handleImagepopup = (e) =>{
+  const handleImagepopup = e => {
     e.preventDefault()
     setvariationModal(!variationmodal)
   }
-  const handleVariationCancel=(e)=>{
+  const handleVariationCancel = e => {
     e.preventDefault()
     setvariationModal(!variationmodal)
   }
-  const handleImageDownload=()=>{
-    var element = document.createElement("a");
+  const handleImageDownload = () => {
+    var element = document.createElement('a')
     //If given url from api we have to use this
     // var imageFile = new Blob(
     //   [
@@ -82,49 +97,20 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     //   { type: "image/*" }
     // );
     // element.href = URL.createObjectURL(file);
-    element.href = file;
-    element.download = "image.png";
-    element.click();
+    element.href = file
+    element.download = 'image.png'
+    element.click()
   }
-
-  const variationdummyData = [
-    {
-      id: 1,
-      image: file,
-    },
-    {
-      id: 2,
-      image: file,
-    },
-    {
-      id: 3,
-      image: file,
-    },
-    {
-      id: 4,
-      image: file,
-    },
-    {
-      id: 5,
-      image: file,
-    },
-    {
-      id: 6,
-      image: file,
-    },
-    {
-      id: 7,
-      image: file,
-    },
-    {
-      id: 8,
-      image: file,
-    },
-    {
-      id: 9,
-      image: file,
-    },
-  ]
+  const handleSaveClick = () => {
+    let formData = new FormData()
+    formData.append('image', image)
+    formData.append('variants', saveVariationDetails.length.toString())
+    formData.append('variantList', saveVariationDetails.toString())
+    formData.append('name', name)
+    props.dispatch(saveEnvision(formData))
+    //success failure close and tost
+    // setModal(!modal)
+  }
 
   return (
     <div className="dashboard-page-main-container">
@@ -134,6 +120,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
           handleViewHistory={handleViewHistory}
           enable={true}
           handleImage={handleImage}
+          envisionUploadHandle={envisionUploadHandle}
         />
         <div className="original-image-container">
           <div>
@@ -178,7 +165,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
               <div></div>
               <div>{range}</div>
             </div>
-            <div className="btn-height pt-5">
+            <div className="btn-height pt-5" onClick={envisionUploadHandle}>
               <a href="#" className="btn btn-gramener">
                 Generate Variations
               </a>
@@ -197,20 +184,21 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
         </div>
         <div className="variation-image-container">
           <div className="variationcontent">
-            {variationdummyData.length > 0 ? (
-              variationdummyData.map(value => {
+            {imageInfo?.data?.data?.info.length > 0 ? (
+              imageInfo?.data?.data?.info.map(value => {
                 return (
                   <div className="variation-image">
                     <div className="circle-style">
                       <input
                         type="checkbox"
-                        value={value.id}
+                        name={value.image_url}
+                        value={value.key}
                         onChange={handleSelectedVariation}
                       />
                     </div>
                     <img
                       className="vimage-style"
-                      src={value.image}
+                      src={value.image_url}
                       alt="original image"
                       onClick={handleImagepopup}
                     />
@@ -284,8 +272,11 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                   </h5>
                 </div>
                 <div className="d-flex">
-                  <div className="fs-12">Number of variation selected:</div>
-                  <div className="fs-12 fw-bold">4</div>
+                  <div className="fs-12">Number of variation selected : </div>
+                  <div className="fs-12 fw-bold">
+                    {' '}
+                    {saveVariationDetails.length}
+                  </div>
                 </div>
               </div>
               <button
@@ -308,7 +299,11 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             </div>
             <div className="footer d-flex justify-content-between">
               <div className="save-button">
-                <button type="button" className="btn btn-gramener">
+                <button
+                  type="button"
+                  className="btn btn-gramener"
+                  onClick={handleSaveClick}
+                >
                   SAVE
                 </button>
               </div>
@@ -327,7 +322,10 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
         </div>
       </div>
 
-      <div className="modal mt-5" style={{ display: variationmodal ? 'block' : 'none' }}>
+      <div
+        className="modal mt-5"
+        style={{ display: variationmodal ? 'block' : 'none' }}
+      >
         <div className="modal-dialog ">
           <div className="variation-modal-container">
             <div className="d-flex justify-content-between">
@@ -337,7 +335,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                     className="modal-title fs-12 fw-bold"
                     id="exampleModalLabel"
                   >
-                   Variation
+                    Variation
                   </h5>
                 </div>
                 <div className="d-flex">
@@ -345,30 +343,29 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                   {/* <div className="fs-12 fw-bold">4</div> */}
                 </div>
               </div>
-              <div >
-              <img
-                    className="download-style"
-                    src={Download}
-                    alt="original image"
+              <div>
+                <img
+                  className="download-style"
+                  src={Download}
+                  alt="original image"
                   onClick={handleImageDownload}
-                  />
-                 <button type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                onClick={handleVariationCancel}
-              ></button></div>
-           
+                />
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  onClick={handleVariationCancel}
+                ></button>
+              </div>
             </div>
             <div className="variation-modal mt-3">
-            <img
-                    className="variation-style"
-                    src={file}
-                    alt="original image"
-                  />
-         
+              <img
+                className="variation-style"
+                src={file}
+                alt="original image"
+              />
             </div>
-        
           </div>
         </div>
       </div>

@@ -149,4 +149,15 @@
   .modal-dialog {
     pointer-events: fill !important;
   }
+  .vimage-style {
+    box-sizing: border-box;
+    height: 34px;
+    width: 34px;
+    border: 1px solid #ffffff;
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5);
+  }
+  .eye-icon {
+    height: 12.55px;
+    width: 19.52px;
+  }
 }
