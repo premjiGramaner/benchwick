@@ -22,9 +22,10 @@ export const imageVariation: any = createAsyncThunk(
   }
 )
 export const imageVariationInitialState: IImageVariationReducerState = {
-  imageInfo:  [],
+  imageInfo: [],
   isError: false,
   isLoading: false,
+  statusCode: null,
 }
 
 const imageVariationReducer = createSlice({
@@ -40,6 +41,7 @@ const imageVariationReducer = createSlice({
       action: IDispatchState
     ) => {
       state.imageInfo = action.payload || null
+      state.statusCode = action?.payload?.data?.statusCode
       state.isLoading = false
       state.isError = false
     },

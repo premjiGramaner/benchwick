@@ -1,6 +1,6 @@
 export interface ISignUpReducerState {
-    signupDetails: any
-    isLoading: boolean
-    isError: boolean
-  }
-  
+  statusCode: null
+  signupDetails: any
+  isLoading: boolean
+  isError: boolean
+}

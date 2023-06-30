@@ -30,6 +30,7 @@ export const getEnvisionVariantsReducerInitialState: IGetEnvisionVariantsReducer
     variantData: [],
     isError: false,
     isLoading: false,
+    statusCode: null,
   }
 
 const getEnvisionVariantsReducer = createSlice({
@@ -46,8 +47,8 @@ const getEnvisionVariantsReducer = createSlice({
       state: IGetEnvisionVariantsReducerState,
       action: IDispatchState
     ) => {
-      // console.log("action?.payload?.data?.data",action?.payload?.data?.data)
       state.variantData = action?.payload?.data?.data?.imageVariant || null
+      state.statusCode = action?.payload?.data?.statusCode
       state.isLoading = false
       state.isError = false
     },

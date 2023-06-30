@@ -26,6 +26,7 @@ export const userHistoryReducerInitialState: IUserHistoryReducerState = {
   data: [],
   isError: false,
   isLoading: false,
+  statusCode: null,
 }
 
 const userHistoryReducer = createSlice({
@@ -40,8 +41,8 @@ const userHistoryReducer = createSlice({
       state: IUserHistoryReducerState,
       action: IDispatchState
     ) => {
-      console.log("action.payload.data",action.payload?.data?.data.imageList)
       state.data = action.payload?.data?.data.imageList || null
+      state.statusCode = action?.payload?.data?.statusCode
       state.isLoading = false
       state.isError = false
     },

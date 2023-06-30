@@ -23,9 +23,10 @@ export const forgotPassword: any = createAsyncThunk(
 )
 
 export const forgotPasswordReducerInitialState: IForgotPasswordReducerState = {
-  token:  [],
+  token: [],
   isError: false,
   isLoading: false,
+  statusCode: null,
 }
 
 const forgotPasswordReducer = createSlice({
@@ -41,6 +42,7 @@ const forgotPasswordReducer = createSlice({
       action: IDispatchState
     ) => {
       state.token = action.payload || null
+      state.statusCode = action?.payload?.data?.statusCode
       state.isLoading = false
       state.isError = false
     },

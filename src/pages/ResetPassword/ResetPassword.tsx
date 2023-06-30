@@ -27,7 +27,6 @@ const ResetPasswordComponent: React.FC<any> = props => {
       console.log('Error decoding JWT token:', error.message)
     }
   }, [])
-  console.log('userId', userId)
   const handlePasswordSubmit = data => {
     dispatch(
       resetPassword({

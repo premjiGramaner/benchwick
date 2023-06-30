@@ -23,7 +23,8 @@ export const signUp: any = createAsyncThunk(
 )
 
 export const signUpReducerInitialState: ISignUpReducerState = {
-  signupDetails:  [],
+  statusCode: null,
+  signupDetails: [],
   isError: false,
   isLoading: false,
 }
@@ -41,6 +42,7 @@ const signUpReducer = createSlice({
       action: IDispatchState
     ) => {
       state.signupDetails = action.payload || null
+      state.statusCode = action?.payload?.data?.statusCode
       state.isLoading = false
       state.isError = false
     },

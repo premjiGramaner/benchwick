@@ -1,6 +1,6 @@
 export interface IForgotPasswordReducerState {
-    token: any
-    isLoading: boolean
-    isError: boolean
-  }
-  
+  token: any
+  isLoading: boolean
+  isError: boolean
+  statusCode: null
+}
