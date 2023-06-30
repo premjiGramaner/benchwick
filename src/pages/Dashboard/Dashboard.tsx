@@ -14,6 +14,7 @@ import {
 } from '@Interface/StoreInterface'
 import { useSelector } from 'react-redux'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
+import toast, { Toaster } from 'react-hot-toast'
 const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [file, setFile] = useState('')
   const [image, setImage] = useState('')
@@ -22,9 +23,24 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [modal, setModal] = useState(false)
   const [variationmodal, setvariationModal] = useState(false)
   const [saveVariationDetails, setsaveVariationDetails] = useState([])
-  const { imageInfo } = useSelector(
+  const { imageInfo, statusCode } = useSelector(
     (state: IReducerState) => state.imageVariationReducer
   )
+  const { envsionStatusCode } = useSelector(
+    (state: IReducerState) => state.saveEnvisionReducer
+  )
+  useEffect(() => {
+    if (statusCode === 200) {
+      toast.success('Image uploaded Successfully!')
+    } else {
+      toast.error('Facing issue while uploading')
+    }
+    if (envsionStatusCode === 200) {
+      toast.success('Variation saved successfully!')
+    } else {
+      toast.error('Facing issue while saving')
+    }
+  }, [statusCode, envsionStatusCode])
   const handleLogout = () => {
     // Do the logout API call and get the success result
     // localStorage.clear()
@@ -256,6 +272,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             )}
           </div>
         </div>
+        <Toaster position="top-right" reverseOrder={false} />
       </div>
 
       <div className="modal" style={{ display: modal ? 'block' : 'none' }}>
@@ -320,6 +337,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             </div>
           </div>
         </div>
+        <Toaster position="top-right" reverseOrder={false} />
       </div>
 
       <div

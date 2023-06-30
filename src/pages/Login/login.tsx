@@ -12,8 +12,8 @@ import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/loginValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
 // import { Cookies } from 'react-cookie'
-import { useDispatch } from 'react-redux'
 import { login } from '../../reducers/loginReducer'
+import toast, { Toaster } from 'react-hot-toast'
 const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
   // const cookies = new Cookies()
   const { userInfo, isError, statusCode } = useSelector(
@@ -21,14 +21,14 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
   )
   const [rememberMe, setRememberMe] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [invalidUser, setInvalidUser] = useState<boolean>(false)
 
   useEffect(() => {
     if (statusCode === 200) {
       IS_USER_AUTHENTICATED(true)
+      toast.success('Successfully logged In!')
       props.navigate(URLS.DASHBOARD)
     } else {
-      setInvalidUser(!invalidUser)
+      toast.error('Kindly check your credentials')
     }
   }, [statusCode])
   const handleLoginSubmit = data => {
@@ -155,13 +155,6 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
                       Login
                     </button>
                   </div>
-                  {/* {
-                    invalidUser ? <p className="form-error">
-                    <i className="fa fa-info-circle"></i>
-                    <span className="error-msg-txt"> Invalid user</span>
-                  </p> : ""
-
-                  } */}
                 </form>
               </div>
               <div>
@@ -179,6 +172,7 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
           </div>
         </div>
       </section>
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   )
 }

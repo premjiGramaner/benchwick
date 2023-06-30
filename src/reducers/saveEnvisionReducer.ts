@@ -23,9 +23,10 @@ export const saveEnvision: any = createAsyncThunk(
 )
 
 export const saveEnvisionReducerInitialState: ISaveEnvisionReducerState = {
-  envisionData:  [],
+  envisionData: [],
   isError: false,
   isLoading: false,
+  envsionStatusCode: null,
 }
 
 const saveEnvisionReducer = createSlice({
@@ -41,6 +42,7 @@ const saveEnvisionReducer = createSlice({
       action: IDispatchState
     ) => {
       state.envisionData = action.payload || null
+      state.envsionStatusCode = action?.payload?.data?.statusCode
       state.isLoading = false
       state.isError = false
     },

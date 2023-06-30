@@ -5,16 +5,20 @@ import {
   IUserHistoryReducerState,
   IGetEnvisionVariantsReducerState,
   IImageVariationReducerState,
-
+  IForgotPasswordReducerState,
+  ISignUpReducerState,
+  ISaveEnvisionReducerState,
 } from './index'
 
 export interface IReducerState {
   coreReducer: ICoreReducerState
   loginReducer: ILoginReducerState
-  userHistoryReducer:IUserHistoryReducerState
-  getEnvisionVariantsReducer:IGetEnvisionVariantsReducerState
-  imageVariationReducer:IImageVariationReducerState
-  
+  userHistoryReducer: IUserHistoryReducerState
+  getEnvisionVariantsReducer: IGetEnvisionVariantsReducerState
+  imageVariationReducer: IImageVariationReducerState
+  forgotPasswordReducer: IForgotPasswordReducerState
+  signUpReducer: ISignUpReducerState
+  saveEnvisionReducer: ISaveEnvisionReducerState
 }
 
 export interface IDispatchState {

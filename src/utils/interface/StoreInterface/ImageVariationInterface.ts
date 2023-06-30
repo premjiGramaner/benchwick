@@ -1,6 +1,6 @@
 export interface IImageVariationReducerState {
-    imageInfo: any
-    isLoading: boolean
-    isError: boolean
-  }
-  
+  imageInfo: any
+  isLoading: boolean
+  isError: boolean
+  statusCode: null
+}

@@ -12,13 +12,15 @@ import schema from '@Utils/schema/signUpValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
 import { useDispatch } from 'react-redux'
 import { signUp } from 'src/reducers/signUpReducer'
+import toast, { Toaster } from 'react-hot-toast'
 const SignupComponent: React.FC<
   IDefaultPageProps & ILoginPageProps
 > = props => {
-  const result = useSelector((state: IReducerState) => state.loginReducer)
+  const { statusCode } = useSelector(
+    (state: IReducerState) => state.signUpReducer
+  )
   const dispatch = useDispatch()
   const handleSignUpSubmit = data => {
-    // IS_USER_AUTHENTICATED(true)
     dispatch(
       signUp({
         email: data.email,
@@ -27,8 +29,15 @@ const SignupComponent: React.FC<
         role: 'admin', // optional - if empty consider as an user
       })
     )
-    props.navigate(URLS.LOGIN)
   }
+  useEffect(() => {
+    if (statusCode === 200) {
+      toast.success('Signed up Successfully!')
+      props.navigate(URLS.LOGIN)
+    } else {
+      toast.error('Kindly check your credentials')
+    }
+  }, [statusCode])
 
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues: { user: '', email: '', password: '', confirmPassword: '' },
@@ -154,6 +163,7 @@ const SignupComponent: React.FC<
           </div>
         </div>
       </section>
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   )
 }

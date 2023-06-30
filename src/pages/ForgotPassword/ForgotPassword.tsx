@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import { URLS } from '@Utils/constants'
 import { useDispatch } from 'react-redux'
+import toast, { Toaster } from 'react-hot-toast'
 import {
   IDefaultPageProps,
   IForgotPasswordProps,
@@ -10,9 +11,21 @@ import {
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/forgotPasswordValidation'
 import { forgotPassword } from 'src/reducers/forgotPasswordReducer'
+import { useSelector } from 'react-redux'
 const ForgotPasswordComponent: React.FC<
   IDefaultPageProps & IForgotPasswordProps
 > = props => {
+  const { statusCode } = useSelector(
+    (state: IReducerState) => state.forgotPasswordReducer
+  )
+  useEffect(() => {
+    if (statusCode === 200) {
+      toast.success('Link sent Successfully,Kindly log In!')
+      props.navigate(URLS.LOGIN)
+    } else {
+      toast.error('Kindly check your recovery email')
+    }
+  }, [statusCode])
   const dispatch = useDispatch()
   const handleLinkSubmit = data => {
     dispatch(
@@ -72,6 +85,7 @@ const ForgotPasswordComponent: React.FC<
           </div>
         </div>
       </section>
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   )
 }
