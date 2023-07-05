@@ -59,6 +59,8 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   }
   const envisionUploadHandle = () => {
     let formData = new FormData()
+    formData.append('image', image)
+    formData.append('variants', range)
     props.dispatch(imageVariation(formData))
   }
   const handleImage = data => {
