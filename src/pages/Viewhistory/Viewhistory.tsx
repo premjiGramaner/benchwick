@@ -259,7 +259,6 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                       <td>{value.created_date}</td>
                       <td>{value.created_time}</td>
                       <td>
-                        {' '}
                         <img
                           className="vimage-style"
                           src={value.original_url}
