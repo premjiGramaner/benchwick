@@ -7,11 +7,13 @@ import close from '@Assets/svg/close.svg'
 import Download from '@Assets/images/Download.png'
 import { imageVariation } from 'src/reducers/imageVariationReducer'
 import {
-  IImageVariationReducerState,
+  IImageVarient,
   IReducerState,
+  IVarientModal,
 } from '@Interface/StoreInterface'
 import { useSelector } from 'react-redux'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
+import { getFileNameFromURL } from "@Utils/utils";
 import toast, { Toaster } from 'react-hot-toast'
 
 const Dashboard: React.FC<IDefaultPageProps> = props => {
@@ -20,27 +22,9 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [range, setRange] = useState('9')
   const [name, setName] = useState('')
   const [modal, setModal] = useState(false)
-  const [variationmodal, setvariationModal] = useState(false)
+  const [variationmodal, setvariationModal] = useState<IVarientModal>({ status: false })
   const [saveVariationDetails, setsaveVariationDetails] = useState([])
-  const { imageInfo, statusCode } = useSelector((state: IReducerState) => state.imageVariationReducer)
-  const { envsionStatusCode } = useSelector((state: IReducerState) => state.saveEnvisionReducer)
-
-  useEffect(() => {
-
-    // if (statusCode === 200) {
-    //   toast.success('Image uploaded Successfully!')
-    // } else {
-    //   toast.error('Facing issue while uploading')
-    // }
-    // if (envsionStatusCode === 200) {
-    //   toast.success('Variation saved successfully!')
-    // } else {
-    //   toast.error('Facing issue while saving')
-    // }
-
-    console.log('useEffect', statusCode, envsionStatusCode)
-
-  }, [statusCode, envsionStatusCode])
+  const { imageInfo } = useSelector((state: IReducerState) => state.imageVariationReducer)
 
   const handleLogout = () => {
     // Do the logout API call and get the success result
@@ -108,41 +92,37 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     setsaveVariationDetails(selectedVariation)
   }
 
-  const handleImagepopup = e => {
-    e.preventDefault()
-    setvariationModal(!variationmodal)
+  const handleImagepopup = ({ index, image_url }: IImageVarient) => {
+    setvariationModal({ status: true, itemIndex: index + 1, imageURL: image_url });
   }
 
   const handleVariationCancel = e => {
     e.preventDefault()
-    setvariationModal(!variationmodal)
+    setvariationModal({ status: false })
   }
 
   const handleImageDownload = () => {
-    var element = document.createElement('a')
-    //If given url from api we have to use this
-    // var imageFile = new Blob(
-    //   [
-    //     "https://timesofindia.indiatimes.com/thumb/msid-70238371,imgsize-89579,width-400,resizemode-4/70238371.jpg"
-    //   ],
-    //   { type: "image/*" }
-    // );
-    // element.href = URL.createObjectURL(file);
-    element.href = file
-    element.download = 'image.png'
-    element.click()
+    fetch(variationmodal?.imageURL)
+      .then(response => response.blob())
+      .then(blob => {
+        const element = document.createElement('a');
+        element.href = URL.createObjectURL(blob);
+        element.download = getFileNameFromURL(variationmodal?.imageURL);
+        document.body.appendChild(element);
+        element.click()
+
+        document.body.removeChild(element);
+      })
   }
 
   const handleSaveClick = () => {
     let formData = new FormData()
     formData.append('image', image)
     formData.append('variants', saveVariationDetails.length.toString())
-    formData.append('variantList', saveVariationDetails.toString())
+    formData.append('variantList', JSON.stringify(saveVariationDetails))
     formData.append('name', name)
     props.dispatch(saveEnvision(formData))
-
-    //success failure close and tost
-    // setModal(!modal)
+    setModal(false);
   }
 
   return (
@@ -229,7 +209,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                       className="vimage-style"
                       src={value.image_url}
                       alt="original image"
-                      onClick={handleImagepopup}
+                      onClick={() => handleImagepopup({ ...value, index })}
                     />
                   </div>
                 )
@@ -356,7 +336,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
       <div
         className="modal mt-5"
-        style={{ display: variationmodal ? 'block' : 'none' }}
+        style={{ display: variationmodal.status ? 'block' : 'none' }}
       >
         <div className="modal-dialog ">
           <div className="variation-modal-container">
@@ -371,8 +351,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                   </h5>
                 </div>
                 <div className="d-flex">
-                  <div className="fs-12">Number 1</div>
-                  {/* <div className="fs-12 fw-bold">4</div> */}
+                  <div className="fs-12">Number {variationmodal?.itemIndex || 0}</div>
                 </div>
               </div>
               <div>
@@ -394,7 +373,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             <div className="variation-modal mt-3">
               <img
                 className="variation-style"
-                src={file}
+                src={variationmodal?.imageURL}
                 alt="original image"
               />
             </div>

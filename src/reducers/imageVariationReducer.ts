@@ -1,6 +1,8 @@
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { IImageVariationReducerState, IDispatchState } from '@Interface/index'
+import toast from 'react-hot-toast'
+
 export const imageVariation: any = createAsyncThunk(
   'imageVariationReducer/imageVariation',
   async (payload: any = {}) => {
@@ -10,17 +12,19 @@ export const imageVariation: any = createAsyncThunk(
         .then((response: any) => {
           const { data, error } = response
           if (!error) {
-            resolve({
-              data: data || null,
-            })
+            toast.success('Image uploaded Successfully!')
+            resolve({ data: data || null })
+          } else {
+            toast.error('Facing issue while uploading')
           }
         })
-        .catch((response: Error) => {
+        .catch(() => {
           resolve({ data: null })
         })
     })
   }
 )
+
 export const imageVariationInitialState: IImageVariationReducerState = {
   imageInfo: [],
   isError: false,
