@@ -14,9 +14,9 @@ const SideBarSection: React.FC<ISideBarInterface> = props => {
         <div className="text-center inner-card-section">
           {/* <img src={file} alt="img" /> */}
           <div className="fs-19">Upload Images</div>
-          <div className="text-center upload-image">
+          <label htmlFor="input-file" className="text-center upload-image">
             <img src={upload} alt="img" />
-          </div>
+          </label>
 
           <div className="card-body">
             <div className="d-flex fs-13 fw-bold align-items-center ">
@@ -39,7 +39,7 @@ const SideBarSection: React.FC<ISideBarInterface> = props => {
 
             <p className="card-text fs-10">Limit 200MB per file | PNG</p>
             <div className="btn-height" onClick={props.envisionUploadHandle}>
-              <a href="#" className="btn btn-gramener">
+              <a href="#" className="btn btn-envision">
                 ENVISION
               </a>
             </div>
@@ -50,8 +50,8 @@ const SideBarSection: React.FC<ISideBarInterface> = props => {
         <button
           className={
             props.enable
-              ? 'btn btn-gramener-border'
-              : 'btn btn-gramener-border opacity'
+              ? 'btn btn-envision-border'
+              : 'btn btn-envision-border opacity'
           }
           onClick={props.handleViewHistory}
           disabled={!props.enable}

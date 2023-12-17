@@ -25,41 +25,37 @@ const RouterComponent: React.FC<IRouterProps> = props => {
   let authRoutes = null
   if (!IS_USER_AUTHENTICATED()) {
     authRoutes = (
-      // <CookiesProvider>
-        <AuthWrapper {...props}>
-          <Routes>
-            {UnAuthMenuList.map(route => {
-              return (
-                <Route
-                  path={route.path}
-                  key={getKey()}
-                  element={<route.component {...props} routeInfo={route} />}
-                />
-              )
-            })}
-          </Routes>
-        </AuthWrapper>
-      // </CookiesProvider>
+      <AuthWrapper {...props}>
+        <Routes>
+          {UnAuthMenuList.map(route => {
+            return (
+              <Route
+                path={route.path}
+                key={getKey()}
+                element={<route.component {...props} routeInfo={route} />}
+              />
+            )
+          })}
+        </Routes>
+      </AuthWrapper>
     )
   }
 
   if (IS_USER_AUTHENTICATED()) {
     authRoutes = (
-      // <CookiesProvider>
-        <AuthWrapper {...props}>
-          <Routes>
-            {AuthMenuList.map(route => {
-              return (
-                <Route
-                  path={route.path}
-                  key={getKey()}
-                  element={<route.component {...props} routeInfo={route} />}
-                />
-              )
-            })}
-          </Routes>
-        </AuthWrapper>
-      //  </CookiesProvider> 
+      <AuthWrapper {...props}>
+        <Routes>
+          {AuthMenuList.map(route => {
+            return (
+              <Route
+                path={route.path}
+                key={getKey()}
+                element={<route.component {...props} routeInfo={route} />}
+              />
+            )
+          })}
+        </Routes>
+      </AuthWrapper>
     )
   }
 
