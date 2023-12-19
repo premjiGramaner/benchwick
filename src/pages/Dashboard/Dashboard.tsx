@@ -5,42 +5,27 @@ import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS } from '@Utils/constants'
 import close from '@Assets/svg/close.svg'
 import Download from '@Assets/images/Download.png'
-import { login } from 'src/reducers'
-import { useDispatch } from 'react-redux'
 import { imageVariation } from 'src/reducers/imageVariationReducer'
 import {
-  IImageVariationReducerState,
+  IImageVarient,
   IReducerState,
+  IVarientModal,
 } from '@Interface/StoreInterface'
 import { useSelector } from 'react-redux'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
+import { getFileNameFromURL } from "@Utils/utils";
 import toast, { Toaster } from 'react-hot-toast'
+
 const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [file, setFile] = useState('')
   const [image, setImage] = useState('')
   const [range, setRange] = useState('9')
   const [name, setName] = useState('')
   const [modal, setModal] = useState(false)
-  const [variationmodal, setvariationModal] = useState(false)
+  const [variationmodal, setvariationModal] = useState<IVarientModal>({ status: false })
   const [saveVariationDetails, setsaveVariationDetails] = useState([])
-  const { imageInfo, statusCode } = useSelector(
-    (state: IReducerState) => state.imageVariationReducer
-  )
-  const { envsionStatusCode } = useSelector(
-    (state: IReducerState) => state.saveEnvisionReducer
-  )
-  useEffect(() => {
-    if (statusCode === 200) {
-      toast.success('Image uploaded Successfully!')
-    } else {
-      toast.error('Facing issue while uploading')
-    }
-    if (envsionStatusCode === 200) {
-      toast.success('Variation saved successfully!')
-    } else {
-      toast.error('Facing issue while saving')
-    }
-  }, [statusCode, envsionStatusCode])
+  const { imageInfo } = useSelector((state: IReducerState) => state.imageVariationReducer)
+
   const handleLogout = () => {
     // Do the logout API call and get the success result
     // localStorage.clear()
@@ -53,35 +38,45 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
     props.navigate(URLS.LOGIN)
   }
+
   const handleViewHistory = e => {
     e.preventDefault()
     props.navigate(URLS.VIEWHISTORY)
   }
+
   const envisionUploadHandle = () => {
-    let formData = new FormData()
-    formData.append('image', image)
-    formData.append('variants', range)
-    props.dispatch(imageVariation(formData))
+    if (!image) {
+      toast.error('Please select an image!');
+    } else {
+      let formData = new FormData()
+      formData.append('image', image)
+      formData.append('variants', range)
+      props.dispatch(imageVariation(formData))
+    }
   }
+
   const handleImage = data => {
     setFile(URL.createObjectURL(data))
     setImage(data)
   }
+
   const handleRange = e => {
     setRange(e.target.value)
   }
+
   const handleSaveSelection = e => {
     e.preventDefault()
     setModal(!modal)
   }
+
   const handleCancel = e => {
     e.preventDefault()
     setModal(!modal)
   }
-  const handleImageClose = () => {
-    setFile('')
-  }
-  let selectedVariation = saveVariationDetails
+
+  const handleImageClose = () => setFile('')
+
+  let selectedVariation = saveVariationDetails;
   const handleSelectedVariation = event => {
     var formData
     if (event.target.checked) {
@@ -91,43 +86,43 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       }
       selectedVariation.push(formData)
     } else {
-      selectedVariation = selectedVariation.filter(
-        item => item.key !== event?.target?.value
-      )
+      selectedVariation = selectedVariation.filter(item => item.key !== event?.target?.value)
     }
+
     setsaveVariationDetails(selectedVariation)
   }
-  const handleImagepopup = e => {
-    e.preventDefault()
-    setvariationModal(!variationmodal)
+
+  const handleImagepopup = ({ index, image_url }: IImageVarient) => {
+    setvariationModal({ status: true, itemIndex: index + 1, imageURL: image_url });
   }
+
   const handleVariationCancel = e => {
     e.preventDefault()
-    setvariationModal(!variationmodal)
+    setvariationModal({ status: false })
   }
+
   const handleImageDownload = () => {
-    var element = document.createElement('a')
-    //If given url from api we have to use this
-    // var imageFile = new Blob(
-    //   [
-    //     "https://timesofindia.indiatimes.com/thumb/msid-70238371,imgsize-89579,width-400,resizemode-4/70238371.jpg"
-    //   ],
-    //   { type: "image/*" }
-    // );
-    // element.href = URL.createObjectURL(file);
-    element.href = file
-    element.download = 'image.png'
-    element.click()
+    fetch(variationmodal?.imageURL)
+      .then(response => response.blob())
+      .then(blob => {
+        const element = document.createElement('a');
+        element.href = URL.createObjectURL(blob);
+        element.download = getFileNameFromURL(variationmodal?.imageURL);
+        document.body.appendChild(element);
+        element.click()
+
+        document.body.removeChild(element);
+      })
   }
+
   const handleSaveClick = () => {
     let formData = new FormData()
     formData.append('image', image)
     formData.append('variants', saveVariationDetails.length.toString())
-    formData.append('variantList', saveVariationDetails.toString())
+    formData.append('variantList', JSON.stringify(saveVariationDetails))
     formData.append('name', name)
     props.dispatch(saveEnvision(formData))
-    //success failure close and tost
-    // setModal(!modal)
+    setModal(false);
   }
 
   return (
@@ -140,7 +135,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
           handleImage={handleImage}
           envisionUploadHandle={envisionUploadHandle}
         />
-        <div className="original-image-container">
+        <div className="original-image-container col-md-2">
           <div>
             <div className="image-holder">
               {file ? (
@@ -167,30 +162,26 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             </div>
             <div className="image-text">Original Image</div>
             <div>
-              <div htmlFor="customRange2" className="variation-text">
-                Number of Variations
+              <div className="variation-text">Number of Variations</div>
+              <div className='variation-section'>
+                <input
+                  type="range"
+                  className="form-range form-control"
+                  min="0"
+                  max="9"
+                  onChange={handleRange}
+                ></input>
+                <div>{range}</div>
               </div>
-              <input
-                type="range"
-                className="form-range form-control"
-                min="0"
-                max="9"
-                id="customRange2"
-                onChange={handleRange}
-              ></input>
-            </div>
-            <div className="d-flex justify-content-between">
-              <div></div>
-              <div>{range}</div>
             </div>
             <div className="btn-height pt-5" onClick={envisionUploadHandle}>
-              <a href="#" className="btn btn-gramener">
+              <a href="#" className="btn btn-envision">
                 Generate Variations
               </a>
             </div>
             <div className="btn-height">
               <button
-                className="btn btn-gramener"
+                className="btn btn-envision"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
                 onClick={handleSaveSelection}
@@ -203,9 +194,9 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
         <div className="variation-image-container">
           <div className="variationcontent">
             {imageInfo?.data?.data?.info.length > 0 ? (
-              imageInfo?.data?.data?.info.map(value => {
+              imageInfo?.data?.data?.info.map((value, index) => {
                 return (
-                  <div className="variation-image">
+                  <div className="variation-image" key={index + value.key}>
                     <div className="circle-style">
                       <input
                         type="checkbox"
@@ -218,7 +209,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                       className="vimage-style"
                       src={value.image_url}
                       alt="original image"
-                      onClick={handleImagepopup}
+                      onClick={() => handleImagepopup({ ...value, index })}
                     />
                   </div>
                 )
@@ -274,21 +265,21 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             )}
           </div>
         </div>
-        <Toaster position="top-right" reverseOrder={false} />
+
       </div>
 
       <div className="modal" style={{ display: modal ? 'block' : 'none' }}>
         <div className="modal-dialog modal-container">
-          <div className="">
+          <div>
             <div className="d-flex justify-content-between">
-              <div className="">
+              <div>
                 <div>
-                  <h5
+                  <h4
                     className="modal-title fs-12 fw-bold"
                     id="exampleModalLabel"
                   >
                     Save Selection
-                  </h5>
+                  </h4>
                 </div>
                 <div className="d-flex">
                   <div className="fs-12">Number of variation selected : </div>
@@ -306,7 +297,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                 onClick={handleCancel}
               ></button>
             </div>
-            <div className="modalbody">
+            <div className="save-varient-modal-body">
               <div className="fs-12">Name</div>
               <input
                 className="name-style"
@@ -320,7 +311,8 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
               <div className="save-button">
                 <button
                   type="button"
-                  className="btn btn-gramener"
+                  disabled={!(saveVariationDetails.length && !!name)}
+                  className="btn btn-envision"
                   onClick={handleSaveClick}
                 >
                   SAVE
@@ -329,7 +321,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
               <div className="save-button">
                 <button
                   type="button"
-                  className="btn btn-gramener-border"
+                  className="btn btn-envision-border"
                   data-bs-dismiss="modal"
                   onClick={handleCancel}
                 >
@@ -344,12 +336,12 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
       <div
         className="modal mt-5"
-        style={{ display: variationmodal ? 'block' : 'none' }}
+        style={{ display: variationmodal.status ? 'block' : 'none' }}
       >
         <div className="modal-dialog ">
           <div className="variation-modal-container">
             <div className="d-flex justify-content-between">
-              <div className="">
+              <div>
                 <div>
                   <h5
                     className="modal-title fs-12 fw-bold"
@@ -359,8 +351,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                   </h5>
                 </div>
                 <div className="d-flex">
-                  <div className="fs-12">Number 1</div>
-                  {/* <div className="fs-12 fw-bold">4</div> */}
+                  <div className="fs-12">Number {variationmodal?.itemIndex || 0}</div>
                 </div>
               </div>
               <div>
@@ -382,13 +373,15 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             <div className="variation-modal mt-3">
               <img
                 className="variation-style"
-                src={file}
+                src={variationmodal?.imageURL}
                 alt="original image"
               />
             </div>
           </div>
         </div>
       </div>
+
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   )
 }

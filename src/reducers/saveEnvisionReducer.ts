@@ -1,6 +1,8 @@
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { ISaveEnvisionReducerState, IDispatchState } from '@Interface/index'
+import { ISaveEnvisionReducerState, IDispatchState } from '@Interface/index';
+import toast from 'react-hot-toast'
+
 export const saveEnvision: any = createAsyncThunk(
   'saveEnvisionReducer/saveEnvision',
   async (payload: any = {}) => {
@@ -10,12 +12,14 @@ export const saveEnvision: any = createAsyncThunk(
         .then((response: any) => {
           const { data, error } = response
           if (!error) {
-            resolve({
-              data: data || null,
-            })
+            toast.success('Variation saved successfully!');
+            resolve({ data: data || null, })
+          } else {
+            toast.error('Facing issue while saving')
+            resolve({ data: null })
           }
         })
-        .catch((response: Error) => {
+        .catch(() => {
           resolve({ data: null })
         })
     })

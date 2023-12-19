@@ -20,3 +20,8 @@ export const guid = (withHyphen: string = '-'): string => {
 export const getKey = (): string => {
     return random().toString(36).slice(3, 13);
 };
+
+
+export const getFileNameFromURL = (url) => {
+    return new URL(url).pathname.split('/').pop();
+}

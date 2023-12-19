@@ -17,7 +17,6 @@ import { useDispatch } from 'react-redux'
 import { userHistory } from 'src/reducers/userHistoryReducer'
 import { useSelector } from 'react-redux'
 import {
-  IGetEnvisionVariantsReducerState,
   IReducerState,
 } from '@Interface/StoreInterface'
 import { getEnvisionVariants } from 'src/reducers/getEnvisionVariantsReducer'
@@ -26,85 +25,45 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const [handlePageCount, setHandlePageCount] = useState<number>(10)
   const [selectedPage, setSelectedPage] = useState<number>(1)
   const [variationmodal, setvariationModal] = useState(false)
-  const { data, isError } = useSelector(
+  const { data = [], isError } = useSelector(
     (state: IReducerState) => state.userHistoryReducer
   )
-  const { variantData } = useSelector(
+  const { variantData = {} } = useSelector(
     (state: IReducerState) => state.getEnvisionVariantsReducer
   )
+
   // useEffect(() => {
   //   props.dispatch(actions.fetchViewhistoryRequested(`page=${selectedPage}`))
   // }, [selectedPage])
+
   const handleLogout = () => {
     // Do the logout API call and get the success result
-    // localStorage.clear()
+    localStorage.clear()
     props.navigate(URLS.LOGIN)
   }
   const handleBackToDashBoard = () => {
     props.navigate(URLS.DASHBOARD)
   }
-  // const paginationRange = Array?.from(
-  //   { length: edgeAppData?.edgeNodeDataList?.next?.totalPages },
-  //   (_, i) => i + 1
-  // )
-  const paginationRange = Array?.from({ length: 10 }, (_, i) => i + 1)
 
-  const onNext = () => {
-    setSelectedPage(selectedPage + 1)
+  const paginationRange = Array?.from({ length: 10 }, (_, i) => i + 1) || []
 
-    // props.dispatch(
-    //   fetchEdgeNodeApp(
-    //     `next.pageSize=${handlePageCount}&next.pageNum=${selectedPage + 1}
-    //     &deviceName=${edgeAppData?.edgeNodeInfo?.title}&projectName=${
-    //       edgeNodeData?.edgeNodeInfo?.title
-    //     }`
-    //   )
-    // )
-  }
+  const onNext = () => setSelectedPage(selectedPage + 1)
+  const onPrevious = () => setSelectedPage(selectedPage - 1)
+  const onFirst = () => setSelectedPage(1)
+  const onLast = () => setSelectedPage(paginationRange.length)
 
-  const onPrevious = () => {
-    setSelectedPage(selectedPage - 1)
-
-    // props.dispatch(
-    //   fetchEdgeNodeApp(
-    //     `next.pageSize=${handlePageCount}&next.pageNum=${selectedPage - 1}
-    //     &deviceName=${edgeAppData?.edgeNodeInfo?.title}&projectName=${
-    //       edgeNodeData?.edgeNodeInfo?.title
-    //     }`
-    //   )
-    // )
-  }
-
-  const onFirst = () => {
-    setSelectedPage(1)
-    // props.dispatch(
-    //   fetchEdgeNodeApp(
-    //     `next.pageSize=${handlePageCount}&next.pageNum=${1}&deviceName=${
-    //       edgeAppData?.edgeNodeInfo?.title
-    //     }
-    //     &projectName=${edgeNodeData?.edgeNodeInfo?.title}`
-    //   )
-    // )
-  }
-
-  const onLast = () => {
-    setSelectedPage(paginationRange.length)
-    // props.dispatch(
-    //   fetchEdgeNodeApp(
-    //     `next.pageSize=${handlePageCount}&next.pageNum=${paginationRange.length}&deviceName=${edgeAppData?.edgeNodeInfo?.title}&projectName=${edgeNodeData?.edgeNodeInfo?.title}`
-    //   )
-    // )
-  }
   const sortHandle = () => {
     console.log('sort is clicked')
   }
+
   const handleViewClick = (value, e) => {
     e.preventDefault()
     setvariationModal(!variationmodal)
     props.dispatch(getEnvisionVariants(value.id))
   }
-  const handleVariationCancel = e => {
-    // e.preventDefault()
+
+  const handleVariationCancel = (e) => {
+    e.preventDefault()
     setvariationModal(!variationmodal)
   }
   const Pagination = () => {
@@ -136,18 +95,10 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
             </li>
             {paginationRange.map((pageNumber: number, index) => {
               return (
-                <li
-                  className={`pagination-number ${
-                    pageNumber === selectedPage && 'selected'
-                  }`}
+                <li className={`pagination-number ${pageNumber === selectedPage && 'selected'}`}
                   key={index}
                   onClick={() => {
                     setSelectedPage(pageNumber)
-                    // props.dispatch(
-                    //   fetchEdgeNodeApp(
-                    //     `next.pageSize=${handlePageCount}&next.pageNum=${pageNumber}&deviceName=${edgeAppData?.edgeNodeInfo?.title}&projectName=${edgeNodeData?.edgeNodeInfo?.title}`
-                    //   )
-                    // )
                   }}
                   aria-hidden="true"
                 >
@@ -157,9 +108,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
             })}
             <li
               onClick={onNext}
-              className={`${
-                selectedPage === paginationRange.length && 'pe-none'
-              }`}
+              className={`${selectedPage === paginationRange.length && 'pe-none'}`}
               aria-hidden="true"
             >
               <img
@@ -169,9 +118,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               />
             </li>
             <li
-              className={`pagination-item ${
-                selectedPage === paginationRange.length && 'pe-none'
-              }`}
+              className={`pagination-item ${selectedPage === paginationRange.length && 'pe-none'}`}
               onClick={onLast}
               aria-hidden="true"
             >
@@ -187,16 +134,6 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
             className="page-count mx-3"
             onBlur={event => {
               if (event.target.value !== '') {
-                // props.dispatch(
-                //   fetchEdgeNodeApp(
-                //     `next.pageSize=${parseInt(
-                //       event.target.value
-                //     )}&next.pageNum=1&deviceName=${
-                //       edgeAppData?.edgeNodeInfo?.title
-                //     }
-                //     &projectName=${edgeNodeData?.edgeNodeInfo?.title}`
-                //   )
-                // )
                 setHandlePageCount(parseInt(event.target.value))
                 setSelectedPage(1)
               }
@@ -207,9 +144,11 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
       </div>
     )
   }
+
   useEffect(() => {
     props.dispatch(userHistory())
   }, [])
+
   return (
     <div className="viewhistory-page-main-container">
       <HeaderSection handleLogout={handleLogout} />
@@ -224,7 +163,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               <SearchBox
                 {...props}
                 icon="fa fa-search"
-                handleChange={e => setSearchInput(e.target.value)}
+                handleChange={(e) => setSearchInput(e.target.value)}
               />
             </div>
           </div>
@@ -251,30 +190,31 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                   <th scope="col">Action</th>
                 </tr>
               </thead>
-              {data.map(value => {
-                return (
-                  <tbody>
-                    <tr className="body-style">
-                      <td>{value.name}</td>
-                      <td>{value.created_date}</td>
-                      <td>{value.created_time}</td>
-                      <td>
-                        <img
-                          className="vimage-style"
-                          src={value.original_url}
-                          alt="original image"
-                        />
-                      </td>
+              <tbody>
+                {data?.map((value, index) => (
+                  <tr key={index} className="body-style">
+                    <td>{value.name}</td>
+                    <td>{value.created_date}</td>
+                    <td>{value.created_time}</td>
+                    <td>
+                      <img
+                        className="vimage-style"
+                        src={value.original_url}
+                        alt="original image"
+                      />
+                    </td>
 
-                      <td>{value.variants}</td>
-                      <td onClick={e => handleViewClick(value, e)}>
-                        <img className="eye-icon" src={icon} alt="eye image" />
-                      </td>
-                      <td>Action</td>
-                    </tr>
-                  </tbody>
-                )
-              })}
+                    <td>{value.variants}</td>
+                    <td onClick={e => handleViewClick(value, e)} className="pointer">
+                      <img className="eye-icon" src={icon} alt="eye image" />
+                    </td>
+                    <td>Action</td>
+                  </tr>
+                ))}
+                {!data && (<tr className="body-style">
+                  <td colSpan={7} className='no-data-found'>No Data available</td>
+                </tr>)}
+              </tbody>
             </table>
           </div>
           <div className="pb-5">
@@ -286,21 +226,18 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
         className="modal mt-5"
         style={{ display: variationmodal ? 'block' : 'none' }}
       >
-        <div className="modal-dialog ">
+        <div className="modal-dialog">
           <div className="variation-modal-container">
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between" id="varient-modal-label">
               <div className="">
                 <div>
-                  <h5
-                    className="modal-title fs-12 fw-bold"
-                    id="exampleModalLabel"
-                  >
-                    <u>SelectionName : {variantData.name}</u>
-                  </h5>
+                  <h4 className="modal-title fs-12 fw-bold">
+                    <u>SelectionName : {variantData?.name}</u>
+                  </h4>
                 </div>
-                <div className="d-flex">
+                <div className="d-flex f14">
                   <div className="fs-12">Number of variations :</div>
-                  <div className="fs-12 fw-bold">{variantData.variants}</div>
+                  <div className="fs-12 fw-bold">{variantData?.variants}</div>
                 </div>
               </div>
               <div>
@@ -315,19 +252,16 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
             </div>
 
             <div className="variation-modal mt-3">
-              {variantData?.variant_list &&
-                variantData?.variant_list.map(value => {
-                  return (
-                    <div>
-                      <img
-                        className="variation-style"
-                        src={value.image_url}
-                        alt="original image"
-                      />
-                    </div>
-                  )
-                })}
-              ,
+              {variantData?.variant_list?.length &&
+                variantData?.variant_list?.map((value) => (
+                  <div key={value.id + value.name}>
+                    <img
+                      className="variation-style"
+                      src={value.image_url}
+                      alt="original image"
+                    />
+                  </div>
+                ))}
             </div>
           </div>
         </div>

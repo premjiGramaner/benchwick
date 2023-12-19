@@ -1,7 +1,7 @@
 {
   "name": "benchwick-server",
   "version": "0.0.1",
-  "description": "RAA Server",
+  "description": "Benchwick API Service",
   "main": "app.js",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",

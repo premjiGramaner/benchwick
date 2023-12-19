@@ -9,3 +9,4 @@ export * from './ImageVariationInterface';
 export * from './SaveEnvisionInterface';
 export * from './GetEnvisionVariantsInterface';
 export * from './UserHistoryInterface';
+export * from './DashboardInterface';

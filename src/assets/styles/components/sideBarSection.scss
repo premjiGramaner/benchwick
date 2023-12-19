@@ -2,10 +2,13 @@
   padding: 40px 42px !important;
   background-color: $sidebar-bg;
   box-shadow: 0 1px 4px 0 $card-bx-shadow;
+
   .upload-image {
     padding-top: 14px;
+    cursor: pointer;
   }
-  .btn-gramener {
+
+  .btn-envision {
     background-color: $defaultTextColor !important;
     border-radius: 15px !important;
     color: $white !important;
@@ -13,7 +16,8 @@
     padding: 8px 10px !important;
     text-transform: uppercase;
   }
-  .btn-gramener-border {
+
+  .btn-envision-border {
     box-sizing: border-box;
     height: 36px;
     border: 2px solid $defaultTextColor !important;
@@ -28,6 +32,7 @@
     font-weight: bold;
     text-align: center;
   }
+
   .card-section {
     height: 286px;
     border-radius: 8px;
@@ -35,37 +40,45 @@
     box-shadow: 0 1px 4px 0 $card-bx-shadow;
     padding: 34px 34px !important;
   }
+
   .inner-card-section {
     height: 221px;
     width: 187px;
   }
+
   .fs-10 {
     opacity: 0.5;
     font-family: $font-family;
     font-size: 10px;
     text-align: center !important;
   }
+
   .fs-13 {
     font-family: $font-family;
     font-size: 13px;
     font-weight: 600;
     text-align: center !important;
   }
+
   .fs-19 {
     font-family: $font-family;
     font-size: 19px;
     font-weight: 600;
     text-align: center !important;
   }
+
   .btn-height {
     padding-top: 10px;
   }
+
   .view-history {
     padding-top: 40px;
   }
+
   .opacity {
     opacity: 0.2;
   }
+
   .upload-text {
     text-decoration: underline;
     color: $defaultTextColor !important;
