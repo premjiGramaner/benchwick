@@ -12,7 +12,7 @@ import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/loginValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
 // import { Cookies } from 'react-cookie'
-import { login } from '../../reducers/loginReducer'
+import { login, logout } from '../../reducers/loginReducer'
 import toast, { Toaster } from 'react-hot-toast'
 const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
   // const cookies = new Cookies()
@@ -24,20 +24,12 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
 
   useEffect(() => {
     if (statusCode === 200) {
-      IS_USER_AUTHENTICATED(true)
       toast.success('Successfully logged In!')
-      props.navigate(URLS.DASHBOARD)
-    } else {
-      toast.error('Kindly check your credentials')
     }
   }, [statusCode])
-  const handleLoginSubmit = data => {
-    // if (rememberMe === true) {
-    //   cookies.set('isRemember', 'true')
-    // } else {
-    //   cookies.set('isRemember', 'false')
-    // }
-    props.dispatch(
+  const handleLoginSubmit = async data => {
+    props.dispatch(logout({}))
+    await props.dispatch(
       login({
         userName: data.user,
         password: data.password,
@@ -59,8 +51,8 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
     validationSchema: schema,
     validateOnChange: true,
     validateOnBlur: false,
-    onSubmit: values => {
-      handleLoginSubmit(values)
+    onSubmit: async values => {
+      await handleLoginSubmit(values)
     },
   })
   return (
