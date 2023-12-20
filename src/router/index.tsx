@@ -11,6 +11,7 @@ import { getKey } from '@Utils/utils'
 
 import AuthMenuList from './authMenuList'
 import UnAuthMenuList from './unAuthMenuList'
+import HeaderSection from '@Components/HeaderSection/HeaderSection'
 
 const RouterComponent: React.FC<IRouterProps> = props => {
   // const cookies = new Cookies()
@@ -44,6 +45,7 @@ const RouterComponent: React.FC<IRouterProps> = props => {
   if (IS_USER_AUTHENTICATED()) {
     authRoutes = (
       <AuthWrapper {...props}>
+        <HeaderSection />
         <Routes>
           {AuthMenuList.map(route => {
             return (

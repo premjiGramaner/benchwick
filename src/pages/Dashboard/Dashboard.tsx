@@ -13,7 +13,7 @@ import {
 } from '@Interface/StoreInterface'
 import { useSelector } from 'react-redux'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
-import { getFileNameFromURL } from "@Utils/utils";
+import { getFileNameFromURL } from '@Utils/utils'
 import toast, { Toaster } from 'react-hot-toast'
 
 const Dashboard: React.FC<IDefaultPageProps> = props => {
@@ -22,9 +22,13 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [range, setRange] = useState('9')
   const [name, setName] = useState('')
   const [modal, setModal] = useState(false)
-  const [variationmodal, setvariationModal] = useState<IVarientModal>({ status: false })
+  const [variationmodal, setvariationModal] = useState<IVarientModal>({
+    status: false,
+  })
   const [saveVariationDetails, setsaveVariationDetails] = useState([])
-  const { imageInfo } = useSelector((state: IReducerState) => state.imageVariationReducer)
+  const { imageInfo } = useSelector(
+    (state: IReducerState) => state.imageVariationReducer
+  )
 
   const handleLogout = () => {
     // Do the logout API call and get the success result
@@ -46,7 +50,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
   const envisionUploadHandle = () => {
     if (!image) {
-      toast.error('Please select an image!');
+      toast.error('Please select an image!')
     } else {
       let formData = new FormData()
       formData.append('image', image)
@@ -76,7 +80,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
   const handleImageClose = () => setFile('')
 
-  let selectedVariation = saveVariationDetails;
+  let selectedVariation = saveVariationDetails
   const handleSelectedVariation = event => {
     var formData
     if (event.target.checked) {
@@ -86,14 +90,20 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       }
       selectedVariation.push(formData)
     } else {
-      selectedVariation = selectedVariation.filter(item => item.key !== event?.target?.value)
+      selectedVariation = selectedVariation.filter(
+        item => item.key !== event?.target?.value
+      )
     }
 
     setsaveVariationDetails(selectedVariation)
   }
 
   const handleImagepopup = ({ index, image_url }: IImageVarient) => {
-    setvariationModal({ status: true, itemIndex: index + 1, imageURL: image_url });
+    setvariationModal({
+      status: true,
+      itemIndex: index + 1,
+      imageURL: image_url,
+    })
   }
 
   const handleVariationCancel = e => {
@@ -105,13 +115,13 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     fetch(variationmodal?.imageURL)
       .then(response => response.blob())
       .then(blob => {
-        const element = document.createElement('a');
-        element.href = URL.createObjectURL(blob);
-        element.download = getFileNameFromURL(variationmodal?.imageURL);
-        document.body.appendChild(element);
+        const element = document.createElement('a')
+        element.href = URL.createObjectURL(blob)
+        element.download = getFileNameFromURL(variationmodal?.imageURL)
+        document.body.appendChild(element)
         element.click()
 
-        document.body.removeChild(element);
+        document.body.removeChild(element)
       })
   }
 
@@ -122,12 +132,11 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     formData.append('variantList', JSON.stringify(saveVariationDetails))
     formData.append('name', name)
     props.dispatch(saveEnvision(formData))
-    setModal(false);
+    setModal(false)
   }
 
   return (
     <div className="dashboard-page-main-container">
-      <HeaderSection handleLogout={handleLogout} />
       <div className="d-flex">
         <SideBarSection
           handleViewHistory={handleViewHistory}
@@ -163,7 +172,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             <div className="image-text">Original Image</div>
             <div>
               <div className="variation-text">Number of Variations</div>
-              <div className='variation-section'>
+              <div className="variation-section">
                 <input
                   type="range"
                   className="form-range form-control"
@@ -265,7 +274,6 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             )}
           </div>
         </div>
-
       </div>
 
       <div className="modal" style={{ display: modal ? 'block' : 'none' }}>
@@ -351,7 +359,9 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                   </h5>
                 </div>
                 <div className="d-flex">
-                  <div className="fs-12">Number {variationmodal?.itemIndex || 0}</div>
+                  <div className="fs-12">
+                    Number {variationmodal?.itemIndex || 0}
+                  </div>
                 </div>
               </div>
               <div>

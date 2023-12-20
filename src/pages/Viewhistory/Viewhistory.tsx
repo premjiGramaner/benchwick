@@ -16,9 +16,7 @@ import icon from '../../assets/svg/fa-eye.svg'
 import { useDispatch } from 'react-redux'
 import { userHistory } from 'src/reducers/userHistoryReducer'
 import { useSelector } from 'react-redux'
-import {
-  IReducerState,
-} from '@Interface/StoreInterface'
+import { IReducerState } from '@Interface/StoreInterface'
 import { getEnvisionVariants } from 'src/reducers/getEnvisionVariantsReducer'
 const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const [searchInput, setSearchInput] = useState<string>('')
@@ -62,7 +60,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
     props.dispatch(getEnvisionVariants(value.id))
   }
 
-  const handleVariationCancel = (e) => {
+  const handleVariationCancel = e => {
     e.preventDefault()
     setvariationModal(!variationmodal)
   }
@@ -95,7 +93,10 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
             </li>
             {paginationRange.map((pageNumber: number, index) => {
               return (
-                <li className={`pagination-number ${pageNumber === selectedPage && 'selected'}`}
+                <li
+                  className={`pagination-number ${
+                    pageNumber === selectedPage && 'selected'
+                  }`}
                   key={index}
                   onClick={() => {
                     setSelectedPage(pageNumber)
@@ -108,7 +109,9 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
             })}
             <li
               onClick={onNext}
-              className={`${selectedPage === paginationRange.length && 'pe-none'}`}
+              className={`${
+                selectedPage === paginationRange.length && 'pe-none'
+              }`}
               aria-hidden="true"
             >
               <img
@@ -118,7 +121,9 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               />
             </li>
             <li
-              className={`pagination-item ${selectedPage === paginationRange.length && 'pe-none'}`}
+              className={`pagination-item ${
+                selectedPage === paginationRange.length && 'pe-none'
+              }`}
               onClick={onLast}
               aria-hidden="true"
             >
@@ -151,7 +156,6 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
 
   return (
     <div className="viewhistory-page-main-container">
-      <HeaderSection handleLogout={handleLogout} />
       <div className="d-flex">
         <SideBarSection enable={false} />
         <div className="history-table-container">
@@ -163,7 +167,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               <SearchBox
                 {...props}
                 icon="fa fa-search"
-                handleChange={(e) => setSearchInput(e.target.value)}
+                handleChange={e => setSearchInput(e.target.value)}
               />
             </div>
           </div>
@@ -205,15 +209,22 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     </td>
 
                     <td>{value.variants}</td>
-                    <td onClick={e => handleViewClick(value, e)} className="pointer">
+                    <td
+                      onClick={e => handleViewClick(value, e)}
+                      className="pointer"
+                    >
                       <img className="eye-icon" src={icon} alt="eye image" />
                     </td>
                     <td>Action</td>
                   </tr>
                 ))}
-                {!data && (<tr className="body-style">
-                  <td colSpan={7} className='no-data-found'>No Data available</td>
-                </tr>)}
+                {!data && (
+                  <tr className="body-style">
+                    <td colSpan={7} className="no-data-found">
+                      No Data available
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -228,7 +239,10 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
       >
         <div className="modal-dialog">
           <div className="variation-modal-container">
-            <div className="d-flex justify-content-between" id="varient-modal-label">
+            <div
+              className="d-flex justify-content-between"
+              id="varient-modal-label"
+            >
               <div className="">
                 <div>
                   <h4 className="modal-title fs-12 fw-bold">
@@ -253,7 +267,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
 
             <div className="variation-modal mt-3">
               {variantData?.variant_list?.length &&
-                variantData?.variant_list?.map((value) => (
+                variantData?.variant_list?.map(value => (
                   <div key={value.id + value.name}>
                     <img
                       className="variation-style"

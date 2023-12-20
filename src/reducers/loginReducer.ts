@@ -1,29 +1,32 @@
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ILoginReducerState, IDispatchState } from '@Interface/index'
-import { getAuthToken } from '@Utils/storage'
+import { IS_USER_AUTHENTICATED, getAuthToken } from '@Utils/storage'
+import { URLS } from '@Utils/constants'
+import toast from 'react-hot-toast'
 
 export const login: any = createAsyncThunk(
   'loginReducer/login',
-  async (payload: any = {}) => {
-    return new Promise((resolve: any) => {
-      api.login
-        .post(payload)
-        .then((response: any) => {
-          const { data, error } = response
-          if (!error) {
-            getAuthToken(data?.data?.user_token)
-            resolve({
-              data: data || null,
-            })
-          }
-        })
-        .catch((response: Error) => {
-          resolve({ data: null })
-        })
-    })
+  async (payload: any = {}, { rejectWithValue }) => {
+    try {
+      const response: any = await api.login.post(payload)
+      const { data, error } = response
+      if (!error) {
+        getAuthToken(data?.data?.user_token)
+        return { data }
+      } else {
+        return rejectWithValue(data)
+      }
+    } catch (error) {
+      return rejectWithValue(error)
+    }
   }
 )
+export const logout: any = createAsyncThunk('loginReducer/logout', async () => {
+  return new Promise((resolve: any) => {
+    resolve({})
+  })
+})
 export const loginReducerInitialState: ILoginReducerState = {
   userInfo: [],
   isError: false,
@@ -44,11 +47,23 @@ const loginReducer = createSlice({
       state.statusCode = action?.payload?.data?.statusCode
       state.isLoading = false
       state.isError = false
+      if (action?.payload?.data?.statusCode === 200) {
+        setTimeout(() => {
+          window.location.href = URLS.DASHBOARD
+          IS_USER_AUTHENTICATED(true)
+        }, 1000)
+      }
     },
-    [login.failed]: (state: ILoginReducerState, action: IDispatchState) => {
+    [login.rejected]: (state: ILoginReducerState, action: IDispatchState) => {
       state.userInfo = null
       state.isLoading = false
       state.isError = true
+      state.statusCode = action?.payload?.response?.status
+      toast.error('Kindly check your credentials')
+    },
+    [logout.fulfilled]: (state: ILoginReducerState) => {
+      state.userInfo = null
+      state.statusCode = null
     },
   },
 })
