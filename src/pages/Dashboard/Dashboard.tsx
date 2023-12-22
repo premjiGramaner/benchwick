@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import HeaderSection from '@Components/HeaderSection/HeaderSection'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
-import { URLS } from '@Utils/constants'
+import { URLS, API_URL } from '@Utils/constants'
 import close from '@Assets/svg/close.svg'
 import Download from '@Assets/images/Download.png'
 import { imageVariation } from 'src/reducers/imageVariationReducer'
@@ -216,7 +216,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                     </div>
                     <img
                       className="vimage-style"
-                      src={value.image_url}
+                      src={`${API_URL.host}/${value.image_url}`}
                       alt="original image"
                       onClick={() => handleImagepopup({ ...value, index })}
                     />
@@ -383,7 +383,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
             <div className="variation-modal mt-3">
               <img
                 className="variation-style"
-                src={variationmodal?.imageURL}
+                src={`${API_URL.host}/${variationmodal?.imageURL}`}
                 alt="original image"
               />
             </div>

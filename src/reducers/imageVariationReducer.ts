@@ -10,6 +10,7 @@ export const imageVariation: any = createAsyncThunk(
       api.imageEnvision
         .post(payload)
         .then((response: any) => {
+          console.log('*** response', response)
           const { data, error } = response
           if (!error) {
             toast.success('Image uploaded Successfully!')
@@ -18,8 +19,14 @@ export const imageVariation: any = createAsyncThunk(
             toast.error('Facing issue while uploading')
           }
         })
-        .catch(() => {
-          resolve({ data: null })
+        .catch(({ response }) => {
+          if (response.status === 501 && response.data) {
+            const { data: { error: { message } } } = response.data || { data: { data: { error: { message: 'Please try again with different format.' } } } };
+            toast.error(message);
+            resolve({ data: null })
+          } else {
+            resolve({ data: null })
+          }
         })
     })
   }

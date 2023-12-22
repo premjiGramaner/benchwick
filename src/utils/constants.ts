@@ -1,5 +1,6 @@
 export const API_URL = {
-  baseURL: 'http://localhost:5001/api',
+  host: 'http://localhost:5001',
+  baseURL: `http://localhost:5001/api`,
 }
 
 export const STORAGE_KEY = {
@@ -16,5 +17,5 @@ export const enum URLS {
   VIEWHISTORY = '/viewhistory',
   SIGNUP = '/signup',
   FORGOTPASSWORD = '/forgotpassword',
-  RESETPASSWORD='/resetPassword',
+  RESETPASSWORD = '/resetPassword',
 }

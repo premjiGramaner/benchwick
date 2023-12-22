@@ -1,41 +1,72 @@
-const { Images } = require("../models");
+const { Images } = require("../models"), axios = require('axios'), FormData = require('form-data');
 const moment = require('moment');
 const fs = require('fs');
-const { getDatesObj, response, errorLogger } = require('../helper/utils');
-const { imageList } = require("../helper/mockList");
+const { getDatesObj, response, errorLogger, validatePath, formatImageCollection, getTypeFromURL } = require('../helper/utils');
+
+const imgPath = 'resources/', tmp_path = 'varients-generated/';
 
 
 const imageEnvision = async (req, res, next) => {
     try {
         const { variants } = req.body;
         const { image } = req.files;
-        console.log('Save Envision', image, variants);
-
+        const { tokenInfo } = res.locals || {};
         if (!image) return res.sendStatus(400);
         if (!(/^image/.test(image.mimetype))) return res.status(400).send({ data: { info: null }, message: 'Image is Invalid!' })
 
-        // Move the uploaded image to our upload folder
-        image.mv(__dirname + '/upload/' + image.name);
+        const path = await validatePath(tmp_path + (tokenInfo.user_info || { uuid: 'default_001' }).uuid + '/');
+        const imageName = (`default_image${getTypeFromURL(image.name)}`)
+        // Move the original image to our temp folder
+        image.mv(path + imageName);
 
-        /* Mock list  */
-        const finalImageList = [];
-        imageList.forEach((element, index) => {
-            if (index < variants) {
-                finalImageList.push(element);
+        const formData = new FormData();
+        formData.append('file', fs.createReadStream(path + imageName), imageName)
+
+        console.log('** formData', formData, imageName, path + imageName)
+        let finalImageList = [], isError = false;
+        const headers = {
+            headers: {
+                'accept': 'application/json',
+                'Accept-Language': 'en-US,en;q=0.8',
+                'Content-Type': `multipart/form-data`,
             }
-        });
+        };
 
-        response({
-            res,
-            code: 200,
-            data: { info: finalImageList, variants: variants },
-            message: 'Image variations generated successfully!'
-        })
+        axios.post(`http://localhost:8000/regenerate_images/?num_images=${variants}&use_sd=true`, formData, headers)
+            .then((response) => finalImageList.push(...(response.data || [])))
+            .catch(function (error) {
+                // handle error
+                console.log('********')
+                console.log('image/imageEnvision:42', error.response)
+                console.log('********')
+                isError = { message: error.response.data.detail, code: error.response.status };
+            }).finally(function () {
+                if (isError) {
+                    response({
+                        res,
+                        code: 501,
+                        data: { info: [], variants: variants, error: isError },
+                        message: 'Image variations generate Failed!'
+                    })
+                } else {
+                    formatImageCollection(finalImageList, imageName, path).then((finalList) => {
+                        response({
+                            res,
+                            code: 200,
+                            data: { info: finalList, variants: variants },
+                            message: 'Image variations generated successfully!'
+                        })
+                    });
+                }
+            });
     } catch (e) {
+        console.log('e', e)
         errorLogger(next, 'image/imageEnvision', e)
     }
 };
 
+
+// store the selected files into server
 const saveEnvision = async (req, res, next) => {
     const { name, variants, variantList } = req.body;
     const { image } = req.files;
