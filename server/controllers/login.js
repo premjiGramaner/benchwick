@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET_KEY } = require('../global_keys')
 
 const { User } = require("../models");
-const { encryptPassword, validatePassword, response, getDatesObj, errorLogger, sendEmail } = require('../helper/utils')
+const { encryptPassword, validatePassword, response, getDatesObj, errorLogger, sendEmail, uuid } = require('../helper/utils')
 
 const login = async (req, res, next) => {
     const { userName, password } = req.body;
@@ -15,11 +15,13 @@ const login = async (req, res, next) => {
             response({ res, code: 400, data: { userInfo: null }, message: 'Password is Invalid!' })
         } else {
             const userData = await User.getUserByUserEmail(userName)
+            console.log('**', userData.dataValues)
             if (userData?.dataValues) {
                 const isUserValid = await validatePassword(password, userData.dataValues.password)
                 if (isUserValid) {
                     const user_info = {
                         id: userData.dataValues.id,
+                        uuid: userData.dataValues.identifier,
                         name: userData.dataValues.name,
                         email: userData.dataValues.email,
                         role: userData.dataValues.role
@@ -55,6 +57,7 @@ const signUp = async (req, res, next) => {
                 const userObj = {
                     email: email,
                     name: name,
+                    identifier: uuid(),
                     password: encPass,
                     role: role || 'user',
                     ...(getDatesObj() || {})

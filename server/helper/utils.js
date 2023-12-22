@@ -1,9 +1,30 @@
+const fs = require("fs"), crypto = require('crypto');
+
 /* Password section */
 const bcrypt = require("bcrypt")
+
 const moment = require('moment');
 const nodemailer = require('nodemailer');
 const { HASH_SALT_ROUND, DEBUGGER_MODE } = require('../global_keys')
 const { template } = require('./email_template');
+
+const random = () => {
+    const array = new Uint32Array(1);
+    if (crypto?.getRandomValues) crypto?.getRandomValues(array); // Compliant for security-sensitive use cases
+    return (!!array.length) ? Number('0.' + array[0]) : 0.1;
+};
+
+const uuid = (hyphen = '-') => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[-]/g, hyphen).replace(/[xy]/g, (c) => {
+        const r = random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+const getKey = () => {
+    return random().toString(36).slice(3, 13);
+};
+
 
 const encryptPassword = (password) => {
     return new Promise((resolve, reject) => {
@@ -56,7 +77,7 @@ const errorLogger = (next, path, error, isDebug) => {
         console.log('')
     }
 
-    return next(error)
+    return next ? next(error) : null;
 }
 
 const getCircularReplacer = () => {
@@ -72,6 +93,18 @@ const getCircularReplacer = () => {
     };
 };
 
+const uuid_key = (length = 6) => {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
+    }
+
+    return result;
+}
 
 const convertCircular = (data) => {
     return JSON.stringify(data, getCircularReplacer())
@@ -112,19 +145,6 @@ const sendEmail = (sendTo, token) => {
     })
 }
 
-const uuid_key = (length = 6) => {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        counter += 1;
-    }
-
-    return result;
-}
-
 const getDatesObj = () => {
     return ({
         created_on: moment().format(),
@@ -132,14 +152,73 @@ const getDatesObj = () => {
     })
 }
 
+const validatePath = async (path) => {
+    const valida_path = await new Promise((resolve) => {
+        fs.access(path, (error) => {
+            if (error) {
+                fs.mkdir(path, { recursive: true }, (e) => {
+                    if (e) {
+                        errorLogger(null, 'utils/validatePath', e)
+                        resolve(false)
+                    } else {
+                        resolve(path);
+                    }
+                });
+            } else resolve(path);
+        });
+    });
+
+    return valida_path;
+}
+
+const getFileNameFromURL = (url) => {
+    return new URL(url).pathname.split('/').pop();
+}
+
+const getTypeFromURL = (url) => {
+    return (/(?:\.([^.]+))?$/).exec(url)[0];
+}
+
+const base64ToFile = (image, filename) => {
+    require("fs").writeFile(filename, image, 'base64', function (err) {
+        console.log('Is base64ToFile error:', err);
+    });
+}
+
+const formatImageCollection = (imageList = [], base_file_name, path) => {
+    const finalList = [];
+    return new Promise((resolve) => {
+        try {
+            imageList.forEach(async (image, index) => {
+                const file_name = `${path}0${(index + 1) + '_' + getTypeFromURL(base_file_name)}`
+                await base64ToFile(image, file_name);
+                finalList.push({
+                    image_url: file_name,
+                    key: uuid_key()
+                })
+            });
+
+            resolve(finalList)
+        } catch (error) {
+            resolve([]);
+        }
+
+    })
+}
+
 module.exports = {
     encryptPassword,
+    getFileNameFromURL,
+    uuid,
+    getTypeFromURL,
+    getKey,
     convertCircular,
     errorLogger,
     validatePassword,
     errorHandler,
     sendEmail,
-    uuid_key,
     getDatesObj,
+    validatePath,
+    formatImageCollection,
     response
 };
