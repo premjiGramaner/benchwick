@@ -1,11 +1,9 @@
-import { useSelector } from 'react-redux'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import { URLS } from '@Utils/constants'
 import {
   IDefaultPageProps,
   ILoginPageProps,
-  IReducerState,
 } from '@Utils/interface'
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/signUpValidation'
@@ -18,7 +16,8 @@ import toast, { Toaster } from 'react-hot-toast'
 const SignupComponent: React.FC<
   IDefaultPageProps & ILoginPageProps
 > = props => {
-  const { statusCode } = useSelector((state: IReducerState) => state.signUpReducer)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues: { user: '', email: '', password: '', confirmPassword: '' },
     validationSchema: schema,
@@ -30,26 +29,27 @@ const SignupComponent: React.FC<
   })
 
   const dispatch = useDispatch();
-  const handleSignUpSubmit = data => {
+  const handleSignUpSubmit = (data) => {
     dispatch(
       signUp({
-        email: data.email,
-        name: data.user,
-        password: data.password,
-        role: 'admin', // optional - if empty consider as an user
+        body: {
+          email: data.email,
+          name: data.user,
+          password: data.password,
+          role: 'admin', // optional - if empty consider as an user
+        },
+        navigation: props.navigate
       })
     )
   };
 
   const isFormValid = () => {
-    return (values.user && values.user && (values.password && values.confirmPassword))
+    return (values.user && values.email && values.password?.length > 5 && values.confirmPassword?.length > 5 && (values.password === values.confirmPassword))
   }
 
-  useEffect(() => {
-    if (statusCode === 200) {
-      props.navigate(URLS.LOGIN)
-    }
-  }, [statusCode])
+  const signInwithGoogle = () => {
+    toast('Sign in with google is work in progress.')
+  }
 
   return (
     <div className="bg-signup vh-100">
@@ -97,12 +97,14 @@ const SignupComponent: React.FC<
                   />
 
                   <TextBox
-                    type="text"
+                    type={showPassword ? 'text' : 'password'}
                     name="password"
                     value={values.password}
                     labelname="password"
                     placeholder=""
                     handleChange={handleChange}
+                    icon={showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'}
+                    handleIconClick={() => setShowPassword(!showPassword)}
                     errorMessageComponent={(touched.password && errors.password ? (
                       <p className="form-error">
                         <i className="fa fa-info-circle"></i>
@@ -112,7 +114,7 @@ const SignupComponent: React.FC<
                   />
 
                   <TextBox
-                    type="text"
+                    type={showPassword ? 'text' : 'password'}
                     name="confirmPassword"
                     value={values.confirmPassword}
                     labelname="Confirm Password"
@@ -129,7 +131,7 @@ const SignupComponent: React.FC<
                   />
 
                   <div className="pb-0 pt-4 bg-transparent d-flex text-center">
-                    <button className="btn btn-primary login-btn upper-case">
+                    <button className="btn btn-primary login-btn upper-case" disabled={!isFormValid()}>
                       SIGNUP
                     </button>
                   </div>
@@ -139,7 +141,7 @@ const SignupComponent: React.FC<
                     <div className="mt-3 straight-line " />
                   </div>
                   <div className="pb-0 pt-4 bg-transparent d-flex text-center">
-                    <button className="btn btn-primary google-login-btn" type='button'>
+                    <button className="btn btn-primary google-login-btn" type='button' onClick={signInwithGoogle}>
                       <img
                         className="px-2 mb-1"
                         src={googlePlus}
@@ -152,7 +154,7 @@ const SignupComponent: React.FC<
                 <div className="pb-3 pt-4 text-center">
                   have an account?
                   <a className="px-1 mt-1" onClick={() => props.navigate(URLS.LOGIN)}>
-                    Login In
+                    Login
                   </a>
                 </div>
               </div>

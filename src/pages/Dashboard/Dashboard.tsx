@@ -170,9 +170,9 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
               </div>
             </div>
             <div className="btn-height pt-5" onClick={envisionUploadHandle}>
-              <a href="#" className="btn btn-envision">
+              <button className="btn btn-envision">
                 Generate Variations
-              </a>
+              </button>
             </div>
             <div className="btn-height">
               <button
