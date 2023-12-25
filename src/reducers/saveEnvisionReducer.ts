@@ -20,6 +20,7 @@ export const saveEnvision: any = createAsyncThunk(
           }
         })
         .catch(() => {
+          toast.error('Facing issue while saving')
           resolve({ data: null })
         })
     })

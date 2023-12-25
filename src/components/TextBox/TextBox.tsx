@@ -22,6 +22,7 @@ const TextBox: FC<ITextBoxProps> = props => {
           <span className={icon}></span>
         </i>
       </div>
+      {props.errorMessageComponent && (props.errorMessageComponent)}
     </div>
   )
 }

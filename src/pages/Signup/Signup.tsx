@@ -10,35 +10,15 @@ import {
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/signUpValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
+import { EnvLogo } from '@Assets/images'
 import { useDispatch } from 'react-redux'
 import { signUp } from 'src/reducers/signUpReducer'
 import toast, { Toaster } from 'react-hot-toast'
+
 const SignupComponent: React.FC<
   IDefaultPageProps & ILoginPageProps
 > = props => {
-  const { statusCode } = useSelector(
-    (state: IReducerState) => state.signUpReducer
-  )
-  const dispatch = useDispatch()
-  const handleSignUpSubmit = data => {
-    dispatch(
-      signUp({
-        email: data.email,
-        name: data.user,
-        password: data.password,
-        role: 'admin', // optional - if empty consider as an user
-      })
-    )
-  }
-  useEffect(() => {
-    if (statusCode === 200) {
-      toast.success('Signed up Successfully!')
-      props.navigate(URLS.LOGIN)
-    } else {
-      toast.error('Kindly check your credentials')
-    }
-  }, [statusCode])
-
+  const { statusCode } = useSelector((state: IReducerState) => state.signUpReducer)
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues: { user: '', email: '', password: '', confirmPassword: '' },
     validationSchema: schema,
@@ -48,6 +28,29 @@ const SignupComponent: React.FC<
       handleSignUpSubmit(values)
     },
   })
+
+  const dispatch = useDispatch();
+  const handleSignUpSubmit = data => {
+    dispatch(
+      signUp({
+        email: data.email,
+        name: data.user,
+        password: data.password,
+        role: 'admin', // optional - if empty consider as an user
+      })
+    )
+  };
+
+  const isFormValid = () => {
+    return (values.user && values.user && (values.password && values.confirmPassword))
+  }
+
+  useEffect(() => {
+    if (statusCode === 200) {
+      props.navigate(URLS.LOGIN)
+    }
+  }, [statusCode])
+
   return (
     <div className="bg-signup vh-100">
       <section className="container d-flex w-100 align-items-center justify-content-xl-start justify-content-center h-100">
@@ -56,9 +59,8 @@ const SignupComponent: React.FC<
             <div className="card rounded mt-5 card-width">
               <div className="card-header px-2 bg-transparent border-0">
                 <figure className="mb-0 pb-3">
-                  {/* <img src={logo} /> */}
+                  <img src={EnvLogo} alt="envision logo" className='app-logo' />
                 </figure>
-                <h1 className="px-5 py-0 fw-bold mb-0">Logo envision</h1>
               </div>
               <div className="card-body card-content px-5 py-2">
                 <form onSubmit={handleSubmit} autoComplete="off">
@@ -69,14 +71,15 @@ const SignupComponent: React.FC<
                     labelname="Name"
                     placeholder=""
                     handleChange={handleChange}
+                    errorMessageComponent={(
+                      touched.user && errors.user ? (
+                        <p className="form-error">
+                          <i className="fa fa-info-circle"></i>
+                          <span className="error-msg-txt">{errors.user}</span>
+                        </p>
+                      ) : null
+                    )}
                   />
-
-                  {touched.user && errors.user ? (
-                    <p className="form-error">
-                      <i className="fa fa-info-circle"></i>
-                      <span className="error-msg-txt">{errors.user}</span>
-                    </p>
-                  ) : null}
 
                   <TextBox
                     type="text"
@@ -85,14 +88,13 @@ const SignupComponent: React.FC<
                     labelname="Email Address"
                     placeholder=""
                     handleChange={handleChange}
+                    errorMessageComponent={(touched.email && errors.email ? (
+                      <p className="form-error">
+                        <i className="fa fa-info-circle"></i>
+                        <span className="error-msg-txt">{errors.email}</span>
+                      </p>
+                    ) : null)}
                   />
-
-                  {touched.email && errors.email ? (
-                    <p className="form-error">
-                      <i className="fa fa-info-circle"></i>
-                      <span className="error-msg-txt">{errors.email}</span>
-                    </p>
-                  ) : null}
 
                   <TextBox
                     type="text"
@@ -101,14 +103,13 @@ const SignupComponent: React.FC<
                     labelname="password"
                     placeholder=""
                     handleChange={handleChange}
+                    errorMessageComponent={(touched.password && errors.password ? (
+                      <p className="form-error">
+                        <i className="fa fa-info-circle"></i>
+                        <span className="error-msg-txt">{errors.password}</span>
+                      </p>
+                    ) : null)}
                   />
-
-                  {touched.password && errors.password ? (
-                    <p className="form-error">
-                      <i className="fa fa-info-circle"></i>
-                      <span className="error-msg-txt">{errors.password}</span>
-                    </p>
-                  ) : null}
 
                   <TextBox
                     type="text"
@@ -117,16 +118,15 @@ const SignupComponent: React.FC<
                     labelname="Confirm Password"
                     placeholder=""
                     handleChange={handleChange}
+                    errorMessageComponent={(touched.confirmPassword && errors.confirmPassword ? (
+                      <p className="form-error">
+                        <i className="fa fa-info-circle"></i>
+                        <span className="error-msg-txt">
+                          {errors.confirmPassword}
+                        </span>
+                      </p>
+                    ) : null)}
                   />
-
-                  {touched.confirmPassword && errors.confirmPassword ? (
-                    <p className="form-error">
-                      <i className="fa fa-info-circle"></i>
-                      <span className="error-msg-txt">
-                        {errors.confirmPassword}
-                      </span>
-                    </p>
-                  ) : null}
 
                   <div className="pb-0 pt-4 bg-transparent d-flex text-center">
                     <button className="btn btn-primary login-btn upper-case">
@@ -139,7 +139,7 @@ const SignupComponent: React.FC<
                     <div className="mt-3 straight-line " />
                   </div>
                   <div className="pb-0 pt-4 bg-transparent d-flex text-center">
-                    <button className="btn btn-primary login-btn">
+                    <button className="btn btn-primary google-login-btn" type='button'>
                       <img
                         className="px-2 mb-1"
                         src={googlePlus}
@@ -150,9 +150,9 @@ const SignupComponent: React.FC<
                   </div>
                 </form>
                 <div className="pb-3 pt-4 text-center">
-                  Don’t have an account?
-                  <a className="px-1 mt-1" href="#" type="file">
-                    Sign Up
+                  have an account?
+                  <a className="px-1 mt-1" onClick={() => props.navigate(URLS.LOGIN)}>
+                    Login In
                   </a>
                 </div>
               </div>
