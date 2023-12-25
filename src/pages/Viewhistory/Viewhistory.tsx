@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import HeaderSection from '@Components/HeaderSection/HeaderSection'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
-import { URLS } from '@Utils/constants'
+import { API_URL, URLS } from '@Utils/constants'
 import SearchBox from '@Components/SearchBox/SearchBox'
 import {
   LeftArrowIcon,
   LeftArrowFirstIcon,
   RightArrowIcon,
   RightLastArrowIcon,
-  CloseIcon,
   SortIcon,
 } from '@Assets/images'
 import icon from '../../assets/svg/fa-eye.svg'
-import { useDispatch } from 'react-redux'
 import { userHistory } from 'src/reducers/userHistoryReducer'
 import { useSelector } from 'react-redux'
 import { IReducerState } from '@Interface/StoreInterface'
@@ -30,15 +27,14 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   )
   const [handlePageCount, setHandlePageCount] = useState<number>(10)
 
-  // useEffect(() => {
-  //   props.dispatch(actions.fetchViewhistoryRequested(`page=${selectedPage}`))
-  // }, [selectedPage])
   const [tableData, setTableData] = useState(data || [])
   const [sortOrder, setSortOrder] = useState<string>('asc') // or 'desc'
   const [sortBy, setSortBy] = useState<string>('name')
+
   useEffect(() => {
-    setTableData(data)
-  }, [data])
+    setTableData(data || [])
+  }, [data]);
+
   const sortHandle = field => {
     const isDateOrTime = ['created_date', 'created_time'].includes(field)
     const isNumeric = field === 'variants'
@@ -94,15 +90,11 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
       const compareValue = a[sortBy].localeCompare(b[sortBy])
       return sortOrder === 'asc' ? compareValue : -compareValue
     })
+
   const startIndex = (selectedPage - 1) * handlePageCount
   const endIndex = startIndex + handlePageCount
   const currentDataPage = filteredAndSortedData.slice(startIndex, endIndex)
 
-  const handleLogout = () => {
-    // Do the logout API call and get the success result
-    localStorage.clear()
-    props.navigate(URLS.LOGIN)
-  }
   const handleBackToDashBoard = () => {
     props.navigate(URLS.DASHBOARD)
   }
@@ -112,21 +104,17 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const paginationRange =
     Array.from({ length: totalPages }, (_, i) => i + 1) || []
 
-  const onFirst = () => {
-    setSelectedPage(1)
-  }
+  const onFirst = () => setSelectedPage(1)
   const onPrevious = () => {
-    if (selectedPage > 1) {
-      setSelectedPage(selectedPage - 1)
-    }
+    if (selectedPage > 1) setSelectedPage(selectedPage - 1)
   }
+
   const onNext = () => {
-    if (
-      selectedPage < Math.ceil(filteredAndSortedData.length / handlePageCount)
-    ) {
+    if (selectedPage < Math.ceil(filteredAndSortedData.length / handlePageCount)) {
       setSelectedPage(selectedPage + 1)
     }
   }
+
   const onLast = () => {
     setSelectedPage(Math.ceil(filteredAndSortedData.length / handlePageCount))
   }
@@ -141,6 +129,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
     e.preventDefault()
     setvariationModal(!variationmodal)
   }
+
   const Pagination = () => {
     return (
       <div className="pt-2">
@@ -171,9 +160,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
             {paginationRange.map((pageNumber: number, index) => {
               return (
                 <li
-                  className={`pagination-number ${
-                    pageNumber === selectedPage && 'selected'
-                  }`}
+                  className={`pagination-number ${pageNumber === selectedPage && 'selected'}`}
                   key={index}
                   onClick={() => {
                     setSelectedPage(pageNumber)
@@ -186,9 +173,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
             })}
             <li
               onClick={onNext}
-              className={`${
-                selectedPage === paginationRange.length && 'pe-none'
-              }`}
+              className={`${selectedPage === paginationRange.length && 'pe-none'}`}
               aria-hidden="true"
             >
               <img
@@ -198,9 +183,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               />
             </li>
             <li
-              className={`pagination-item ${
-                selectedPage === paginationRange.length && 'pe-none'
-              }`}
+              className={`pagination-item ${selectedPage === paginationRange.length && 'pe-none'}`}
               onClick={onLast}
               aria-hidden="true"
             >
@@ -221,7 +204,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               }
             }}
           />
-          <p className="pagination-total-count">{`${selectedPage}-${totalPages} of ${totalItems}`}</p>
+          <p className="pagination-total-count">{`${selectedPage} - ${totalPages} of ${totalItems}`}</p>
         </div>
       </div>
     )
@@ -258,9 +241,8 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     <img
                       src={SortIcon}
                       style={{ cursor: 'pointer' }}
-                      className={`sort-icon ${
-                        sortBy === 'name' ? 'active' : ''
-                      }`}
+                      className={`sort-icon ${sortBy === 'name' ? 'active' : ''
+                        }`}
                       alt=""
                       aria-hidden="true"
                     />
@@ -270,9 +252,8 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     <img
                       src={SortIcon}
                       style={{ cursor: 'pointer' }}
-                      className={`sort-icon ${
-                        sortBy === 'name' ? 'active' : ''
-                      }`}
+                      className={`sort-icon ${sortBy === 'name' ? 'active' : ''
+                        }`}
                       alt=""
                       aria-hidden="true"
                     />
@@ -282,9 +263,8 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     <img
                       src={SortIcon}
                       style={{ cursor: 'pointer' }}
-                      className={`sort-icon ${
-                        sortBy === 'name' ? 'active' : ''
-                      }`}
+                      className={`sort-icon ${sortBy === 'name' ? 'active' : ''
+                        }`}
                       alt=""
                       aria-hidden="true"
                     />
@@ -295,9 +275,8 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     <img
                       src={SortIcon}
                       style={{ cursor: 'pointer' }}
-                      className={`sort-icon ${
-                        sortBy === 'name' ? 'active' : ''
-                      }`}
+                      className={`sort-icon ${sortBy === 'name' ? 'active' : ''
+                        }`}
                       alt=""
                       aria-hidden="true"
                     />
@@ -316,7 +295,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                       <td>
                         <img
                           className="vimage-style"
-                          src={value.original_url}
+                          src={`${API_URL.host}/${value.original_url}`}
                           alt="original image"
                         />
                       </td>
@@ -384,7 +363,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                   <div key={value.id + value.name}>
                     <img
                       className="variation-style"
-                      src={value.image_url}
+                      src={`${API_URL.host}/${value.image_url}`}
                       alt="original image"
                     />
                   </div>

@@ -1,6 +1,8 @@
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ISignUpReducerState, IDispatchState } from '@Interface/index'
+import toast from 'react-hot-toast'
+
 export const signUp: any = createAsyncThunk(
   'signUpReducer/signUpPassword',
   async (payload: any = {}) => {
@@ -10,12 +12,16 @@ export const signUp: any = createAsyncThunk(
         .then((response: any) => {
           const { data, error } = response
           if (!error) {
+            toast.success('Signed up Successfully!');
             resolve({
               data: data || null,
             })
+          } else {
+            toast.error('Kindly check your credentials')
           }
         })
-        .catch((response: Error) => {
+        .catch(() => {
+          toast.error('Facing issue while saving')
           resolve({ data: null })
         })
     })

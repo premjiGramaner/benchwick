@@ -1,8 +1,4 @@
-/**
- *  --------------------- Text Box Interface ---------------------
- * All king of Inputs Interface must be authorized from here
- * Including Check boxes, Select box, custom multiple select
- */
+import { ReactElement } from "react"
 
 export interface ITextBoxProps {
   type: string
@@ -11,6 +7,7 @@ export interface ITextBoxProps {
   placeholder?: string
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handleIconClick?: (e: React.MouseEvent<HTMLElement>) => void
+  errorMessageComponent?: ReactElement
   icon?: string
   name: string
 }

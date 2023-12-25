@@ -1,34 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
 .bg-signup {
   font-size: 12px;
   font-family: $font-family;
   background-image: url(../../assets/svg/bg.svg);
   background-size: cover;
   background-repeat: no-repeat;
+
   .text-color3 {
     color: $light-gray;
   }
+
   .login-btn {
     background-color: $defaultTextColor;
     border-radius: 18px !important;
     color: $white !important;
     width: 100% !important;
   }
+
+  .google-login-btn {
+    background-color: white;
+    border-color: #E1E1E1;
+    border-radius: 18px !important;
+    color: #757575;
+    width: 100% !important;
+  }
+
   .upper-case {
     text-transform: uppercase;
   }
+
   .form-error {
     color: $form-error;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    margin-top: -12px;
+
     .error-msg-txt {
-      font-size: 1.75rem;
+      font-size: 12px;
     }
   }
+
   .card-content {
     margin-top: 14px;
     height: auto;
     padding: 0.15rem 4rem !important;
   }
+
   .card-width {
     margin-top: 14px !important;
     height: auto;
@@ -37,12 +54,21 @@
     background-color: #ffffff;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
   }
+
   .straight-line {
     height: 0.5px;
     width: 151px;
     background-color: #d4d4d4;
   }
+
   .round-checkbox {
     border-radius: 50%;
+  }
+
+  .app-logo {
+    width: auto;
+    height: 90px;
+    margin-left: 15px;
+    margin-top: 5px;
   }
 }

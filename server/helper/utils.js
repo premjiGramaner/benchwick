@@ -210,6 +210,7 @@ module.exports = {
     encryptPassword,
     getFileNameFromURL,
     uuid,
+    uuid_key,
     getTypeFromURL,
     getKey,
     convertCircular,

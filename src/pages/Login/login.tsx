@@ -2,7 +2,6 @@ import { useSelector } from 'react-redux'
 import React, { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import { URLS } from '@Utils/constants'
-import { getAuthToken, IS_USER_AUTHENTICATED } from '@Utils/storage'
 import {
   IDefaultPageProps,
   ILoginPageProps,
@@ -11,9 +10,11 @@ import {
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/loginValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
+import { EnvLogo } from '@Assets/images'
 // import { Cookies } from 'react-cookie'
 import { login, logout } from '../../reducers/loginReducer'
 import toast, { Toaster } from 'react-hot-toast'
+
 const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
   // const cookies = new Cookies()
   const { userInfo, isError, statusCode } = useSelector(
@@ -39,6 +40,7 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
   const handleSignup = () => {
     props.navigate(URLS.SIGNUP)
   }
+
   const handleForgotPassword = () => {
     props.navigate(URLS.FORGOTPASSWORD)
   }
@@ -63,9 +65,8 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
             <div className="card rounded p-4 mt-0 card-width">
               <div className="card-header px-2 pt-4 pb-5 bg-transparent border-0">
                 <figure className="mb-0 pb-3">
-                  {/* <img src={logo} /> */}
+                  <img src={EnvLogo} alt="envision logo" className='app-logo' />
                 </figure>
-                <h1 className="px-5 py-0 fw-bold mb-0">Logo envision</h1>
               </div>
               <div className="card-body card-content px-5 py-0">
                 <form onSubmit={handleSubmit} autoComplete="off">
@@ -133,7 +134,7 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
                     <div className="mt-3 straight-line " />
                   </div>
                   <div className="pb-0 pt-4 bg-transparent d-flex text-center">
-                    <button className="btn btn-primary login-btn">
+                    <button className="btn btn-primary google-login-btn">
                       <img
                         className="px-2 mb-1"
                         src={googlePlus}

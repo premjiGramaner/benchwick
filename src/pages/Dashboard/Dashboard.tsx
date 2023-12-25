@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import HeaderSection from '@Components/HeaderSection/HeaderSection'
+import React, { useState } from 'react'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS, API_URL } from '@Utils/constants'
@@ -29,19 +28,6 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const { imageInfo } = useSelector(
     (state: IReducerState) => state.imageVariationReducer
   )
-
-  const handleLogout = () => {
-    // Do the logout API call and get the success result
-    // localStorage.clear()
-    // dispatch(
-    //   login({
-    //     userName: "",
-    //     password: "",
-    //   })
-    // )
-
-    props.navigate(URLS.LOGIN)
-  }
 
   const handleViewHistory = e => {
     e.preventDefault()
