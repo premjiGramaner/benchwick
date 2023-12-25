@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1440px" height="768px" viewBox="0 0 1440 768" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>2505F9F9-3298-40E8-B3CC-029C47937CB5@1.5x</title>
+    <defs>
+        <linearGradient x1="13.631582%" y1="37.5602447%" x2="65.7151227%" y2="64.2222222%" id="linearGradient-1">
+            <stop stop-color="#9768F3" offset="0%"></stop>
+            <stop stop-color="#5A21E7" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="1440" height="768"></rect>
+    </defs>
+    <g id="Rev1.1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-9">
+            <mask id="mask-3" fill="white">
+                <use xlink:href="#path-2"></use>
+            </mask>
+            <use id="Mask" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+            <g opacity="0.5" mask="url(#mask-3)">
+                <g transform="translate(-1.000000, -1.000000)" opacity="0.2">
+                    <g id="Group-8" transform="translate(240.833333, 0.000000)" stroke-linecap="square">
+                        <line x1="0.5" y1="0.5" x2="0.5" y2="798.5" id="Line-2" stroke="#FFFFFF"></line>
+                        <line x1="240.333333" y1="0.5" x2="240.333333" y2="798.5" id="Line-2-Copy" stroke="#FFFFFF"></line>
+                        <line x1="480.166667" y1="0.5" x2="480.166667" y2="798.5" id="Line-2-Copy-2" stroke="#FFFFFF"></line>
+                        <line x1="720" y1="0.5" x2="720" y2="798.5" id="Line-2-Copy-3" stroke="#FFFFFF"></line>
+                        <line x1="959.833333" y1="0.5" x2="959.833333" y2="798.5" id="Line-2-Copy-4" stroke="#FFFFFF"></line>
+                    </g>
+                    <g id="Group" transform="translate(0.000000, 306.000000)">
+                        <line x1="0.5" y1="0.5" x2="241.5" y2="0.5" id="Line-3" stroke="#FFFFFF"></line>
+                        <line x1="481.5" y1="0.5" x2="721.5" y2="0.5" id="Line-3-Copy-2" stroke="#FFFFFF"></line>
+                        <line x1="241.5" y1="273.5" x2="481.5" y2="273.5" id="Line-3-Copy" stroke="#FFFFFF"></line>
+                        <line x1="720.5" y1="273.5" x2="960.5" y2="273.5" id="Line-3-Copy-3" stroke="#FFFFFF"></line>
+                        <line x1="960.5" y1="0.5" x2="1200.5" y2="0.5" id="Line-3-Copy-5" stroke="#FFFFFF"></line>
+                        <line x1="1200.5" y1="273.5" x2="1440.5" y2="273.5" id="Line-3-Copy-4" stroke="#FFFFFF"></line>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

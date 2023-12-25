@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    login,
-    getUserInfo
-} = require('../controllers/login')
+    getUserInfo,
+    getUserHistory,
+    userLogout
+} = require('../controllers/user')
 
-router.get("/self", login);
-router.get("/user-history", getUserInfo);
-router.get("/logout", getUserInfo);
+router.get("/self", getUserInfo);
+router.get("/user-history", getUserHistory);
+router.get("/delete-history/:id", getUserHistory);
+router.get("/logout", userLogout);
 
 module.exports = router;

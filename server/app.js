@@ -24,6 +24,9 @@ app.use('/api', indexRouter);
 app.use(express.static(path.join(__dirname, '../build')));
 app.use(express.static(path.join(__dirname, '../src')));
 
+app.use('/varients-images', express.static(__dirname + '/varients-images')); // giving public access
+app.use('/varients-generated', express.static(__dirname + '/varients-generated')); // giving public access
+
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development

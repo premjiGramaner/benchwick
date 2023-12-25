@@ -3,12 +3,14 @@ const router = express.Router();
 
 const {
     login,
-    getUserInfo
+    signUp,
+    forgotPassword,
+    passwordUpdate
 } = require('../controllers/login')
 
 router.post("/", login);
-router.post("/signup", getUserInfo);
-router.post("/forgot-password", getUserInfo);
-router.post("/password-update", getUserInfo);
+router.post("/signup", signUp);
+router.post("/forgot-password", forgotPassword);
+router.post("/password-update", passwordUpdate);
 
 module.exports = router;

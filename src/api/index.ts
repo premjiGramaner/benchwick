@@ -1,4 +1,5 @@
-import { IS_USER_AUTHENTICATED } from './../utils/storage/index';
+import { forgotPassword } from './../reducers/forgotPasswordReducer'
+import { IS_USER_AUTHENTICATED } from './../utils/storage/index'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { API_URL, STORAGE_KEY } from '@Utils/constants'
 
@@ -6,10 +7,33 @@ const instance = axios.create({
   baseURL: API_URL.baseURL,
   timeout: 0, // no timeout
 })
-
+const config = {
+  headers: { 'content-type': 'multipart/form-data' },
+}
 const api = {
   login: {
-    get: () => instance.get('/users'),
+    post: arg => instance.post('/login', arg),
+  },
+  forgotPassword: {
+    post: arg => instance.post('/login/forgot-password', arg),
+  },
+  resetPassword: {
+    post: arg => instance.post('/login/password-update', arg),
+  },
+  signUp: {
+    post: arg => instance.post('/login/signup', arg),
+  },
+  imageEnvision: {
+    post: arg => instance.post('/image/image-envision', arg, config),
+  },
+  saveEnvision: {
+    post: arg => instance.post('/image/save-envision', arg, config),
+  },
+  getEnvisionVariations: {
+    get: arg => instance.get(`/image/get-envision-variants/${arg}`),
+  },
+  userHistory: {
+    get: () => instance.get('/user/user-history'),
   },
 }
 
@@ -34,7 +58,7 @@ export const tokenRequestInterceptor = async (req: AxiosRequestConfig) => {
 }
 
 // If you want any optimization or custom response pleas make changes here
-const responseSuccessHandler = (response: AxiosResponse<any>) => (response);
+const responseSuccessHandler = (response: AxiosResponse<any>) => response
 
 /**
  * Todo
@@ -42,11 +66,11 @@ const responseSuccessHandler = (response: AxiosResponse<any>) => (response);
  */
 const responseErrorHandler = (error: any) => {
   if (error?.response?.status === 401) {
-    localStorage.clear();
+    localStorage.clear()
     window.location.reload()
   }
 
-  return Promise.reject(error);
+  return Promise.reject(error)
 }
 
 instance.interceptors.request.use(tokenRequestInterceptor)
