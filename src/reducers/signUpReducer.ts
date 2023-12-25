@@ -1,4 +1,5 @@
 import api from '@API/index'
+import { URLS } from '@Utils/constants';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ISignUpReducerState, IDispatchState } from '@Interface/index'
 import toast from 'react-hot-toast'
@@ -7,8 +8,9 @@ export const signUp: any = createAsyncThunk(
   'signUpReducer/signUpPassword',
   async (payload: any = {}) => {
     return new Promise((resolve: any) => {
+      const navigate = payload.navigation;
       api.signUp
-        .post(payload)
+        .post(payload.body)
         .then((response: any) => {
           const { data, error } = response
           if (!error) {
@@ -16,6 +18,7 @@ export const signUp: any = createAsyncThunk(
             resolve({
               data: data || null,
             })
+            navigate(URLS.LOGIN)
           } else {
             toast.error('Kindly check your credentials')
           }

@@ -6,6 +6,6 @@ export default () =>
       .string()
       .email(' Please enter valid email address ')
       .required(' Email is required '),
-    password: yup.string().required(' Password is required '),
-    confirmPassword: yup.string().required(' Confirm Password is required '),
+    password: yup.string().min(5).required(' Password is required '),
+    confirmPassword: yup.string().min(5).required(' Confirm Password is required '),
   })

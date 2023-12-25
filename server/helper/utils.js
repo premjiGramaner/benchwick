@@ -1,4 +1,4 @@
-const fs = require("fs"), crypto = require('crypto');
+const fs = require("fs"), crypto = require('crypto'), _uuid = require('uuid-node');
 
 /* Password section */
 const bcrypt = require("bcrypt")
@@ -14,11 +14,8 @@ const random = () => {
     return (!!array.length) ? Number('0.' + array[0]) : 0.1;
 };
 
-const uuid = (hyphen = '-') => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[-]/g, hyphen).replace(/[xy]/g, (c) => {
-        const r = random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
+const uuid = () => {
+    return _uuid.generateUUID()
 }
 
 const getKey = () => {

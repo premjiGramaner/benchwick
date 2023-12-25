@@ -34,9 +34,11 @@
     color: $form-error;
     margin-bottom: 1.5rem;
     margin-top: -12px;
+    font-size: 14px;
 
     .error-msg-txt {
       font-size: 12px;
+      padding-left: 4px;
     }
   }
 
