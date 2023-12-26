@@ -3,7 +3,7 @@ import SideBarSection from '@Components/SideBarSection/SideBarSection'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS, API_URL } from '@Utils/constants'
 import close from '@Assets/svg/close.svg'
-import Download from '@Assets/images/Download.png'
+import Download from '@Assets/svg/variant-download.svg'
 import { imageVariation } from 'src/reducers/imageVariationReducer'
 import {
   IImageVarient,
@@ -98,12 +98,13 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   }
 
   const handleImageDownload = () => {
-    fetch(variationmodal?.imageURL)
+    //image path required to change
+    fetch(API_URL.host+"/"+ variationmodal?.imageURL)
       .then(response => response.blob())
       .then(blob => {
         const element = document.createElement('a')
         element.href = URL.createObjectURL(blob)
-        element.download = getFileNameFromURL(variationmodal?.imageURL)
+        element.download = getFileNameFromURL(API_URL.host+"/"+variationmodal?.imageURL)
         document.body.appendChild(element)
         element.click()
 
