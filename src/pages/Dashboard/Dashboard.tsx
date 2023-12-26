@@ -170,7 +170,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
               </div>
             </div>
             <div className="btn-height pt-5" onClick={envisionUploadHandle}>
-              <button className="btn btn-envision">
+              <button className="btn btn-envision" disabled={!range || range && range.toString() == "0"}>
                 Generate Variations
               </button>
             </div>
@@ -192,6 +192,9 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
               imageInfo?.data?.data?.info.map((value, index) => {
                 return (
                   <div className="variation-image" key={index + value.key}>
+                    <div className="variation-image-index-circle">
+                      <span>{ index+1 }</span>
+                    </div>
                     <div className="circle-style">
                       <input
                         type="checkbox"
