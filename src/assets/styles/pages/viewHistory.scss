@@ -154,6 +154,20 @@
     grid-gap: 20px;
   }
 
+  .variation-image-index-circle {
+    display: inline-block;
+    text-align: center !important;
+    height: 23px;
+    width: 23px;
+    background-color: $white;
+    position: absolute;
+    z-index: 99;
+    margin-top:-0.5rem;
+    margin-left: -0.625rem;
+    border-radius: 75%;
+    font-weight:bold;
+    border: thin solid #bec8d0
+  }
   .variation-style {
     box-sizing: border-box;
     height: 129px;

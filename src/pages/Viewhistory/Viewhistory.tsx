@@ -359,8 +359,11 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
 
             <div className="variation-modal mt-3">
               {variantData?.variant_list?.length &&
-                variantData?.variant_list?.map(value => (
+                variantData?.variant_list?.map((value,index) => (
                   <div key={value.id + value.name}>
+                    <div className="variation-image-index-circle">
+                      <span>{ index+1 }</span>
+                    </div>
                     <img
                       className="variation-style"
                       src={`${API_URL.host}/${value.image_url}`}
