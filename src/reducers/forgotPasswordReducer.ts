@@ -21,11 +21,11 @@ export const forgotPassword: any = createAsyncThunk(
             toast.success('Link sent Successfully, Please try login with your credentials!');
             setTimeout(() => navigate(URLS.LOGIN), 200);
           } else {
-            toast.error('Kindly check your recovery email');
+            toast.error('Please check your recovery email');
           }
         })
         .catch(() => {
-          toast.error('Kindly check your recovery email');
+          toast.error('Please check your recovery email');
           resolve({ data: null })
         })
     })
