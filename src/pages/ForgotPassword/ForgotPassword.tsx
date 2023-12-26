@@ -1,37 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useFormik } from 'formik'
-import { URLS } from '@Utils/constants'
 import { useDispatch } from 'react-redux'
-import toast, { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import {
   IDefaultPageProps,
   IForgotPasswordProps,
-  IReducerState,
 } from '@Utils/interface'
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/forgotPasswordValidation'
 import { forgotPassword } from 'src/reducers/forgotPasswordReducer'
-import { useSelector } from 'react-redux'
+
 const ForgotPasswordComponent: React.FC<
   IDefaultPageProps & IForgotPasswordProps
-> = props => {
-  const { statusCode } = useSelector(
-    (state: IReducerState) => state.forgotPasswordReducer
-  )
-  useEffect(() => {
-    if (statusCode === 200) {
-      toast.success('Link sent Successfully,Kindly log In!')
-      props.navigate(URLS.LOGIN)
-    } else {
-      toast.error('Kindly check your recovery email')
-    }
-  }, [statusCode])
+> = (props) => {
   const dispatch = useDispatch()
   const handleLinkSubmit = data => {
     dispatch(
       forgotPassword({
-        email: data.email,
-        redirect_URL: 'http://localhost:8080/resetPassword',
+        navigation: props.navigate,
+        body: {
+          email: data.email,
+          redirect_URL: 'http://localhost:8080/resetPassword',
+        }
       })
     )
   }
@@ -44,7 +34,8 @@ const ForgotPasswordComponent: React.FC<
     onSubmit: values => {
       handleLinkSubmit(values)
     },
-  })
+  });
+
   return (
     <div className="bg-forgot-password vh-100">
       <section className="d-flex w-100 align-items-center justify-content-center h-100">

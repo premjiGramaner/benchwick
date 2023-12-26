@@ -68,7 +68,7 @@ const SignupComponent: React.FC<
                     type="text"
                     name="user"
                     value={values.user}
-                    labelname="Name"
+                    labelname="Username"
                     placeholder=""
                     handleChange={handleChange}
                     errorMessageComponent={(
