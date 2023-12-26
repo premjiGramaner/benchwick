@@ -32,6 +32,9 @@
     font-weight: bold;
     text-align: center;
   }
+  .btn-envision-disabled {
+    background-color: $button-disabled !important;
+  }
 
   .card-section {
     height: 286px;

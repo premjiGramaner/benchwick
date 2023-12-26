@@ -38,8 +38,8 @@ const SideBarSection: React.FC<ISideBarInterface> = props => {
             </div>
 
             <p className="card-text fs-10">Limit 200MB per file | PNG</p>
-            <div className="btn-height" onClick={props.envisionUploadHandle}>
-              <a href="#" className="btn btn-envision">
+            <div className="btn-height"  >
+              <a href="#" className="btn btn-envision btn-envision-disabled">
                 ENVISION
               </a>
             </div>
