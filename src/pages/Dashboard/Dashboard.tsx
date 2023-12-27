@@ -3,7 +3,7 @@ import SideBarSection from '@Components/SideBarSection/SideBarSection'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS, API_URL } from '@Utils/constants'
 import close from '@Assets/svg/close.svg'
-import Download from '@Assets/images/Download.png'
+import Download from '@Assets/svg/variant-download.svg'
 import { imageVariation } from 'src/reducers/imageVariationReducer'
 import {
   IImageVarient,
@@ -17,7 +17,7 @@ import toast, { Toaster } from 'react-hot-toast'
 
 const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [file, setFile] = useState('')
-  const [image, setImage] = useState('')
+  const [image, setImage] = useState<File | null>(null)
   const [range, setRange] = useState('9')
   const [name, setName] = useState('')
   const [modal, setModal] = useState(false)
@@ -30,7 +30,13 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   )
 
   const handleViewHistory = e => {
-    e.preventDefault()
+    e.preventDefault();
+    setRange('9');
+    setFile('');
+    setImage(null);
+    setsaveVariationDetails([]);
+    setvariationModal({ status: false });
+    props.dispatch(imageVariation({}))
     props.navigate(URLS.VIEWHISTORY)
   }
 
@@ -45,7 +51,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     }
   }
 
-  const handleImage = data => {
+  const handleImage = (data: File) => {
     setFile(URL.createObjectURL(data))
     setImage(data)
   }
@@ -61,10 +67,14 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
   const handleCancel = e => {
     e.preventDefault()
+    setName("");
     setModal(!modal)
   }
 
-  const handleImageClose = () => setFile('')
+  const handleImageClose = () => {
+    setFile('');
+    setImage(null)
+  }
 
   let selectedVariation = saveVariationDetails
   const handleSelectedVariation = event => {
@@ -92,18 +102,19 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     })
   }
 
-  const handleVariationCancel = e => {
+  const handleVariationCancel = (e) => {
     e.preventDefault()
     setvariationModal({ status: false })
   }
 
   const handleImageDownload = () => {
-    fetch(variationmodal?.imageURL)
+    //image path required to change
+    fetch(API_URL.host + "/" + variationmodal?.imageURL)
       .then(response => response.blob())
       .then(blob => {
         const element = document.createElement('a')
         element.href = URL.createObjectURL(blob)
-        element.download = getFileNameFromURL(variationmodal?.imageURL)
+        element.download = getFileNameFromURL(API_URL.host + "/" + variationmodal?.imageURL)
         document.body.appendChild(element)
         element.click()
 
@@ -118,9 +129,11 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     formData.append('variantList', JSON.stringify(saveVariationDetails))
     formData.append('name', name)
     props.dispatch(saveEnvision(formData))
+    setName("");
     setModal(false)
   }
 
+  const isFormValidToUpload = (!range || range && range.toString() == "0") || !image;
   return (
     <div className="dashboard-page-main-container">
       <div className="d-flex">
@@ -128,6 +141,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
           handleViewHistory={handleViewHistory}
           enable={true}
           handleImage={handleImage}
+          isFormValid={isFormValidToUpload}
           envisionUploadHandle={envisionUploadHandle}
         />
         <div className="original-image-container col-md-2">
@@ -170,7 +184,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
               </div>
             </div>
             <div className="btn-height pt-5" onClick={envisionUploadHandle}>
-              <button className="btn btn-envision">
+              <button className="btn btn-envision" disabled={isFormValidToUpload}>
                 Generate Variations
               </button>
             </div>
@@ -192,6 +206,9 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
               imageInfo?.data?.data?.info.map((value, index) => {
                 return (
                   <div className="variation-image" key={index + value.key}>
+                    <div className="variation-image-index-circle">
+                      <span>{index + 1}</span>
+                    </div>
                     <div className="circle-style">
                       <input
                         type="checkbox"

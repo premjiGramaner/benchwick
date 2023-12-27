@@ -8,7 +8,7 @@ const imgPath = 'varients-images/', tmp_path = 'varients-generated/';
 
 const imageEnvision = async (req, res, next) => {
     try {
-        const { variants } = req.body;
+        const { variants, mockError = true } = req.body;
         const { image } = req.files;
         const { tokenInfo } = res.locals || {};
         if (!image) return res.sendStatus(400);
@@ -58,6 +58,30 @@ const imageEnvision = async (req, res, next) => {
                                     },
                                     {
                                         image_url: (`${path}03_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}04_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}05_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}06_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}07_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}08_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}09_.jpg`),
                                         key: uuid_key()
                                     }
                                 ],
