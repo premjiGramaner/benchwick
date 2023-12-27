@@ -15,7 +15,6 @@ const login = async (req, res, next) => {
             response({ res, code: 400, data: { userInfo: null }, message: 'Password is Invalid!' })
         } else {
             const userData = await User.getUserByUserEmail(userName)
-            console.log('**', userData.dataValues)
             if (userData?.dataValues) {
                 const isUserValid = await validatePassword(password, userData.dataValues.password)
                 if (isUserValid) {

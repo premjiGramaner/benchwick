@@ -11,7 +11,6 @@ export const getAuthToken = (updateToken?: any) => {
 
 export const getLoggedUserName = (userData?:any) => {
     if(userData) {
-        debugger;
        localStorage.setItem(STORAGE_KEY.LOGGED_USER_NAME,userData?.data.name);
        return userData?.data.name;
     }
