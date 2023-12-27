@@ -13,7 +13,7 @@ export const imageVariation: any = createAsyncThunk(
           console.log('*** response', response)
           const { data, error } = response
           if (!error) {
-            toast.success('Image uploaded Successfully!')
+            toast.success('​Variations generated successfully!')
             resolve({ data: data || null })
           } else {
             toast.error('Facing issue while uploading')

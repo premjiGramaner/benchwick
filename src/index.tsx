@@ -4,8 +4,8 @@ import store from '@Store/storeConfig'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import App from './App'
 
-const eagleContainer = document.getElementById('root')
-const root = ReactDOM.createRoot(eagleContainer)
+const benchWickContainer = document.getElementById('root')
+const root = ReactDOM.createRoot(benchWickContainer)
 root.render(
   <Provider store={store}>
     <App />
