@@ -30,7 +30,13 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   )
 
   const handleViewHistory = e => {
-    e.preventDefault()
+    e.preventDefault();
+    setRange('9');
+    setFile('');
+    setImage('');
+    setsaveVariationDetails([]);
+    setvariationModal({ status: false });     
+    props.dispatch(imageVariation({}))
     props.navigate(URLS.VIEWHISTORY)
   }
 
@@ -61,6 +67,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
   const handleCancel = e => {
     e.preventDefault()
+    setName("");
     setModal(!modal)
   }
 
@@ -119,6 +126,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     formData.append('variantList', JSON.stringify(saveVariationDetails))
     formData.append('name', name)
     props.dispatch(saveEnvision(formData))
+    setName("");
     setModal(false)
   }
 
