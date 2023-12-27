@@ -10,7 +10,6 @@ export const imageVariation: any = createAsyncThunk(
       api.imageEnvision
         .post(payload)
         .then((response: any) => {
-          console.log('*** response', response)
           const { data, error } = response
           if (!error) {
             toast.success('​Variations generated successfully!')
