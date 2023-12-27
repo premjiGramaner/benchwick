@@ -1,7 +1,7 @@
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ILoginReducerState, IDispatchState } from '@Interface/index'
-import { IS_USER_AUTHENTICATED, getAuthToken } from '@Utils/storage'
+import { IS_USER_AUTHENTICATED, getAuthToken ,getLoggedUserName} from '@Utils/storage'
 import { URLS } from '@Utils/constants'
 import toast from 'react-hot-toast'
 
@@ -12,7 +12,8 @@ export const login: any = createAsyncThunk(
       const response: any = await api.login.post(payload)
       const { data, error } = response
       if (!error) {
-        getAuthToken(data?.data?.user_token)
+        getAuthToken(data?.data?.user_token);
+        getLoggedUserName(data);        
         return { data }
       } else {
         return rejectWithValue(data)

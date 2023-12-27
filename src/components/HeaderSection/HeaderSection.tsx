@@ -7,9 +7,12 @@ import { useNavigate } from 'react-router-dom'
 import { URLS } from '@Utils/constants'
 import { useDispatch } from 'react-redux'
 import { logout } from '../../reducers/loginReducer'
+import { getLoggedUserName } from '@Utils/storage'
+
 const HeaderSection: React.FC = props => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const userName = getLoggedUserName();
   const handleLogout = () => {
     navigate(URLS.LOGIN)
     dispatch(logout({}))
@@ -19,7 +22,7 @@ const HeaderSection: React.FC = props => {
     <div className="header-section">
       <section className="bg-placeholder">
         <div className="mb-0 px-5 d-flex justify-content-end align-middle user-section">
-          <p className="mb-0 fs-12 text-white user-align">Welcome, Peter</p>
+          <p className="mb-0 fs-12 text-white user-align">Welcome, { userName }</p>
           <img className="icon-size mt-1 px-2" alt="icons" src={user} />
           <img
             className="icon-size mt-1 px-2 mr-2"
