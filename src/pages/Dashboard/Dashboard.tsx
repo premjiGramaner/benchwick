@@ -6,7 +6,7 @@ import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS, API_URL } from '@Utils/constants'
 import close from '@Assets/svg/close.svg'
 import Download from '@Assets/svg/variant-download.svg'
-import { imageVariation } from 'src/reducers/imageVariationReducer'
+import { imageVariation } from '@Reducers/imageVariationReducer'
 import {
   IImageVarient,
   IReducerState,
@@ -19,7 +19,7 @@ import { getFileNameFromURL } from '@Utils/utils'
 const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [file, setFile] = useState('')
   const [image, setImage] = useState<File | null>(null)
-  const [range, setRange] = useState('9')
+  const [range, setRange] = useState(localStorage.getItem('variation_range') || '0')
   const [name, setName] = useState('')
   const [modal, setModal] = useState(false)
   const [variationmodal, setvariationModal] = useState<IVarientModal>({
@@ -34,12 +34,10 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
   const handleViewHistory = e => {
     e.preventDefault();
-    setRange('9');
     setFile('');
     setImage(null);
     setsaveVariationDetails([]);
     setvariationModal({ status: false });
-    props.dispatch(imageVariation({}))
     props.navigate(URLS.VIEWHISTORY)
   }
 
@@ -61,6 +59,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
   const handleRange = e => {
     setRange(e.target.value)
+    localStorage.setItem('variation_range', e.target.value)
   }
 
   const handleSaveSelection = e => {
@@ -144,6 +143,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
           handleImage={handleImage}
           isFormValid={isFormValidToUpload}
           envisionUploadHandle={envisionUploadHandle}
+          {...props}
         />
         <div className="original-image-container col-md-2">
           <div>
@@ -179,6 +179,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                   className="form-range form-control"
                   min="0"
                   max="9"
+                  value={range}
                   onChange={handleRange}
                 ></input>
                 <div>{range}</div>
