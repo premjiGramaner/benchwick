@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
-import { URLS } from '@Utils/constants'
 import { useDispatch } from 'react-redux'
+import { URLS } from '@Utils/constants'
+
 import { logout } from '../reducers/loginReducer'
 
 import { IDefaultPageProps } from '@Utils/interface';

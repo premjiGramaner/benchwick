@@ -1,8 +1,8 @@
+import toast from 'react-hot-toast'
 import { URLS } from '@Utils/constants';
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { IForgotPasswordReducerState, IDispatchState } from '@Interface/index'
-import toast from 'react-hot-toast'
 
 export const forgotPassword: any = createAsyncThunk(
   'forgotPasswordReducer/forgotPassword',
@@ -18,7 +18,7 @@ export const forgotPassword: any = createAsyncThunk(
               data: data || null,
             })
 
-            toast.success('Link sent Successfully, Please try login with your credentials!');
+            toast.success('Link sent successfully, Please try login with your credentials!');
             setTimeout(() => navigate(URLS.LOGIN), 200);
           } else {
             toast.error('Please check your recovery email');

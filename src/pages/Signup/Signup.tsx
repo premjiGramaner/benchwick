@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
+import toast, { Toaster } from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
 import { URLS } from '@Utils/constants'
 import {
   IDefaultPageProps,
@@ -9,9 +11,7 @@ import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/signUpValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
 import { EnvLogo } from '@Assets/images'
-import { useDispatch } from 'react-redux'
 import { signUp } from 'src/reducers/signUpReducer'
-import toast, { Toaster } from 'react-hot-toast'
 
 const SignupComponent: React.FC<
   IDefaultPageProps & ILoginPageProps

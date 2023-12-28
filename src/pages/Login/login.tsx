@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import React, { useState, useEffect } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { useFormik } from 'formik'
 import { URLS } from '@Utils/constants'
 import {
@@ -11,13 +12,11 @@ import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/loginValidation'
 import googlePlus from '@Assets/svg/google-plus.svg'
 import { EnvLogo } from '@Assets/images'
-// import { Cookies } from 'react-cookie'
 import { login, logout } from '../../reducers/loginReducer'
-import toast, { Toaster } from 'react-hot-toast'
+
 
 const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
-  // const cookies = new Cookies()
-  const { userInfo, isError, statusCode } = useSelector(
+  const { statusCode } = useSelector(
     (state: IReducerState) => state.loginReducer
   )
   const [rememberMe, setRememberMe] = useState<boolean>(false)
@@ -57,6 +56,7 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
       await handleLoginSubmit(values)
     },
   })
+
   return (
     <div className="bg-login vh-100">
       <section className="container d-flex w-100 align-items-center justify-content-xl-start justify-content-center h-100">

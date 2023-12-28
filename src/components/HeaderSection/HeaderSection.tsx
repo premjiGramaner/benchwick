@@ -1,11 +1,9 @@
 import React from 'react'
-import { IHeaderInterface } from '@Utils/interface/ReusableComponentInterface/HeaderInterface'
-import headerImage from '@Assets/svg/header@1.5x.svg'
+import { useDispatch } from 'react-redux'
 import user from '@Assets/svg/user.svg'
 import logoutIcon from '@Assets/svg/logout.svg'
 import { useNavigate } from 'react-router-dom'
 import { URLS } from '@Utils/constants'
-import { useDispatch } from 'react-redux'
 import { logout } from '../../reducers/loginReducer'
 import { getLoggedUserName } from '@Utils/storage'
 
@@ -18,6 +16,7 @@ const HeaderSection: React.FC = props => {
     dispatch(logout({}))
     localStorage.clear()
   }
+  
   return (
     <div className="header-section">
       <section className="bg-placeholder">
