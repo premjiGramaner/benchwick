@@ -7,7 +7,7 @@ import { URLS } from '@Utils/constants'
 import { logout } from '../../reducers/loginReducer'
 import { getLoggedUserName } from '@Utils/storage'
 
-const HeaderSection: React.FC = props => {
+const HeaderSection: React.FC<{}> = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const userName = getLoggedUserName();
