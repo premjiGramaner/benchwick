@@ -12,8 +12,8 @@ export const login: any = createAsyncThunk(
       const response: any = await api.login.post(payload)
       const { data, error } = response
       if (!error) {
-        getAuthToken(data?.data?.user_token);
-        getLoggedUserName(data);        
+        getAuthToken(data?.data?.user_token);       
+        getLoggedUserName(data?.data?.name);        
         return { data }
       } else {
         return rejectWithValue(data)
