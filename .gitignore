@@ -1,2 +1,6 @@
 build/
 node_modules
+server/varients-generated
+server/varients-images
+server/varients-images/*
+server/varients-generated/*

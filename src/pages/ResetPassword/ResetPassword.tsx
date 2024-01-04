@@ -35,7 +35,7 @@ const ResetPasswordComponent: React.FC<IDefaultPageProps> = props => {
   }, [])
 
   const handlePasswordSubmit = (data) => {
-    if (data.newPassword.length === data.confirmPassword) {
+    if (data.newPassword === data.confirmPassword) {
       dispatch(
         resetPassword({
           body: {
