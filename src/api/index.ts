@@ -1,5 +1,3 @@
-import { forgotPassword } from './../reducers/forgotPasswordReducer'
-import { IS_USER_AUTHENTICATED } from './../utils/storage/index'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { API_URL, STORAGE_KEY } from '@Utils/constants'
 

@@ -1,7 +1,7 @@
-import api from '@API/index'
+import toast from 'react-hot-toast'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { IImageVariationReducerState, IDispatchState } from '@Interface/index'
-import toast from 'react-hot-toast'
+import api from '@API/index'
 
 export const imageVariation: any = createAsyncThunk(
   'imageVariationReducer/imageVariation',

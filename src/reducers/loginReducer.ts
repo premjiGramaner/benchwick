@@ -1,9 +1,9 @@
-import api from '@API/index'
+import toast from 'react-hot-toast'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ILoginReducerState, IDispatchState } from '@Interface/index'
 import { IS_USER_AUTHENTICATED, getAuthToken ,getLoggedUserName} from '@Utils/storage'
 import { URLS } from '@Utils/constants'
-import toast from 'react-hot-toast'
+import api from '@API/index'
 
 export const login: any = createAsyncThunk(
   'loginReducer/login',
@@ -12,8 +12,8 @@ export const login: any = createAsyncThunk(
       const response: any = await api.login.post(payload)
       const { data, error } = response
       if (!error) {
-        getAuthToken(data?.data?.user_token);
-        getLoggedUserName(data);        
+        getAuthToken(data?.data?.user_token);       
+        getLoggedUserName(data?.data?.name);        
         return { data }
       } else {
         return rejectWithValue(data)
@@ -60,7 +60,7 @@ const loginReducer = createSlice({
       state.isLoading = false
       state.isError = true
       state.statusCode = action?.payload?.response?.status
-      toast.error('Kindly check your credentials')
+      toast.error('Please check your credentials')
     },
     [logout.fulfilled]: (state: ILoginReducerState) => {
       state.userInfo = null

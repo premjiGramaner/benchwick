@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { API_URL, URLS } from '@Utils/constants'
@@ -12,9 +13,10 @@ import {
 } from '@Assets/images'
 import icon from '../../assets/svg/fa-eye.svg'
 import { userHistory } from 'src/reducers/userHistoryReducer'
-import { useSelector } from 'react-redux'
+
 import { IReducerState } from '@Interface/StoreInterface'
 import { getEnvisionVariants } from 'src/reducers/getEnvisionVariantsReducer'
+
 const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const [searchInput, setSearchInput] = useState<string>('')
   const [selectedPage, setSelectedPage] = useState<number>(1)
@@ -217,7 +219,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   return (
     <div className="viewhistory-page-main-container">
       <div className="d-flex">
-        <SideBarSection enable={false} />
+        <SideBarSection enable={false}  isFormValid={false} />
         <div className="history-table-container">
           <div className="d-flex justify-content-between">
             <button className="back-btn" onClick={handleBackToDashBoard}>

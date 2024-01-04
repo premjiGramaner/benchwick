@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS, API_URL } from '@Utils/constants'
@@ -10,10 +12,9 @@ import {
   IReducerState,
   IVarientModal,
 } from '@Interface/StoreInterface'
-import { useSelector } from 'react-redux'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
 import { getFileNameFromURL } from '@Utils/utils'
-import toast, { Toaster } from 'react-hot-toast'
+
 
 const Dashboard: React.FC<IDefaultPageProps> = props => {
   const [file, setFile] = useState('')
@@ -28,6 +29,8 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const { imageInfo } = useSelector(
     (state: IReducerState) => state.imageVariationReducer
   )
+  const isFormValidToUpload = (!range || range && range.toString() == "0") || !image;
+  let selectedVariation = saveVariationDetails
 
   const handleViewHistory = e => {
     e.preventDefault();
@@ -74,9 +77,9 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const handleImageClose = () => {
     setFile('');
     setImage(null)
+    props.dispatch(imageVariation({}))
   }
-
-  let selectedVariation = saveVariationDetails
+ 
   const handleSelectedVariation = event => {
     var formData
     if (event.target.checked) {
@@ -117,7 +120,6 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
         element.download = getFileNameFromURL(API_URL.host + "/" + variationmodal?.imageURL)
         document.body.appendChild(element)
         element.click()
-
         document.body.removeChild(element)
       })
   }
@@ -132,8 +134,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     setName("");
     setModal(false)
   }
-
-  const isFormValidToUpload = (!range || range && range.toString() == "0") || !image;
+  
   return (
     <div className="dashboard-page-main-container">
       <div className="d-flex">

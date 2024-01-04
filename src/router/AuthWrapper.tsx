@@ -1,6 +1,4 @@
 import React from 'react';
-
-import { URLS } from '@Utils/constants';
 import { IDefaultPageProps } from '@Interface/index';
 
 class AuthComponentWrapper extends React.Component<any, { hasError: boolean }> {

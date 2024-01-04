@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
-import { URLS } from '@Utils/constants'
+import jwt_decode from 'jwt-decode'
+import toast, { Toaster } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
+import { URLS } from '@Utils/constants'
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/resetPasswordValidation'
 import { resetPassword } from 'src/reducers/resetPasswordReducer'
-import jwt_decode from 'jwt-decode'
 import { EnvLogo } from '@Assets/images'
-import toast, { Toaster } from 'react-hot-toast'
+
 import { IDefaultPageProps } from '@Interface/PagesInterface'
 
 const ResetPasswordComponent: React.FC<IDefaultPageProps> = props => {
@@ -134,4 +135,5 @@ const ResetPasswordComponent: React.FC<IDefaultPageProps> = props => {
     </div>
   )
 }
+
 export default ResetPasswordComponent

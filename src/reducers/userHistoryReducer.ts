@@ -1,6 +1,7 @@
-import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { IUserHistoryReducerState, IDispatchState } from '@Interface/index'
+import api from '@API/index'
+
 export const userHistory: any = createAsyncThunk(
   'userHistoryReducer/userHistory',
   async (payload: any = {}) => {

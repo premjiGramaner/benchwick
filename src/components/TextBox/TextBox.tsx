@@ -4,6 +4,7 @@ import { ITextBoxProps } from '@Interface/ReusableComponentInterface/InputsInter
 
 const TextBox: FC<ITextBoxProps> = props => {
   const { handleIconClick, handleChange, icon, ...rest } = props
+  
   return (
     <div className="inputField textbox-field">
       <label className="label-style fs-12 text-color3">{props.labelname}</label>

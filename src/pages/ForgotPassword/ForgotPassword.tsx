@@ -10,9 +10,7 @@ import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/forgotPasswordValidation'
 import { forgotPassword } from 'src/reducers/forgotPasswordReducer'
 
-const ForgotPasswordComponent: React.FC<
-  IDefaultPageProps & IForgotPasswordProps
-> = (props) => {
+const ForgotPasswordComponent: React.FC<IDefaultPageProps & IForgotPasswordProps> = (props) => {
   const dispatch = useDispatch()
   const handleLinkSubmit = data => {
     dispatch(
