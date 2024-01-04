@@ -11,3 +11,5 @@
 #     https://www.atlassian.com/git/tutorials/git-lfs
 node_modules
 client/node_modules
+varients-generated
+varients-images

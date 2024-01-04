@@ -1,15 +1,37 @@
-import React,{ useRef} from 'react'
+import React, { useState } from 'react'
 import { ISideBarInterface } from '@Utils/interface/ReusableComponentInterface/SideBarInterface'
 import upload from '@Assets/svg/upload.svg'
+import { useRef } from 'react';
+import { IDefaultPageProps } from '@Interface/PagesInterface';
+import { imageVariation } from '@Reducers/imageVariationReducer';
 
-const SideBarSection: React.FC<ISideBarInterface> = props => {
+const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props => {
+  const fileInput = useRef();
+  const [imageItem, setImageItem] = useState<File | null>(null)
+  const range = localStorage.getItem('variation_range') || "4";
 
-  const fileInput = useRef()
   const handleUpload = event => {
-    props.handleImage(event.target.files[0])
+    if (props.handleImage) {
+      props.handleImage(event.target.files[0])
+    } else {
+      setImageItem(event.target.files[0])
+    }
   }
+
+  const imageEnvision = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    if (props?.envisionUploadHandle) {
+      props.envisionUploadHandle(e);
+    } else {
+      let formData = new FormData()
+      formData.append('image', imageItem)
+      formData.append('variants', range)
+      props.dispatch(imageVariation(formData))
+    }
+  }
+
   const { isFormValid } = props;
-  
+  const isFormDisabled = isFormValid === undefined ? !imageItem : isFormValid;
+
   return (
     <div className="sidebar-section"  >
       <div className="card card-section">
@@ -40,14 +62,14 @@ const SideBarSection: React.FC<ISideBarInterface> = props => {
             </div>
 
             <p className="card-text fs-10">Limit 200MB per file | PNG</p>
-            <div className="btn-height" onClick={props.envisionUploadHandle}>
-              <a href="#"  className={`btn btn-envision ${(isFormValid ) && 'disabled'} `}>
+            <div className="btn-height" onClick={imageEnvision}>
+              <a href="#" className={`btn btn-envision ${(isFormDisabled) && 'disabled'}`}>
                 ENVISION
               </a>
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
       <div className="view-history">
         <button
           className={
@@ -61,7 +83,7 @@ const SideBarSection: React.FC<ISideBarInterface> = props => {
           View History
         </button>
       </div>
-    </div>
+    </div >
   )
 }
 

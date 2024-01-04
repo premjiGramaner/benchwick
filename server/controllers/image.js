@@ -8,7 +8,7 @@ const imgPath = 'varients-images/', tmp_path = 'varients-generated/';
 
 const imageEnvision = async (req, res, next) => {
     try {
-        const { variants, mockError = true } = req.body;
+        const { variants, mockError = false } = req.body;
         const { image } = req.files;
         const { tokenInfo } = res.locals || {};
         if (!image) return res.sendStatus(400);
@@ -16,13 +16,14 @@ const imageEnvision = async (req, res, next) => {
 
         const path = await validatePath(tmp_path + (tokenInfo.user_info || { uuid: 'default_001' }).uuid + '/');
         const imageName = (`default_image${getTypeFromURL(image.name)}`)
+
         // Move the original image to our temp folder
         image.mv(path + imageName);
 
         const formData = new FormData();
         formData.append('file', fs.createReadStream(path + imageName), imageName)
 
-        console.log('** formData', formData, imageName, path + imageName)
+        console.log('** formData', imageName, path + imageName)
         let finalImageList = [], isError = false;
         const headers = {
             headers: {
@@ -37,7 +38,7 @@ const imageEnvision = async (req, res, next) => {
             .catch(function (error) {
                 // handle error
                 console.log('********')
-                console.log('image/imageEnvision:42', error.response)
+                console.log('image/imageEnvision: python result', error.response?.status + ' : ' + error.response?.statusText)
                 console.log('********')
                 isError = { message: error?.response?.data?.detail || true, code: error?.response?.status };
             }).finally(function () {

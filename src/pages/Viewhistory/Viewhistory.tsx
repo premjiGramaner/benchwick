@@ -219,7 +219,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   return (
     <div className="viewhistory-page-main-container">
       <div className="d-flex">
-        <SideBarSection enable={false}  isFormValid={false} />
+        <SideBarSection enable={false} {...props} />
         <div className="history-table-container">
           <div className="d-flex justify-content-between">
             <button className="back-btn" onClick={handleBackToDashBoard}>
