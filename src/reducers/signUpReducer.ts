@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ISignUpReducerState, IDispatchState } from '@Interface/index'
 import api from '@API/index'
 import { URLS } from '@Utils/constants';
+import axios from 'axios';
 
 export const signUp: any = createAsyncThunk(
   'signUpReducer/signUpPassword',
@@ -30,6 +31,17 @@ export const signUp: any = createAsyncThunk(
     })
   }
 )
+
+export const getUserInfoFromGoogle = async (access_token: string) => {
+  return axios
+    .get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        Accept: 'application/json'
+      },
+    })
+    .then(res => res.data);
+}
 
 export const signUpReducerInitialState: ISignUpReducerState = {
   statusCode: null,

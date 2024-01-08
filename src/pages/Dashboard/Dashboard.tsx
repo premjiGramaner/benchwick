@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
@@ -14,29 +14,25 @@ import {
 } from '@Interface/StoreInterface'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
 import { getFileNameFromURL } from '@Utils/utils'
+import { ImageContext } from "src/router/context-provider";
 
 
 const Dashboard: React.FC<IDefaultPageProps> = props => {
-  const [file, setFile] = useState('')
-  const [image, setImage] = useState<File | null>(null)
-  const [range, setRange] = useState(localStorage.getItem('variation_range') || '0')
-  const [name, setName] = useState('')
+  const { dashboardResult, setDashboardResult } = useContext(ImageContext);
+  const { image, file, range, name } = dashboardResult || {};
+
   const [modal, setModal] = useState(false)
-  const [variationmodal, setvariationModal] = useState<IVarientModal>({
-    status: false,
-  })
+  const [variationmodal, setvariationModal] = useState<IVarientModal>({ status: false })
   const [saveVariationDetails, setsaveVariationDetails] = useState([])
-  const { imageInfo } = useSelector(
-    (state: IReducerState) => state.imageVariationReducer
-  )
+
+  const { imageInfo } = useSelector((state: IReducerState) => state.imageVariationReducer)
+
   const isFormValidToUpload = (!range || range && range.toString() == "0") || !image;
   let selectedVariation = saveVariationDetails
 
-  const handleViewHistory = e => {
+  const handleViewHistory = (e) => {
     e.preventDefault();
-    setFile('');
-    setImage(null);
-    setsaveVariationDetails([]);
+    setModal(false);
     setvariationModal({ status: false });
     props.navigate(URLS.VIEWHISTORY)
   }
@@ -53,32 +49,31 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   }
 
   const handleImage = (data: File) => {
-    setFile(URL.createObjectURL(data))
-    setImage(data)
+    setsaveVariationDetails([]);
+    setDashboardResult({ image: data, file: URL.createObjectURL(data) })
   }
 
-  const handleRange = e => {
-    setRange(e.target.value)
+  const handleRange = (e) => {
+    setDashboardResult({ range: e.target.value })
     localStorage.setItem('variation_range', e.target.value)
   }
 
-  const handleSaveSelection = e => {
+  const handleSaveSelection = (e) => {
     e.preventDefault()
     setModal(!modal)
   }
 
-  const handleCancel = e => {
+  const handleCancel = (e) => {
     e.preventDefault()
-    setName("");
+    setDashboardResult({ name: '' })
     setModal(!modal)
   }
 
   const handleImageClose = () => {
-    setFile('');
-    setImage(null)
+    setDashboardResult({ image: null, file: '' })
     props.dispatch(imageVariation({}))
   }
- 
+
   const handleSelectedVariation = event => {
     var formData
     if (event.target.checked) {
@@ -130,10 +125,10 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     formData.append('variantList', JSON.stringify(saveVariationDetails))
     formData.append('name', name)
     props.dispatch(saveEnvision(formData))
-    setName("");
+    setDashboardResult({ name: '' })
     setModal(false)
   }
-  
+
   return (
     <div className="dashboard-page-main-container">
       <div className="d-flex">
@@ -179,7 +174,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                   className="form-range form-control"
                   min="0"
                   max="9"
-                  value={range}
+                  value={range || 0}
                   onChange={handleRange}
                 ></input>
                 <div>{range}</div>
@@ -316,7 +311,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                 className="name-style"
                 type="text"
                 placeholder="Selection Name 1"
-                onChange={e => setName(e.target.value)}
+                onChange={e => setDashboardResult({ name: e.target.value })}
                 value={name}
               />
             </div>

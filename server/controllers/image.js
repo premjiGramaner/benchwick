@@ -23,7 +23,6 @@ const imageEnvision = async (req, res, next) => {
         const formData = new FormData();
         formData.append('file', fs.createReadStream(path + imageName), imageName)
 
-        console.log('** formData', imageName, path + imageName)
         let finalImageList = [], isError = false;
         const headers = {
             headers: {
@@ -34,12 +33,11 @@ const imageEnvision = async (req, res, next) => {
         };
 
         axios.post(`http://localhost:8000/regenerate_images/?num_images=${variants}&use_sd=true`, formData, headers)
-            .then((response) => finalImageList.push(...(response.data || [])))
+            .then((response) => {
+                finalImageList.push(...(response.data || []))
+            })
             .catch(function (error) {
                 // handle error
-                console.log('********')
-                console.log('image/imageEnvision: python result', error.response?.status + ' : ' + error.response?.statusText)
-                console.log('********')
                 isError = { message: error?.response?.data?.detail || true, code: error?.response?.status };
             }).finally(function () {
                 if (isError) {
@@ -132,6 +130,7 @@ const saveEnvision = async (req, res, next) => {
             image_name: image.name,
             image_size: image.size,
             isActive: 'true',
+            create_by: tokenInfo.user_info.id,
             created_date: moment().format('DD/MM/YYYY'),
             created_time: moment().format('h:mm:ss'),
             ...(getDatesObj() || {})

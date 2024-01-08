@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { IUserHistoryReducerState, IDispatchState } from '@Interface/index'
+import toast from 'react-hot-toast'
 import api from '@API/index'
 
 export const userHistory: any = createAsyncThunk(
   'userHistoryReducer/userHistory',
-  async (payload: any = {}) => {
+  async () => {
     return new Promise((resolve: any) => {
       api.userHistory
         .get()
@@ -16,8 +17,33 @@ export const userHistory: any = createAsyncThunk(
             })
           }
         })
-        .catch((response: Error) => {
+        .catch(() => {
+          toast.success('Failed to get user history!');
           resolve({ data: null })
+        })
+    })
+  }
+)
+
+export const deleteHistory: any = createAsyncThunk(
+  'userHistoryReducer/deleteHistory',
+  async (payload: number, thunkAPI) => {
+    return new Promise((resolve: any) => {
+      api.deleteHistory
+        .delete(payload)
+        .then((response: any) => {
+          const { data, error } = response
+          if (!error) {
+            toast.success('History deleted successfully!');
+            thunkAPI.dispatch(userHistory());
+            resolve({
+              data: data || null,
+            })
+          }
+        })
+        .catch(() => {
+          toast.success('Failed to delete history!');
+          resolve(null)
         })
     })
   }

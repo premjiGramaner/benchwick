@@ -1,26 +1,27 @@
 import React, { Fragment, Suspense, useEffect } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import { URLS } from '@Utils/constants'
 import { withRouter } from './WithRouter'
 import AuthWrapper from './AuthWrapper'
-import { IS_USER_AUTHENTICATED } from '@Utils/storage'
+import { IS_USER_AUTHENTICATED, updateStorages } from '@Utils/storage'
 import { IRouterProps } from '@Utils/interface/PagesInterface'
 import { getKey } from '@Utils/utils'
-// import { CookiesProvider } from 'react-cookie'
-// import { Cookies } from 'react-cookie'
+import { CookiesProvider } from 'react-cookie'
+import { Cookies } from 'react-cookie'
 
 import AuthMenuList from './authMenuList'
 import UnAuthMenuList from './unAuthMenuList'
 import HeaderSection from '@Components/HeaderSection/HeaderSection'
+import { URLS } from '@Utils/constants'
 
 const RouterComponent: React.FC<IRouterProps> = props => {
-  // const cookies = new Cookies()
-  const navigate = useNavigate()
-  // let isRemember = cookies.get('isRemember')
+  const navigate = useNavigate();
+  const cookie = new Cookies()
+
   useEffect(() => {
-    // if (isRemember === 'true') return
-    // navigate(URLS.DEFAULT)
-    // console.log('RouterComponent Initial props', UnAuthMenuList)
+    if (cookie.get('isRemember') === true && IS_USER_AUTHENTICATED('cookie') && !IS_USER_AUTHENTICATED()) {
+      updateStorages({ moveSessionToLocal: true });
+      setTimeout(() => navigate(URLS.DEFAULT), 200)
+    }
   }, [])
 
   let authRoutes = null
@@ -33,7 +34,7 @@ const RouterComponent: React.FC<IRouterProps> = props => {
               <Route
                 path={route.path}
                 key={getKey()}
-                element={<route.component {...props} routeInfo={route} />}
+                element={<route.component {...props} />}
               />
             )
           })}
@@ -52,17 +53,17 @@ const RouterComponent: React.FC<IRouterProps> = props => {
               <Route
                 path={route.path}
                 key={getKey()}
-                element={<route.component {...props} routeInfo={route} />}
+                element={<route.component {...props} />}
               />
             )
           })}
         </Routes>
-      </AuthWrapper>
+      </AuthWrapper >
     )
   }
 
   return (
-    <React.Fragment>
+    <CookiesProvider defaultSetOptions={{ path: '/' }}>
       <Suspense
         fallback={
           <Fragment>
@@ -72,7 +73,7 @@ const RouterComponent: React.FC<IRouterProps> = props => {
       >
         {authRoutes}
       </Suspense>
-    </React.Fragment>
+    </CookiesProvider>
   )
 }
 

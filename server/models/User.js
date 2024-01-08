@@ -1,5 +1,3 @@
-const moment = require('moment');
-
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
         id: {
@@ -16,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         email: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        client_id: {
             type: DataTypes.STRING,
             allowNull: true
         },
@@ -45,7 +47,8 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false
     });
 
-    User.getUserByUserEmail = function (email) {
+    User.getUserByUserEmail = function (email, client_id) {
+        if (client_id) return this.findOne({ where: { email, client_id } });
         return this.findOne({ where: { email } });
     }
 

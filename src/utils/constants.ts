@@ -1,4 +1,5 @@
 export const API_URL = {
+  wss: 'wss://localhost:5001/',
   host: 'http://localhost:5001',
   baseURL: `http://localhost:5001/api`,
 }

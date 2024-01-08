@@ -190,7 +190,7 @@ const getTypeFromURL = (url) => {
 const base64ToFile = (image, filename) => {
     return new Promise((resolve) => {
         fs.writeFile(filename, image, 'base64', function (err) {
-            console.log('Is base64ToFile error:', err);
+            // console.log('Is base64ToFile error:', err);
             resolve(filename)
         });
     })
@@ -204,13 +204,14 @@ const formatImageCollection = (imageList = [], base_file_name, path) => {
                 // if (!index) console.log('image: ', image)
                 const file_name = `${path}0${(index + 1) + '_' + getTypeFromURL(base_file_name)}`
                 await base64ToFile(image, file_name).then((item) => {
-                    console.log('waiting check ***', item)
+                    // console.log('waiting check ***', item)
                     finalList.push({
                         image_url: file_name,
                         key: uuid_key()
                     })
                 });
 
+                // console.log('Index res', finalList.length, imageList.length)
                 if (finalList.length === imageList.length) resolve(finalList)
             });
 

@@ -1,19 +1,32 @@
-.page-not-found-main-container {
-        .bg-placeholder {
-          width:auto;
-          height:123px;
-          background-size: cover;
-          background-repeat: no-repeat;
-          background-image: url(../../assets/svg/bg.svg);
-          .fs-12 {
-            font-size: 1.75rem;
-          }
-          .icon-size {
-            font-size: 1.375rem;
-            padding-left: 0.5rem;
-            &:hover {
-              cursor: pointer;
-            }
-          }
-        }
+.page-not-found {
+  display: flex;
+  height: calc(100vh - 200px);
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    margin-top: 0;
+
+    img {
+      height: 100%;
+    }
+  }
+
+  .page-not-available-label {
+    font-size: 30px;
+    color: $grey;
+    margin-bottom: 1.5rem;
+  }
+
+  .back-to-home {
+    font-size: 16px;
+    color: $defaultTextColor;
+    cursor: pointer;
+  }
 }

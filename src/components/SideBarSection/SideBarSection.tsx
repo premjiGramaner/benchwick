@@ -1,36 +1,39 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { ISideBarInterface } from '@Utils/interface/ReusableComponentInterface/SideBarInterface'
 import upload from '@Assets/svg/upload.svg'
 import { useRef } from 'react';
 import { IDefaultPageProps } from '@Interface/PagesInterface';
 import { imageVariation } from '@Reducers/imageVariationReducer';
+import { ImageContext } from "src/router/context-provider";
 
 const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props => {
   const fileInput = useRef();
-  const [imageItem, setImageItem] = useState<File | null>(null)
-  const range = localStorage.getItem('variation_range') || "4";
+  const { dashboardResult, setDashboardResult } = useContext(ImageContext);
+  const { image, range } = dashboardResult || {};
 
   const handleUpload = event => {
     if (props.handleImage) {
       props.handleImage(event.target.files[0])
     } else {
-      setImageItem(event.target.files[0])
-    }
-  }
-
-  const imageEnvision = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    if (props?.envisionUploadHandle) {
-      props.envisionUploadHandle(e);
-    } else {
-      let formData = new FormData()
-      formData.append('image', imageItem)
-      formData.append('variants', range)
-      props.dispatch(imageVariation(formData))
+      setDashboardResult({ image: event.target.files[0] })
     }
   }
 
   const { isFormValid } = props;
-  const isFormDisabled = isFormValid === undefined ? !imageItem : isFormValid;
+  const isFormDisabled = isFormValid === undefined ? !image : isFormValid;
+
+  const imageEnvision = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    if (!isFormDisabled) {
+      if (props?.envisionUploadHandle) {
+        props.envisionUploadHandle(e);
+      } else {
+        let formData = new FormData()
+        formData.append('image', image)
+        formData.append('variants', range)
+        props.dispatch(imageVariation(formData))
+      }
+    }
+  }
 
   return (
     <div className="sidebar-section"  >
@@ -50,7 +53,6 @@ const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props =>
                   upload
                 </label>
                 <input
-                  disabled={!props.enable}
                   value=""
                   ref={fileInput}
                   id="input-file"

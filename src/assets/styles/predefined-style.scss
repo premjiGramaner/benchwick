@@ -1,0 +1,37 @@
+.flex {
+    display: flex;
+}
+
+.f-center {
+    display: flex;
+    align-items: center;
+}
+
+.f-justify-center {
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.display-center {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.display-td-center {
+    text-align: left;
+    vertical-align: middle;
+    padding-left: 40px !important;
+}
+
+.pl-35 {
+    padding-left: 30px !important;
+}
+
+.pointer {
+    cursor: pointer;
+}

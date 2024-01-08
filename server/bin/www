@@ -3,12 +3,14 @@
  */
 var app = require('../app');
 var debug = require('debug')('reactnode:server');
-var http = require('http');
+var http = require('http'), { wsServerPool } = require('./socket');
 
 var port = normalizePort(process.env.PORT || '5001');
 app.Sequlizer_port = port;
 
 var server = http.createServer(app);
+// wsServerPool(server);
+
 server.on('error', onError);
 server.on('listening', onListening);
 

@@ -7,13 +7,10 @@ import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { NavigateOptions, To } from "react-router-dom";
 
-import { IMenuItem } from '@Interface/index';
-
 export interface IDefaultPageProps {
     children?: React.ReactNode;
     navigate: (url: To, options?: NavigateOptions) => void;
     location: Location;
     dispatch: Dispatch<AnyAction>;
-    isUserAuthenticated: string | void;
-    routeInfo: IMenuItem
+    isuserauthenticated: string | void;
 }
