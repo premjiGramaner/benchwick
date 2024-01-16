@@ -27,7 +27,6 @@ const ResetPasswordComponent: React.FC<IDefaultPageProps> = props => {
       setUserId(decodedToken?.id)
       setIsLoading(false);
     } catch (error) {
-      console.log('Error decoding JWT token:', error.message)
       toast.error('Token is invalid!');
       props.navigate(URLS.LOGIN);
       setIsLoading(false);
@@ -85,7 +84,7 @@ const ResetPasswordComponent: React.FC<IDefaultPageProps> = props => {
                 value={values.newPassword}
                 labelname="New Password"
                 placeholder="Please enter the New Password"
-                handleChange={handleChange}
+                handlechange={handleChange}
                 icon={showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'}
                 handleIconClick={() => setShowPassword(!showPassword)}
                 errorMessageComponent={(touched.newPassword && errors.newPassword ? (
@@ -102,7 +101,7 @@ const ResetPasswordComponent: React.FC<IDefaultPageProps> = props => {
                 value={values.confirmPassword}
                 labelname="Confirm Password"
                 placeholder="Please enter the confirm password"
-                handleChange={handleChange}
+                handlechange={handleChange}
                 errorMessageComponent={(touched.confirmPassword && errors.confirmPassword ? (
                   <p className="form-error">
                     <i className="fa fa-info-circle"></i>

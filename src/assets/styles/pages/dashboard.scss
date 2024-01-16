@@ -2,6 +2,21 @@
   .original-image-container {
     padding: 40px 30px !important;
     margin-left: 30px;
+
+    .btn-height.loading {
+      height: 90px;
+      padding-top: 0 !important;
+
+      .dash-loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .sl-spinner3 {
+          width: 40px;
+        }
+      }
+    }
   }
 
   .image-holder {
@@ -275,23 +290,40 @@
     height: 30x;
     width: 20px;
     border-radius: 8px;
+    cursor: pointer;
   }
 
   .variation-modal-container {
     padding: 40px 50px !important;
-    height: 530px;
-    width: 578px;
+    min-height: calc(100vh / 1.2);
     border-radius: 8px;
     background-color: $white;
     box-shadow: 0 1px 4px 0 $card-bx-shadow;
-  }
 
-  .variation-style {
-    box-sizing: border-box;
-    height: 400px;
-    width: 479px;
-    border: 1px solid #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 0 1px 0 $image-box-shadow;
+    .variation-modal {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem !important;
+
+      .variation-style {
+        box-sizing: border-box;
+        height: auto;
+        width: 630px;
+        border: 1px solid #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 0 1px 0 $image-box-shadow;
+      }
+    }
+
+    #varient-modal-label {
+      h4 {
+        margin-bottom: 4px;
+      }
+
+      .f14 {
+        font-size: 14px;
+      }
+    }
   }
 }

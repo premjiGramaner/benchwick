@@ -83,7 +83,7 @@ module.exports = (sequelize, DataTypes) => {
         //         ['full_name', 'DESC']]
         // }).then(function (result) { })
 
-        return this.findAll({ where: { create_by: id } });
+        return this.findAll({ where: { create_by: id, isActive: 'true' } });
     }
 
     Images.getHistoryByAdmin = function () {
