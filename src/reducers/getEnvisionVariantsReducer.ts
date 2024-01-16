@@ -1,9 +1,10 @@
-import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import api from '@API/index'
 import {
   IGetEnvisionVariantsReducerState,
   IDispatchState,
 } from '@Interface/index'
+
 export const getEnvisionVariants: any = createAsyncThunk(
   'getEnvisionVariantsReducer/getEnvisionVariants',
   async (payload: any = {}) => {

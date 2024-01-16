@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import { ITextBoxProps } from '@Interface/ReusableComponentInterface/InputsInterface'
 
 const TextBox: FC<ITextBoxProps> = props => {
-  const { handleIconClick, handleChange, icon, ...rest } = props
+  const { handleIconClick, handlechange, errorMessageComponent, icon, ...rest } = props
+
   return (
     <div className="inputField textbox-field">
       <label className="label-style fs-12 text-color3">{props.labelname}</label>
@@ -15,14 +16,14 @@ const TextBox: FC<ITextBoxProps> = props => {
           fs-14 px-0 border-top-0 border-end-0 border-start-0 rounded-0 border"
           placeholder={props.placeholder}
           aria-label="userName"
-          onChange={handleChange}
+          onChange={handlechange}
           {...rest}
         />
         <i className="eye-icon" onClick={handleIconClick}>
           <span className={icon}></span>
         </i>
       </div>
-      {props.errorMessageComponent && (props.errorMessageComponent)}
+      {errorMessageComponent && (errorMessageComponent)}
     </div>
   )
 }

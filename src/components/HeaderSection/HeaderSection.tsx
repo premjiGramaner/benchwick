@@ -1,25 +1,33 @@
 import React from 'react'
-import { IHeaderInterface } from '@Utils/interface/ReusableComponentInterface/HeaderInterface'
-import headerImage from '@Assets/svg/header@1.5x.svg'
+import { useDispatch } from 'react-redux'
 import user from '@Assets/svg/user.svg'
 import logoutIcon from '@Assets/svg/logout.svg'
 import { useNavigate } from 'react-router-dom'
 import { URLS } from '@Utils/constants'
-import { useDispatch } from 'react-redux'
 import { logout } from '../../reducers/loginReducer'
-const HeaderSection: React.FC = props => {
+import { getLoggedUserName } from '@Utils/storage'
+import { EnvHeaderLogo } from '@Assets/images'
+// import { socket } from '@Sw/default'
+
+const HeaderSection: React.FC<{}> = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const userName = getLoggedUserName() || "Unknow user";
+
   const handleLogout = () => {
-    navigate(URLS.LOGIN)
-    dispatch(logout({}))
-    localStorage.clear()
+    dispatch(logout({}));
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate(URLS.LOGIN);
+    // socket.disconnect()
   }
+
   return (
     <div className="header-section">
       <section className="bg-placeholder">
+        <img src={EnvHeaderLogo} alt="envision logo" className='app-logo' />
         <div className="mb-0 px-5 d-flex justify-content-end align-middle user-section">
-          <p className="mb-0 fs-12 text-white user-align">Welcome, Peter</p>
+          <p className="mb-0 fs-12 text-white user-align">Welcome, {userName}</p>
           <img className="icon-size mt-1 px-2" alt="icons" src={user} />
           <img
             className="icon-size mt-1 px-2 mr-2"

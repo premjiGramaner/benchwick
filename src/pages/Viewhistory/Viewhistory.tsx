@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { API_URL, URLS } from '@Utils/constants'
@@ -11,25 +12,31 @@ import {
   SortIcon,
 } from '@Assets/images'
 import icon from '../../assets/svg/fa-eye.svg'
-import { userHistory } from 'src/reducers/userHistoryReducer'
-import { useSelector } from 'react-redux'
+import { userHistory, deleteHistory } from '@Reducers/userHistoryReducer'
+import Download from '@Assets/svg/variant-download.svg'
+
 import { IReducerState } from '@Interface/StoreInterface'
-import { getEnvisionVariants } from 'src/reducers/getEnvisionVariantsReducer'
+import { getEnvisionVariants } from '@Reducers/getEnvisionVariantsReducer'
+import { getFileNameFromURL, getKey } from '@Utils/utils'
+
 const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const [searchInput, setSearchInput] = useState<string>('')
   const [selectedPage, setSelectedPage] = useState<number>(1)
   const [variationmodal, setvariationModal] = useState(false)
+
+  const [handlePageCount, setHandlePageCount] = useState<number>(10)
+  const [deleteModal, setDeleteModal] = useState<number>(0)
+
+  const [sortOrder, setSortOrder] = useState<string>('asc') // or 'desc'
+  const [sortBy, setSortBy] = useState<string>('name')
+
   const { data = [], isError } = useSelector(
     (state: IReducerState) => state.userHistoryReducer
   )
-  const { variantData = {} } = useSelector(
-    (state: IReducerState) => state.getEnvisionVariantsReducer
-  )
-  const [handlePageCount, setHandlePageCount] = useState<number>(10)
 
   const [tableData, setTableData] = useState(data || [])
-  const [sortOrder, setSortOrder] = useState<string>('asc') // or 'desc'
-  const [sortBy, setSortBy] = useState<string>('name')
+  const { variantData = {} } = useSelector((state: IReducerState) => state.getEnvisionVariantsReducer)
+  const { userInfo } = useSelector((state: IReducerState) => state.loginReducer)
 
   useEffect(() => {
     setTableData(data || [])
@@ -64,11 +71,9 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
 
   const filteredAndSortedData = tableData
     .filter(item =>
-      Object.values(item).some(
-        value =>
-          typeof value === 'string' &&
-          value.toLowerCase().includes(searchInput.toLowerCase())
-      )
+      item.name.toLowerCase().lastIndexOf(searchInput.toLowerCase()) > -1 ||
+      item.image_name.toLowerCase().lastIndexOf(searchInput.toLowerCase()) > -1 ||
+      item.variants.toString().toLowerCase().lastIndexOf(searchInput.toLowerCase()) > -1
     )
     .sort((a, b) => {
       if (sortBy === 'date' || sortBy === 'time' || sortBy === 'variants') {
@@ -98,6 +103,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const handleBackToDashBoard = () => {
     props.navigate(URLS.DASHBOARD)
   }
+
   const totalItems = filteredAndSortedData.length
   const totalPages = Math.ceil(totalItems / handlePageCount)
 
@@ -161,7 +167,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               return (
                 <li
                   className={`pagination-number ${pageNumber === selectedPage && 'selected'}`}
-                  key={index}
+                  key={getKey()}
                   onClick={() => {
                     setSelectedPage(pageNumber)
                   }}
@@ -214,21 +220,37 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
     props.dispatch(userHistory())
   }, [])
 
+  const onDeleteItem = (id: number) => {
+    props.dispatch(deleteHistory(id))
+    setDeleteModal(0)
+  }
+
+  const handleImageDownload = (url: string) => {
+    //image path required to change
+    fetch(API_URL.host + "/" + url)
+      .then(response => response.blob())
+      .then(blob => {
+        const element = document.createElement('a')
+        element.href = URL.createObjectURL(blob)
+        element.download = getFileNameFromURL(API_URL.host + "/" + url)
+        document.body.appendChild(element)
+        element.click()
+        document.body.removeChild(element)
+      })
+  }
+
+  const isAdmin = userInfo?.role === 'admin';
   return (
     <div className="viewhistory-page-main-container">
       <div className="d-flex">
-        <SideBarSection enable={false} />
+        <SideBarSection enable={false} {...props} />
         <div className="history-table-container">
           <div className="d-flex justify-content-between">
             <button className="back-btn" onClick={handleBackToDashBoard}>
               Back to dashboard
             </button>
             <div className="d-flex  justify-content-between align-items-center searchContainer">
-              <SearchBox
-                {...props}
-                icon="fa fa-search"
-                handleChange={e => setSearchInput(e.target.value)}
-              />
+              <SearchBox handlechange={e => setSearchInput(String(e.target.value))} />
             </div>
           </div>
 
@@ -240,10 +262,8 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     Name
                     <img
                       src={SortIcon}
-                      style={{ cursor: 'pointer' }}
-                      className={`sort-icon ${sortBy === 'name' ? 'active' : ''
-                        }`}
-                      alt=""
+                      className={`sort-icon pointer ${sortBy === 'name' ? 'active' : ''}`}
+                      alt="sort-icon"
                       aria-hidden="true"
                     />
                   </th>
@@ -251,10 +271,8 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     Date
                     <img
                       src={SortIcon}
-                      style={{ cursor: 'pointer' }}
-                      className={`sort-icon ${sortBy === 'name' ? 'active' : ''
-                        }`}
-                      alt=""
+                      className={`sort-icon pointer ${sortBy === 'created_date' ? 'active' : ''}`}
+                      alt="sort-icon"
                       aria-hidden="true"
                     />
                   </th>
@@ -262,10 +280,8 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     Time
                     <img
                       src={SortIcon}
-                      style={{ cursor: 'pointer' }}
-                      className={`sort-icon ${sortBy === 'name' ? 'active' : ''
-                        }`}
-                      alt=""
+                      className={`sort-icon pointer ${sortBy === 'created_time' ? 'active' : ''}`}
+                      alt="sort-icon"
                       aria-hidden="true"
                     />
                   </th>
@@ -274,10 +290,8 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                     Saved Variation
                     <img
                       src={SortIcon}
-                      style={{ cursor: 'pointer' }}
-                      className={`sort-icon ${sortBy === 'name' ? 'active' : ''
-                        }`}
-                      alt=""
+                      className={`sort-icon pointer ${sortBy === 'variants' ? 'active' : ''}`}
+                      alt="sort-icon"
                       aria-hidden="true"
                     />
                   </th>
@@ -288,7 +302,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               <tbody>
                 {!!currentDataPage &&
                   currentDataPage?.map((value, index) => (
-                    <tr key={index} className="body-style">
+                    <tr key={getKey()} className="body-style">
                       <td>{value.name}</td>
                       <td>{value.created_date}</td>
                       <td>{value.created_time}</td>
@@ -303,11 +317,14 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                       <td>{value.variants}</td>
                       <td
                         onClick={e => handleViewClick(value, e)}
-                        className="pointer"
+                        className="pointer pl-35"
                       >
                         <img className="eye-icon" src={icon} alt="eye image" />
                       </td>
-                      <td>Action</td>
+                      {isAdmin && <td>{value.isActive === 'true' ? 'Active' : 'In Active'}</td>}
+                      {!isAdmin && <td className='display-td-center'>
+                        <span className="glyphicon glyphicon-trash" onClick={() => setDeleteModal(value.id)}></span>
+                      </td>}
                     </tr>
                   ))}
                 {currentDataPage?.length === 0 && (
@@ -325,17 +342,18 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
           </div>
         </div>
       </div>
-      <div
-        className="modal mt-5"
-        style={{ display: variationmodal ? 'block' : 'none' }}
+
+      {variationmodal && <div
+        className="modal mt-5 animate__animated animate__fadeIn"
+        style={{ display: 'block' }}
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-lg">
           <div className="variation-modal-container">
             <div
               className="d-flex justify-content-between"
               id="varient-modal-label"
             >
-              <div className="">
+              <div>
                 <div>
                   <h4 className="modal-title fs-12 fw-bold">
                     <u>SelectionName : {variantData?.name}</u>
@@ -357,21 +375,51 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               </div>
             </div>
 
-            <div className="variation-modal mt-3">
+            <div className="variation-modal">
               {variantData?.variant_list?.length &&
-                variantData?.variant_list?.map(value => (
-                  <div key={value.id + value.name}>
+                variantData?.variant_list?.map((value, index) => (
+                  <div key={getKey()} className="corner-download">
+                    <div className="variation-image-index-circle">
+                      <span>{index + 1}</span>
+                    </div>
                     <img
                       className="variation-style"
                       src={`${API_URL.host}/${value.image_url}`}
                       alt="original image"
+                    />
+                    <img
+                      className="download-button"
+                      src={Download}
+                      alt="original image"
+                      onClick={() => handleImageDownload(value.image_url)}
                     />
                   </div>
                 ))}
             </div>
           </div>
         </div>
-      </div>
+      </div>}
+
+      {deleteModal && <div className="modal delete-confirm-modal animate__animated animate__fadeIn">
+        <div className="modal-dialog modal-sm">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title">Confirm Delete</h4>
+              <button type="button" className="close" onClick={() => setDeleteModal(0)}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>Are you sure want to delete?</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-default" onClick={() => setDeleteModal(0)}>Cancel</button>
+              <button type="button" className="btn btn-primary" onClick={() => onDeleteItem(deleteModal)}>Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>}
+
     </div>
   )
 }

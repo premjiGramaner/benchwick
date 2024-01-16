@@ -1,21 +1,31 @@
+import toast from 'react-hot-toast'
+import { URLS } from '@Utils/constants';
 import api from '@API/index'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { IForgotPasswordReducerState, IDispatchState } from '@Interface/index'
+
 export const forgotPassword: any = createAsyncThunk(
   'forgotPasswordReducer/forgotPassword',
   async (payload: any = {}) => {
     return new Promise((resolve: any) => {
       api.forgotPassword
-        .post(payload)
+        .post(payload.body)
         .then((response: any) => {
-          const { data, error } = response
+          const navigate = payload.navigation;
+          const { data, error } = response;
           if (!error) {
             resolve({
               data: data || null,
             })
+
+            toast.success('Link sent successfully, Please try login with your credentials!');
+            setTimeout(() => navigate(URLS.LOGIN), 200);
+          } else {
+            toast.error('Please check your recovery email');
           }
         })
-        .catch((response: Error) => {
+        .catch(() => {
+          toast.error('Please check your recovery email');
           resolve({ data: null })
         })
     })

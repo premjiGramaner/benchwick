@@ -149,19 +149,30 @@ const getDatesObj = () => {
     })
 }
 
+const makeDir = (path, resolve) => {
+    fs.mkdir(path, { recursive: true }, (e) => {
+        if (e) {
+            errorLogger(null, 'utils/validatePath', e)
+            resolve(false)
+        } else {
+            resolve(path);
+        }
+    });
+}
+
 const validatePath = async (path) => {
     const valida_path = await new Promise((resolve) => {
         fs.access(path, (error) => {
             if (error) {
-                fs.mkdir(path, { recursive: true }, (e) => {
-                    if (e) {
-                        errorLogger(null, 'utils/validatePath', e)
-                        resolve(false)
-                    } else {
-                        resolve(path);
+                makeDir(path, resolve);
+            } else {
+                fs.rmdir(path, { recursive: true, force: true }, (err) => {
+                    if (err) {
+                        console.log(err);
                     }
+                    makeDir(path, resolve);
                 });
-            } else resolve(path);
+            };
         });
     });
 
@@ -177,9 +188,12 @@ const getTypeFromURL = (url) => {
 }
 
 const base64ToFile = (image, filename) => {
-    require("fs").writeFile(filename, image, 'base64', function (err) {
-        console.log('Is base64ToFile error:', err);
-    });
+    return new Promise((resolve) => {
+        fs.writeFile(filename, image, 'base64', function (err) {
+            // console.log('Is base64ToFile error:', err);
+            resolve(filename)
+        });
+    })
 }
 
 const formatImageCollection = (imageList = [], base_file_name, path) => {
@@ -187,15 +201,20 @@ const formatImageCollection = (imageList = [], base_file_name, path) => {
     return new Promise((resolve) => {
         try {
             imageList.forEach(async (image, index) => {
+                // if (!index) console.log('image: ', image)
                 const file_name = `${path}0${(index + 1) + '_' + getTypeFromURL(base_file_name)}`
-                await base64ToFile(image, file_name);
-                finalList.push({
-                    image_url: file_name,
-                    key: uuid_key()
-                })
+                await base64ToFile(image, file_name).then((item) => {
+                    // console.log('waiting check ***', item)
+                    finalList.push({
+                        image_url: file_name,
+                        key: uuid_key()
+                    })
+                });
+
+                // console.log('Index res', finalList.length, imageList.length)
+                if (finalList.length === imageList.length) resolve(finalList)
             });
 
-            resolve(finalList)
         } catch (error) {
             resolve([]);
         }
@@ -212,6 +231,9 @@ module.exports = {
     getKey,
     convertCircular,
     errorLogger,
+    validatePath,
+    getFileNameFromURL,
+    formatImageCollection,
     validatePassword,
     errorHandler,
     sendEmail,

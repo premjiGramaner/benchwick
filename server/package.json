@@ -1,14 +1,13 @@
 {
-  "name": "benchwick-server",
-  "version": "0.0.1",
-  "description": "Benchwick API Service",
+  "name": "envision-server",
+  "version": "1.0.0",
+  "description": "Envision API Service",
   "main": "app.js",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon ./bin/www",
     "client": "cd client && npm install && npm run build",
     "linux": "cd client && npm install && npm run build",
-    "heroku-postbuild": "cd client && npm install && npm run build",
     "dev": "node --inspect app.js"
   },
   "author": "gramener",
@@ -26,14 +25,18 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
     "form-data": "^4.0.0",
+    "google-auth-library": "^9.4.1",
     "image-to-base64": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
     "mysql2": "^2.1.0",
-    "nodemailer": "^6.9.3",
+    "node-cache": "^5.1.2",
+    "nodemailer": "^6.9.7",
     "react": "^16.13.1",
     "sequelize": "^5.21.5",
-    "uuid-node": "^1.0.1"
+    "socket.io": "^4.7.3",
+    "uuid-node": "^1.0.1",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"

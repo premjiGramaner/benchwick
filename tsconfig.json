@@ -24,6 +24,8 @@
       "@Assets/*": ["src/assets/*"],
       "@Images/*": ["src/assets/images/*"],
       "@API/*": ["src/api/*"],
+      "@Reducers/*": ["src/reducers/*"],
+      "@Sw/*": ["src/socket/*"]
     }
   },
   "include": ["next-env.d.ts", "src/**/*", "**/*.ts", "**/*.tsx"],

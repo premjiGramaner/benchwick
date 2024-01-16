@@ -2,6 +2,7 @@
 
 // Base color codes
 $defaultTextColor: #5506ed;
+$headerLeft: #9768F3;
 $blue: #526fd6;
 $light-blue: #e0e5f8;
 $grey: #767676;
@@ -45,6 +46,7 @@ $image-box-shadow: rgba(0, 0, 0, 0.5);
 $sidebar-bg: #eff2f6;
 $outline: #ddd;
 $modal-color: #c7c7c7;
+$button-disabled : #ddcdfb;
 
 /* ----- TODO update the below item with requirement ----- */
 // Font family declarations
@@ -75,6 +77,9 @@ $mq-2560: '(min-width: #{$bp-2560})';
 $mq-retina: '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)';
 
 /* =======----------- Page Styles are must be imported here --------============ */
+@import 'modal.scss';
+@import 'predefined-style.scss';
+
 @import './pages/login.scss';
 @import './pages/dashboard.scss';
 @import './pages/pageNotFound.scss';

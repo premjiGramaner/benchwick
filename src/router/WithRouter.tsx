@@ -17,7 +17,7 @@ export function withRouter(Child: any) {
         navigate={(url: To, options?: NavigateOptions) => navigate(url, options)}
         location={location}
         dispatch={dispatch}
-        isUserAuthenticated={IS_USER_AUTHENTICATED()}
+        isuserauthenticated={String(IS_USER_AUTHENTICATED())}
       />
     )
   }

@@ -2,13 +2,14 @@ const { Images } = require("../models"), axios = require('axios'), FormData = re
 const moment = require('moment');
 const fs = require('fs');
 const { getDatesObj, response, errorLogger, validatePath, formatImageCollection, getTypeFromURL, uuid_key } = require('../helper/utils');
+const { queueCompleted } = require("./sockets");
 
 const imgPath = 'varients-images/', tmp_path = 'varients-generated/';
 
 
 const imageEnvision = async (req, res, next) => {
     try {
-        const { variants } = req.body;
+        const { variants, uuid, mockError = false } = req.body;
         const { image } = req.files;
         const { tokenInfo } = res.locals || {};
         if (!image) return res.sendStatus(400);
@@ -16,13 +17,13 @@ const imageEnvision = async (req, res, next) => {
 
         const path = await validatePath(tmp_path + (tokenInfo.user_info || { uuid: 'default_001' }).uuid + '/');
         const imageName = (`default_image${getTypeFromURL(image.name)}`)
+
         // Move the original image to our temp folder
         image.mv(path + imageName);
 
         const formData = new FormData();
         formData.append('file', fs.createReadStream(path + imageName), imageName)
 
-        console.log('** formData', formData, imageName, path + imageName)
         let finalImageList = [], isError = false;
         const headers = {
             headers: {
@@ -33,12 +34,11 @@ const imageEnvision = async (req, res, next) => {
         };
 
         axios.post(`http://localhost:8000/regenerate_images/?num_images=${variants}&use_sd=true`, formData, headers)
-            .then((response) => finalImageList.push(...(response.data || [])))
+            .then((response) => {
+                finalImageList.push(...(response.data || []))
+            })
             .catch(function (error) {
                 // handle error
-                console.log('********')
-                console.log('image/imageEnvision:42', error.response)
-                console.log('********')
                 isError = { message: error?.response?.data?.detail || true, code: error?.response?.status };
             }).finally(function () {
                 if (isError) {
@@ -59,6 +59,30 @@ const imageEnvision = async (req, res, next) => {
                                     {
                                         image_url: (`${path}03_.jpg`),
                                         key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}04_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}05_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}06_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}07_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}08_.jpg`),
+                                        key: uuid_key()
+                                    },
+                                    {
+                                        image_url: (`${path}09_.jpg`),
+                                        key: uuid_key()
                                     }
                                 ],
                                 variants: variants, error: isError
@@ -73,8 +97,11 @@ const imageEnvision = async (req, res, next) => {
                             message: 'Image variations generate Failed!'
                         })
                     }
+
+                    // queueCompleted(uuid, { info: [], variants: variants }, isError);
                 } else {
                     formatImageCollection(finalImageList, imageName, path).then((finalList) => {
+                        // queueCompleted(uuid, { info: finalList, variants: variants });
                         response({
                             res,
                             code: 200,
@@ -107,6 +134,7 @@ const saveEnvision = async (req, res, next) => {
             image_name: image.name,
             image_size: image.size,
             isActive: 'true',
+            create_by: tokenInfo.user_info.id,
             created_date: moment().format('DD/MM/YYYY'),
             created_time: moment().format('h:mm:ss'),
             ...(getDatesObj() || {})

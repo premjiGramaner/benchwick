@@ -1,13 +1,21 @@
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
-import store from '@Store/storeConfig'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import App from './App'
+import { ConsumerContext } from './router/context-provider'
 
-const eagleContainer = document.getElementById('root')
-const root = ReactDOM.createRoot(eagleContainer)
+import { persistor, store } from '@Store/storeConfig';
+import { PersistGate } from 'redux-persist/integration/react';
+
+
+const benchWickContainer = document.getElementById('root')
+const root = ReactDOM.createRoot(benchWickContainer)
 root.render(
   <Provider store={store}>
-    <App />
+    <PersistGate loading={null} persistor={persistor}>
+      <ConsumerContext>
+        <App />
+      </ConsumerContext>
+    </PersistGate>
   </Provider>
 )

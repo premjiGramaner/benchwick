@@ -1,5 +1,3 @@
-import { forgotPassword } from './../reducers/forgotPasswordReducer'
-import { IS_USER_AUTHENTICATED } from './../utils/storage/index'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { API_URL, STORAGE_KEY } from '@Utils/constants'
 
@@ -13,6 +11,7 @@ const config = {
 const api = {
   login: {
     post: arg => instance.post('/login', arg),
+    google_sign_in: arg => instance.post('/login/google-signin', arg),
   },
   forgotPassword: {
     post: arg => instance.post('/login/forgot-password', arg),
@@ -34,6 +33,9 @@ const api = {
   },
   userHistory: {
     get: () => instance.get('/user/user-history'),
+  },
+  deleteHistory: {
+    delete: (arg: number) => instance.delete(`/user/delete-history/${arg}`),
   },
 }
 

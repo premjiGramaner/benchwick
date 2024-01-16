@@ -1,10 +1,12 @@
-import api from '@API/index'
+import toast from 'react-hot-toast'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ILoginReducerState, IDispatchState } from '@Interface/index'
-import { IS_USER_AUTHENTICATED, getAuthToken } from '@Utils/storage'
+import { updateStorages } from '@Utils/storage'
 import { URLS } from '@Utils/constants'
-import toast from 'react-hot-toast'
+import api from '@API/index'
+import { Cookies } from 'react-cookie'
 
+const cookie = new Cookies();
 export const login: any = createAsyncThunk(
   'loginReducer/login',
   async (payload: any = {}, { rejectWithValue }) => {
@@ -12,23 +14,49 @@ export const login: any = createAsyncThunk(
       const response: any = await api.login.post(payload)
       const { data, error } = response
       if (!error) {
-        getAuthToken(data?.data?.user_token)
+        toast.success('Successfully logged In!')
+        updateStorages({ user_token: data?.data?.user_token, name: data?.data?.name, auth: true, isCookie: cookie.get('isRemember') });
         return { data }
       } else {
+        toast.error('Please check your credentials')
         return rejectWithValue(data)
       }
     } catch (error) {
+      toast.error('Please check your credentials')
       return rejectWithValue(error)
     }
   }
 )
+
+export const login_with_google: any = createAsyncThunk(
+  'loginReducer/login',
+  async (payload: any = {}, { rejectWithValue }) => {
+    try {
+      const response: any = await api.login.google_sign_in(payload)
+      const { data, error } = response
+      if (!error) {
+        toast.success('Successfully logged In!')
+        updateStorages({ user_token: data?.data?.user_token, name: data?.data?.name, auth: true, isCookie: false });
+        return { data }
+      } else {
+        toast.error('Failed to authorize your request, Plese try after sometimes.')
+        return rejectWithValue(data)
+      }
+    } catch (error) {
+      toast.error('Failed to authorize your request, Plese try after sometimes.')
+      return rejectWithValue(error)
+    }
+  }
+)
+
 export const logout: any = createAsyncThunk('loginReducer/logout', async () => {
   return new Promise((resolve: any) => {
     resolve({})
   })
 })
+
 export const loginReducerInitialState: ILoginReducerState = {
-  userInfo: [],
+  userInfo: null,
   isError: false,
   isLoading: false,
   statusCode: null,
@@ -42,16 +70,16 @@ const loginReducer = createSlice({
     [login.pending]: (state: ILoginReducerState) => {
       state.isLoading = true
     },
-    [login.fulfilled]: (state: ILoginReducerState, action: IDispatchState) => {
-      state.userInfo = action.payload || null
-      state.statusCode = action?.payload?.data?.statusCode
+    [login.fulfilled]: (state: ILoginReducerState, { payload }: IDispatchState) => {
+      state.userInfo = payload?.data?.data || null
+      state.statusCode = payload?.data?.statusCode
       state.isLoading = false
       state.isError = false
-      if (action?.payload?.data?.statusCode === 200) {
+
+      if (payload?.data?.statusCode === 200) {
         setTimeout(() => {
           window.location.href = URLS.DASHBOARD
-          IS_USER_AUTHENTICATED(true)
-        }, 1000)
+        }, 500)
       }
     },
     [login.rejected]: (state: ILoginReducerState, action: IDispatchState) => {
@@ -59,7 +87,6 @@ const loginReducer = createSlice({
       state.isLoading = false
       state.isError = true
       state.statusCode = action?.payload?.response?.status
-      toast.error('Kindly check your credentials')
     },
     [logout.fulfilled]: (state: ILoginReducerState) => {
       state.userInfo = null

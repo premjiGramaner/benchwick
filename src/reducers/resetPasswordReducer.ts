@@ -1,21 +1,31 @@
-import api from '@API/index'
+import toast from 'react-hot-toast'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { IResetPasswordReducerState, IDispatchState } from '@Interface/index'
+import { URLS } from '@Utils/constants';
+import api from '@API/index'
+
 export const resetPassword: any = createAsyncThunk(
   'resetPasswordReducer/resetPassword',
   async (payload: any = {}) => {
     return new Promise((resolve: any) => {
       api.resetPassword
-        .post(payload)
+        .post(payload.body)
         .then((response: any) => {
           const { data, error } = response
+          const navigate = payload.navigation;
           if (!error) {
             resolve({
               data: data || null,
-            })
+            });
+
+            toast.success('Password updated, Please try login with your new password!');
+            setTimeout(() => navigate(URLS.LOGIN), 200);
+          } else {
+            toast.error('Failed to update password, Please contact Administrator');
           }
         })
-        .catch((response: Error) => {
+        .catch(() => {
+          toast.error('Failed to update password, Please contact Administrator');
           resolve({ data: null })
         })
     })
@@ -23,7 +33,7 @@ export const resetPassword: any = createAsyncThunk(
 )
 
 export const resetPasswordReducerInitialState: IResetPasswordReducerState = {
-  status:  [],
+  status: [],
   isError: false,
   isLoading: false,
 }
