@@ -1,15 +1,28 @@
 /**
  * Moduler dependencies.
  */
-var app = require('../app');
-var debug = require('debug')('reactnode:server');
-var http = require('http'), { wsServerPool } = require('./socket');
+var app = require('../app'),
+  debug = require('debug')('reactnode:server'),
+  http = require('http'),
+  sequlizer = require('../models/index');
+  // { Server } = require("socket.io"),
+  // { loadInstance } = require('../controllers/sockets');
 
-var port = normalizePort(process.env.PORT || '5001');
+var port = normalizePort(process.env.APP_PORT || '5001');
 app.Sequlizer_port = port;
 
 var server = http.createServer(app);
-// wsServerPool(server);
+// var io = new Server({ server });
+// io.listen(process.env.WS_PORT);
+
+sequlizer.sequelize.sync({ force: false }).then(() => {
+  app.listen(app.Sequlizer_port, () => {
+    // io.on('connection', function (socket) {
+    //   loadInstance(socket)
+    // });
+    console.log(`server listening on PORT ${app.Sequlizer_port}`);
+  });
+});
 
 server.on('error', onError);
 server.on('listening', onListening);
@@ -58,3 +71,6 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+// module.exports = { io };
+exports = app;

@@ -1,12 +1,23 @@
 import React, { useState, createContext } from "react";
-import { API_URL } from '@Utils/constants'
+// import { initateWS } from '../socket';
+
+export type ICurrentQueue = {
+    variants: string,
+    fileInfo: {
+        name: string,
+        size: string,
+        contentType: string,
+    },
+    image: string
+};
 
 export type IDashboardStateInfo = {
     image?: File,
     range?: string,
     name?: string,
     file?: string,
-    reset?: boolean
+    reset?: boolean,
+    currentQueue?: ICurrentQueue
 };
 
 const initalState: IDashboardStateInfo = {
@@ -14,48 +25,32 @@ const initalState: IDashboardStateInfo = {
     range: localStorage.getItem('variation_range') || '4',
     name: '',
     file: '',
+    currentQueue: null
 }
 
 export type IImageContext = {
     dashboardResult: IDashboardStateInfo;
     initalState: IDashboardStateInfo;
+    fetching: boolean,
+    setFetching: React.Dispatch<React.SetStateAction<boolean>>,
     setDashboardResult: (value: IDashboardStateInfo) => void
 };
 
 export const ImageContext = createContext<IImageContext>(null);
 export const ConsumerContext = ({ children }: { children: JSX.Element }) => {
     const [dashboardResult, setDashboardResult] = useState<IDashboardStateInfo>(initalState);
+    const [fetching, setFetching] = useState<boolean>(false);
 
-    const socket = new WebSocket(API_URL.wss);
-
-    socket.onopen = function (e) {
-        console.log("[open] Connection established");
-        console.log("Sending to server");
-        socket.send("My name is John");
-    };
-
-    socket.onmessage = function (event) {
-        console.log(`[message] Data received from server: ${event.data}`);
-    };
-
-    socket.onclose = function (event) {
-        if (event.wasClean) {
-            console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-        } else {
-            // e.g. server process killed or network down
-            // event.code is usually 1006 in this case
-            console.log('[close] Connection died');
-        }
-    };
-
-    socket.onerror = function (error) {
-        console.log(`[error]`);
-    };
+    // useEffect(() => {
+    //     initateWS();
+    // }, [])
 
     return (
         <ImageContext.Provider value={{
             dashboardResult,
             initalState,
+            fetching,
+            setFetching,
             setDashboardResult: (arg: IDashboardStateInfo) => {
                 if (arg?.reset) setDashboardResult(initalState);
                 setDashboardResult({ ...dashboardResult, ...arg })

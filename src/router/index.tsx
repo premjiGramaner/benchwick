@@ -27,19 +27,17 @@ const RouterComponent: React.FC<IRouterProps> = props => {
   let authRoutes = null
   if (!IS_USER_AUTHENTICATED()) {
     authRoutes = (
-      <AuthWrapper {...props}>
-        <Routes>
-          {UnAuthMenuList.map(route => {
-            return (
-              <Route
-                path={route.path}
-                key={getKey()}
-                element={<route.component {...props} />}
-              />
-            )
-          })}
-        </Routes>
-      </AuthWrapper>
+      <Routes>
+        {UnAuthMenuList.map(route => {
+          return (
+            <Route
+              path={route.path}
+              key={getKey()}
+              element={<route.component {...props} />}
+            />
+          )
+        })}
+      </Routes>
     )
   }
 

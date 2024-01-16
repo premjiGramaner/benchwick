@@ -15,10 +15,12 @@ import {
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
 import { getFileNameFromURL } from '@Utils/utils'
 import { ImageContext } from "src/router/context-provider";
+// import { uuid, postReq, GET_QUEUE_STATUS, UPDATE_QUEUE_STATUS } from "@Sw/index";
+import Loader from "react-js-loader";
 
 
 const Dashboard: React.FC<IDefaultPageProps> = props => {
-  const { dashboardResult, setDashboardResult } = useContext(ImageContext);
+  const { dashboardResult, setDashboardResult, fetching, setFetching } = useContext(ImageContext);
   const { image, file, range, name } = dashboardResult || {};
 
   const [modal, setModal] = useState(false)
@@ -28,7 +30,11 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const { imageInfo } = useSelector((state: IReducerState) => state.imageVariationReducer)
 
   const isFormValidToUpload = (!range || range && range.toString() == "0") || !image;
-  let selectedVariation = saveVariationDetails
+  let selectedVariation = saveVariationDetails;
+
+  /* useEffect(() => {
+    postReq(GET_QUEUE_STATUS); // check is there any current queue
+  }, []); */
 
   const handleViewHistory = (e) => {
     e.preventDefault();
@@ -44,11 +50,27 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       let formData = new FormData()
       formData.append('image', image)
       formData.append('variants', range)
-      props.dispatch(imageVariation(formData))
+      // formData.append('uuid', uuid)
+      props.dispatch(imageVariation({ body: formData, setFetching }));
+
+      /* encodeImageFileAsURL(image).then((result) => {
+        postReq(UPDATE_QUEUE_STATUS, {
+          variants: range,
+          fileInfo: {
+            name: image.name,
+            size: image.size,
+            contentType: splitImage(image.type),
+          },
+          image: result
+        })
+      }) */
+
+      setFetching(true);
     }
   }
 
   const handleImage = (data: File) => {
+    handleImageClose(); // reset Existing image
     setsaveVariationDetails([]);
     setDashboardResult({ image: data, file: URL.createObjectURL(data) })
   }
@@ -180,13 +202,21 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                 <div>{range}</div>
               </div>
             </div>
-            <div className="btn-height pt-5" onClick={envisionUploadHandle}>
-              <button className="btn btn-envision" disabled={isFormValidToUpload}>
-                Generate Variations
-              </button>
+            <div className={`btn-height pt-5 ${fetching && 'loading'}`}>
+              {fetching ? (
+                <span className='dash-loader'>
+                  <Loader type="spinner-default" bgColor='#7b7878' size={25} />
+                  Procceing your request...
+                </span>
+              ) : (
+                <button className="btn btn-envision" disabled={isFormValidToUpload} onClick={envisionUploadHandle}>
+                  Generate Variations
+                </button>
+              )}
             </div>
             <div className="btn-height">
               <button
+                disabled={(!saveVariationDetails.length || fetching)}
                 className="btn btn-envision"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
@@ -346,7 +376,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
         className="modal mt-5"
         style={{ display: variationmodal.status ? 'block' : 'none' }}
       >
-        <div className="modal-dialog ">
+        <div className="modal-dialog modal-lg">
           <div className="variation-modal-container">
             <div className="d-flex justify-content-between">
               <div>
@@ -380,7 +410,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                 ></button>
               </div>
             </div>
-            <div className="variation-modal mt-3">
+            <div className="variation-modal">
               <img
                 className="variation-style"
                 src={`${API_URL.host}/${variationmodal?.imageURL}`}
@@ -396,4 +426,4 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   )
 }
 
-export default Dashboard
+export default React.memo(Dashboard)

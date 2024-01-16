@@ -8,7 +8,7 @@ import { ImageContext } from "src/router/context-provider";
 
 const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props => {
   const fileInput = useRef();
-  const { dashboardResult, setDashboardResult } = useContext(ImageContext);
+  const { dashboardResult, fetching, setFetching, setDashboardResult } = useContext(ImageContext);
   const { image, range } = dashboardResult || {};
 
   const handleUpload = event => {
@@ -20,7 +20,7 @@ const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props =>
   }
 
   const { isFormValid } = props;
-  const isFormDisabled = isFormValid === undefined ? !image : isFormValid;
+  const isFormDisabled = (fetching) ? fetching : (isFormValid === undefined ? !image : isFormValid);
 
   const imageEnvision = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (!isFormDisabled) {
@@ -30,7 +30,7 @@ const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props =>
         let formData = new FormData()
         formData.append('image', image)
         formData.append('variants', range)
-        props.dispatch(imageVariation(formData))
+        props.dispatch(imageVariation({ body: formData, setFetching }))
       }
     }
   }
@@ -53,6 +53,7 @@ const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props =>
                   upload
                 </label>
                 <input
+                  disabled={fetching}
                   value=""
                   ref={fileInput}
                   id="input-file"

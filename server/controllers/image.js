@@ -2,13 +2,14 @@ const { Images } = require("../models"), axios = require('axios'), FormData = re
 const moment = require('moment');
 const fs = require('fs');
 const { getDatesObj, response, errorLogger, validatePath, formatImageCollection, getTypeFromURL, uuid_key } = require('../helper/utils');
+const { queueCompleted } = require("./sockets");
 
 const imgPath = 'varients-images/', tmp_path = 'varients-generated/';
 
 
 const imageEnvision = async (req, res, next) => {
     try {
-        const { variants, mockError = false } = req.body;
+        const { variants, uuid, mockError = false } = req.body;
         const { image } = req.files;
         const { tokenInfo } = res.locals || {};
         if (!image) return res.sendStatus(400);
@@ -96,8 +97,11 @@ const imageEnvision = async (req, res, next) => {
                             message: 'Image variations generate Failed!'
                         })
                     }
+
+                    // queueCompleted(uuid, { info: [], variants: variants }, isError);
                 } else {
                     formatImageCollection(finalImageList, imageName, path).then((finalList) => {
+                        // queueCompleted(uuid, { info: finalList, variants: variants });
                         response({
                             res,
                             code: 200,

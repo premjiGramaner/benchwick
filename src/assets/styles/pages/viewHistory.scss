@@ -141,12 +141,30 @@
         font-size: 14px;
       }
     }
+
+    .corner-download {
+      position: relative;
+
+      img.download-button {
+        position: absolute;
+        right: 15px;
+        background: white;
+        border-radius: 50%;
+        border: 1px solid #a2a2a2;
+        padding: 3px;
+        top: -8px;
+        height: auto;
+        width: 26px;
+        cursor: pointer;
+      }
+    }
   }
 
   .variation-modal {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
+    margin-top: 2rem;
   }
 
   .variation-image-index-circle {

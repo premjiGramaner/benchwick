@@ -13,10 +13,11 @@ import {
 } from '@Assets/images'
 import icon from '../../assets/svg/fa-eye.svg'
 import { userHistory, deleteHistory } from '@Reducers/userHistoryReducer'
+import Download from '@Assets/svg/variant-download.svg'
 
 import { IReducerState } from '@Interface/StoreInterface'
 import { getEnvisionVariants } from '@Reducers/getEnvisionVariantsReducer'
-import { getKey } from '@Utils/utils'
+import { getFileNameFromURL, getKey } from '@Utils/utils'
 
 const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const [searchInput, setSearchInput] = useState<string>('')
@@ -224,6 +225,20 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
     setDeleteModal(0)
   }
 
+  const handleImageDownload = (url: string) => {
+    //image path required to change
+    fetch(API_URL.host + "/" + url)
+      .then(response => response.blob())
+      .then(blob => {
+        const element = document.createElement('a')
+        element.href = URL.createObjectURL(blob)
+        element.download = getFileNameFromURL(API_URL.host + "/" + url)
+        document.body.appendChild(element)
+        element.click()
+        document.body.removeChild(element)
+      })
+  }
+
   const isAdmin = userInfo?.role === 'admin';
   return (
     <div className="viewhistory-page-main-container">
@@ -360,10 +375,10 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
               </div>
             </div>
 
-            <div className="variation-modal mt-3">
+            <div className="variation-modal">
               {variantData?.variant_list?.length &&
                 variantData?.variant_list?.map((value, index) => (
-                  <div key={getKey()}>
+                  <div key={getKey()} className="corner-download">
                     <div className="variation-image-index-circle">
                       <span>{index + 1}</span>
                     </div>
@@ -371,6 +386,12 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                       className="variation-style"
                       src={`${API_URL.host}/${value.image_url}`}
                       alt="original image"
+                    />
+                    <img
+                      className="download-button"
+                      src={Download}
+                      alt="original image"
+                      onClick={() => handleImageDownload(value.image_url)}
                     />
                   </div>
                 ))}

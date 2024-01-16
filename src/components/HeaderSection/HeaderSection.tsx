@@ -7,6 +7,7 @@ import { URLS } from '@Utils/constants'
 import { logout } from '../../reducers/loginReducer'
 import { getLoggedUserName } from '@Utils/storage'
 import { EnvHeaderLogo } from '@Assets/images'
+// import { socket } from '@Sw/default'
 
 const HeaderSection: React.FC<{}> = () => {
   const dispatch = useDispatch()
@@ -18,6 +19,7 @@ const HeaderSection: React.FC<{}> = () => {
     localStorage.clear();
     sessionStorage.clear();
     navigate(URLS.LOGIN);
+    // socket.disconnect()
   }
 
   return (

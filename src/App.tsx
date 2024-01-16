@@ -6,7 +6,6 @@ import "@Assets/styles/style.scss";
 
 import { gapi, loadGapiInsideDOM } from 'gapi-script';
 
-
 import MainRouter from "./router";
 import AUTH_JSON from "./utils/client_secret.json";
 import { GoogleOAuthProvider } from '@react-oauth/google';

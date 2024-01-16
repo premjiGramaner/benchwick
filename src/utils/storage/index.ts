@@ -9,6 +9,15 @@ export const getAuthToken = (updateToken?: string) => {
     return sessionStorage.getItem(STORAGE_KEY.AUTH_TOKEN);
 };
 
+export const getUserKey = (key?: string) => {
+    if (key) {
+        localStorage.setItem(STORAGE_KEY.USER_KEY, key);
+        return key;
+    }
+
+    return sessionStorage.getItem(STORAGE_KEY.USER_KEY);
+};
+
 export const getLoggedUserName = (userName?: string) => {
     if (userName) {
         sessionStorage.setItem(STORAGE_KEY.LOGGED_USER_NAME, userName);
