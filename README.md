@@ -36,4 +36,5 @@ Provide users a link to your public Terms of Service
 
 To run tunnel - Development
 D:\Gramener\Softwares>ngrok http 8080 --host-header="localhost:8080"
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'envision@123';
 ```

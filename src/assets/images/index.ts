@@ -7,7 +7,7 @@ import RightArrowIcon from './right.png'
 import RightLastArrowIcon from './right-last.png'
 import CloseIcon from './close.png'
 import SortIcon from './sort.png'
-import Download from './Download.png';
+import Download from './download.png';
 import Oops from './oops.png';
 
 export {
