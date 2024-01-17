@@ -10,107 +10,111 @@ const imgPath = 'varients-images/', tmp_path = 'varients-generated/';
 const imageEnvision = async (req, res, next) => {
     try {
         const { variants, uuid, mockError = false } = req.body;
-        const { image } = req.files;
-        const { tokenInfo } = res.locals || {};
-        if (!image) return res.sendStatus(400);
-        if (!(/^image/.test(image.mimetype))) return res.status(400).send({ data: { info: null }, message: 'Image is Invalid!' })
+        if (req.files && variants) {
+            const { image } = req.files;
+            const { tokenInfo } = res.locals || {};
+            if (!image) return res.sendStatus(400);
+            if (!(/^image/.test(image.mimetype))) return res.status(400).send({ data: { info: null }, message: 'Image is Invalid!' })
 
-        const path = await validatePath(tmp_path + (tokenInfo.user_info || { uuid: 'default_001' }).uuid + '/');
-        const imageName = (`default_image${getTypeFromURL(image.name)}`)
+            const path = await validatePath(tmp_path + (tokenInfo.user_info || { uuid: 'default_001' }).uuid + '/');
+            const imageName = (`default_image${getTypeFromURL(image.name)}`)
 
-        // Move the original image to our temp folder
-        image.mv(path + imageName);
+            // Move the original image to our temp folder
+            image.mv(path + imageName);
 
-        const formData = new FormData();
-        formData.append('file', fs.createReadStream(path + imageName), imageName)
+            const formData = new FormData();
+            formData.append('file', fs.createReadStream(path + imageName), imageName)
 
-        let finalImageList = [], isError = false;
-        const headers = {
-            headers: {
-                'accept': 'application/json',
-                'Accept-Language': 'en-US,en;q=0.8',
-                'Content-Type': `multipart/form-data`,
-            }
-        };
-
-        axios.post(`http://localhost:8000/regenerate_images/?num_images=${variants}&use_sd=true`, formData, headers)
-            .then((response) => {
-                finalImageList.push(...(response.data || []))
-            })
-            .catch(function (error) {
-                // handle error
-                isError = { message: error?.response?.data?.detail || true, code: error?.response?.status };
-            }).finally(function () {
-                if (isError) {
-                    if (mockError) {
-                        return response({
-                            res,
-                            code: 200, // 501,
-                            data: {
-                                info: [
-                                    {
-                                        image_url: (`${path}01_.jpg`),
-                                        key: uuid_key()
-                                    },
-                                    {
-                                        image_url: (`${path}02_.jpg`),
-                                        key: uuid_key()
-                                    },
-                                    {
-                                        image_url: (`${path}03_.jpg`),
-                                        key: uuid_key()
-                                    },
-                                    {
-                                        image_url: (`${path}04_.jpg`),
-                                        key: uuid_key()
-                                    },
-                                    {
-                                        image_url: (`${path}05_.jpg`),
-                                        key: uuid_key()
-                                    },
-                                    {
-                                        image_url: (`${path}06_.jpg`),
-                                        key: uuid_key()
-                                    },
-                                    {
-                                        image_url: (`${path}07_.jpg`),
-                                        key: uuid_key()
-                                    },
-                                    {
-                                        image_url: (`${path}08_.jpg`),
-                                        key: uuid_key()
-                                    },
-                                    {
-                                        image_url: (`${path}09_.jpg`),
-                                        key: uuid_key()
-                                    }
-                                ],
-                                variants: variants, error: isError
-                            },
-                            message: 'Image variations generate Failed!'
-                        })
-                    } else {
-                        response({
-                            res,
-                            code: 501,
-                            data: { info: [], variants: variants, error: isError },
-                            message: 'Image variations generate Failed!'
-                        })
-                    }
-
-                    // queueCompleted(uuid, { info: [], variants: variants }, isError);
-                } else {
-                    formatImageCollection(finalImageList, imageName, path).then((finalList) => {
-                        // queueCompleted(uuid, { info: finalList, variants: variants });
-                        response({
-                            res,
-                            code: 200,
-                            data: { info: finalList, variants: variants },
-                            message: 'Image variations generated successfully!'
-                        })
-                    });
+            let finalImageList = [], isError = false;
+            const headers = {
+                headers: {
+                    'accept': 'application/json',
+                    'Accept-Language': 'en-US,en;q=0.8',
+                    'Content-Type': `multipart/form-data`,
                 }
-            });
+            };
+
+            axios.post(`http://localhost:8000/regenerate_images/?num_images=${variants}&use_sd=true`, formData, headers)
+                .then((response) => {
+                    finalImageList.push(...(response.data || []))
+                })
+                .catch(function (error) {
+                    // handle error
+                    isError = { message: error?.response?.data?.detail || true, code: error?.response?.status };
+                }).finally(function () {
+                    if (isError) {
+                        if (mockError) {
+                            return response({
+                                res,
+                                code: 200, // 501,
+                                data: {
+                                    info: [
+                                        {
+                                            image_url: (`${path}01_.jpg`),
+                                            key: uuid_key()
+                                        },
+                                        {
+                                            image_url: (`${path}02_.jpg`),
+                                            key: uuid_key()
+                                        },
+                                        {
+                                            image_url: (`${path}03_.jpg`),
+                                            key: uuid_key()
+                                        },
+                                        {
+                                            image_url: (`${path}04_.jpg`),
+                                            key: uuid_key()
+                                        },
+                                        {
+                                            image_url: (`${path}05_.jpg`),
+                                            key: uuid_key()
+                                        },
+                                        {
+                                            image_url: (`${path}06_.jpg`),
+                                            key: uuid_key()
+                                        },
+                                        {
+                                            image_url: (`${path}07_.jpg`),
+                                            key: uuid_key()
+                                        },
+                                        {
+                                            image_url: (`${path}08_.jpg`),
+                                            key: uuid_key()
+                                        },
+                                        {
+                                            image_url: (`${path}09_.jpg`),
+                                            key: uuid_key()
+                                        }
+                                    ],
+                                    variants: variants, error: isError
+                                },
+                                message: 'Image variations generate Failed!'
+                            })
+                        } else {
+                            response({
+                                res,
+                                code: 501,
+                                data: { info: [], variants: variants, error: isError },
+                                message: 'Image variations generate Failed!'
+                            })
+                        }
+
+                        // queueCompleted(uuid, { info: [], variants: variants }, isError);
+                    } else {
+                        formatImageCollection(finalImageList, imageName, path).then((finalList) => {
+                            // queueCompleted(uuid, { info: finalList, variants: variants });
+                            response({
+                                res,
+                                code: 200,
+                                data: { info: finalList, variants: variants },
+                                message: 'Image variations generated successfully!'
+                            })
+                        });
+                    }
+                });
+        } else {
+            return res.status(400).send({ data: { info: null }, message: 'Image is Invalid!' })
+        }
     } catch (e) {
         console.log('e', e)
         errorLogger(next, 'image/imageEnvision', e)
