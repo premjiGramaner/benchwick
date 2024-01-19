@@ -12,7 +12,11 @@ export const imageVariation: any = createAsyncThunk(
         .then((response: any) => {
           const { data, error } = response
           if (!error) {
-            toast.success('​Variations generated successfully!')
+            if (data?.data?.data?.info.length == payload.range) {
+              toast.success('​Variations generated successfully')
+            } else {
+              toast.custom('Some of the generate images are Invalid and skipped!')
+            }
             resolve({ data: data || null })
           } else {
             toast.error('Facing issue while uploading')
@@ -43,7 +47,13 @@ export const imageVariationInitialState: IImageVariationReducerState = {
 const imageVariationReducer = createSlice({
   name: 'imageVariationReducer',
   initialState: imageVariationInitialState,
-  reducers: {},
+  reducers: {
+    resetImages(state) {
+      state.imageInfo = null;
+      state.statusCode = null;
+      state.isError = false;
+    },
+  },
   extraReducers: {
     [imageVariation.pending]: (state: IImageVariationReducerState) => {
       state.isLoading = true
@@ -68,4 +78,5 @@ const imageVariationReducer = createSlice({
   },
 })
 
+export const { resetImages } = imageVariationReducer.actions;
 export default imageVariationReducer.reducer

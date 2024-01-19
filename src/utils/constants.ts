@@ -1,7 +1,7 @@
 export const API_URL = {
   wss: 'ws://localhost:5003/',
-  host: 'http://localhost:5001',
-  baseURL: `http://localhost:5001/api`,
+  host: window.location.origin,
+  baseURL: `${window.location.origin}/api`,
 }
 
 export const STORAGE_KEY = {

@@ -36,6 +36,7 @@ const imageEnvision = async (req, res, next) => {
 
             axios.post(`http://localhost:8000/regenerate_images/?num_images=${variants}&use_sd=true`, formData, headers)
                 .then((response) => {
+                    // console.log('Python Response count', (response.data || []).length)
                     finalImageList.push(...(response.data || []))
                 })
                 .catch(function (error) {

@@ -41,7 +41,7 @@ const api = {
 
 const getAuthHeader = async () => {
   try {
-    const accessToken = localStorage[STORAGE_KEY.AUTH_TOKEN]
+    const accessToken = sessionStorage[STORAGE_KEY.AUTH_TOKEN]
     return accessToken ? `Bearer ${accessToken}` : undefined
   } catch (error) {
     console.error('There was an error token:', error)

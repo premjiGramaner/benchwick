@@ -6,7 +6,7 @@ import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS, API_URL } from '@Utils/constants'
 import close from '@Assets/svg/close.svg'
 import Download from '@Assets/svg/variant-download.svg'
-import { imageVariation } from '@Reducers/imageVariationReducer'
+import { imageVariation, resetImages } from '@Reducers/imageVariationReducer'
 import {
   IImageVarient,
   IReducerState,
@@ -51,7 +51,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       formData.append('image', image)
       formData.append('variants', range)
       // formData.append('uuid', uuid)
-      props.dispatch(imageVariation({ body: formData, setFetching }));
+      props.dispatch(imageVariation({ body: formData, range, setFetching }));
 
       /* encodeImageFileAsURL(image).then((result) => {
         postReq(UPDATE_QUEUE_STATUS, {
@@ -93,7 +93,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
   const handleImageClose = () => {
     setDashboardResult({ image: null, file: '' })
-    props.dispatch(imageVariation({}))
+    props.dispatch(resetImages())
   }
 
   const handleSelectedVariation = event => {
@@ -373,7 +373,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       </div>
 
       <div
-        className="modal mt-5"
+        className="modal mt-5 pos-right"
         style={{ display: variationmodal.status ? 'block' : 'none' }}
       >
         <div className="modal-dialog modal-lg">

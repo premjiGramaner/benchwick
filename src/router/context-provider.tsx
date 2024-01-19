@@ -1,4 +1,8 @@
-import React, { useState, createContext } from "react";
+import { IReducerState } from "@Interface/StoreInterface";
+import { resetImages } from "@Reducers/imageVariationReducer";
+import React, { useState, createContext, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 // import { initateWS } from '../socket';
 
 export type ICurrentQueue = {
@@ -39,11 +43,15 @@ export type IImageContext = {
 export const ImageContext = createContext<IImageContext>(null);
 export const ConsumerContext = ({ children }: { children: JSX.Element }) => {
     const [dashboardResult, setDashboardResult] = useState<IDashboardStateInfo>(initalState);
+    const { imageInfo } = useSelector((state: IReducerState) => state.imageVariationReducer)
     const [fetching, setFetching] = useState<boolean>(false);
+    const dispatch = useDispatch()
 
-    // useEffect(() => {
-    //     initateWS();
-    // }, [])
+    useEffect(() => {
+        if (!dashboardResult.image && imageInfo?.data?.data?.info.length) {
+            dispatch(resetImages())
+        }
+    }, [])
 
     return (
         <ImageContext.Provider value={{
