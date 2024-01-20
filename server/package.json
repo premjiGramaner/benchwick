@@ -1,7 +1,7 @@
 {
-  "name": "benchwick-server",
+  "name": "envision-server",
   "version": "1.0.1",
-  "description": "Benchwick API Service",
+  "description": "Envision API Service",
   "main": "app.js",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
