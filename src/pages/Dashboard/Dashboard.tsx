@@ -30,7 +30,6 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const { imageInfo } = useSelector((state: IReducerState) => state.imageVariationReducer)
 
   const isFormValidToUpload = (!range || range && range.toString() == "0") || !image;
-  let selectedVariation = saveVariationDetails;
 
   /* useEffect(() => {
     postReq(GET_QUEUE_STATUS); // check is there any current queue
@@ -97,6 +96,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   }
 
   const handleSelectedVariation = event => {
+    let selectedVariation = [...saveVariationDetails]
     var formData
     if (event.target.checked) {
       formData = {

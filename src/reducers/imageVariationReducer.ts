@@ -15,7 +15,7 @@ export const imageVariation: any = createAsyncThunk(
             if (data?.data?.data?.info.length == payload.range) {
               toast.success('​Variations generated successfully')
             } else {
-              toast.custom('Some of the generate images are Invalid and skipped!')
+              toast('Some of the generate images are Invalid and skipped!')
             }
             resolve({ data: data || null })
           } else {
