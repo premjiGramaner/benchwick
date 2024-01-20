@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
-import toast, { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { URLS } from '@Utils/constants'
 import {
@@ -9,14 +9,15 @@ import {
 } from '@Utils/interface'
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/signUpValidation'
-import googlePlus from '@Assets/svg/google-plus.svg'
 import { EnvLogo } from '@Assets/images'
 import { signUp } from 'src/reducers/signUpReducer'
+import { LoginWithGoogleButton } from '@Pages/Login/LoginWithGoogleButton'
 
 const SignupComponent: React.FC<
   IDefaultPageProps & ILoginPageProps
 > = props => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [validating, setValidating] = useState(false);
 
   const { values, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues: { user: '', email: '', password: '', confirmPassword: '' },
@@ -36,7 +37,7 @@ const SignupComponent: React.FC<
           email: data.email,
           name: data.user,
           password: data.password,
-          role: 'admin', // optional - if empty consider as an user
+          role: '', // optional - if empty consider as an user or add admin
         },
         navigation: props.navigate
       })
@@ -45,10 +46,6 @@ const SignupComponent: React.FC<
 
   const isFormValid = () => {
     return (values.user && values.email && values.password?.length > 5 && values.confirmPassword?.length > 5 && (values.password === values.confirmPassword))
-  }
-
-  const signInwithGoogle = () => {
-    toast('Sign in with google is work in progress.')
   }
 
   return (
@@ -62,7 +59,7 @@ const SignupComponent: React.FC<
                   <img src={EnvLogo} alt="envision logo" className='app-logo' />
                 </figure>
               </div>
-              <div className="card-body card-content px-5 py-2">
+              <div className="card-body card-content px-4 py-2">
                 <form onSubmit={handleSubmit} autoComplete="off">
                   <TextBox
                     type="text"
@@ -70,7 +67,7 @@ const SignupComponent: React.FC<
                     value={values.user}
                     labelname="Username"
                     placeholder=""
-                    handleChange={handleChange}
+                    handlechange={handleChange}
                     errorMessageComponent={(
                       touched.user && errors.user ? (
                         <p className="form-error">
@@ -87,7 +84,7 @@ const SignupComponent: React.FC<
                     value={values.email}
                     labelname="Email Address"
                     placeholder=""
-                    handleChange={handleChange}
+                    handlechange={handleChange}
                     errorMessageComponent={(touched.email && errors.email ? (
                       <p className="form-error">
                         <i className="fa fa-info-circle"></i>
@@ -101,8 +98,9 @@ const SignupComponent: React.FC<
                     name="password"
                     value={values.password}
                     labelname="password"
+                    autoComplete="username"
                     placeholder=""
-                    handleChange={handleChange}
+                    handlechange={handleChange}
                     icon={showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'}
                     handleIconClick={() => setShowPassword(!showPassword)}
                     errorMessageComponent={(touched.password && errors.password ? (
@@ -118,8 +116,9 @@ const SignupComponent: React.FC<
                     name="confirmPassword"
                     value={values.confirmPassword}
                     labelname="Confirm Password"
+                    autoComplete="username"
                     placeholder=""
-                    handleChange={handleChange}
+                    handlechange={handleChange}
                     errorMessageComponent={(touched.confirmPassword && errors.confirmPassword ? (
                       <p className="form-error">
                         <i className="fa fa-info-circle"></i>
@@ -140,18 +139,11 @@ const SignupComponent: React.FC<
                     <div className="mt-1 px-2 fs-14">Or</div>
                     <div className="mt-3 straight-line " />
                   </div>
-                  <div className="pb-0 pt-4 bg-transparent d-flex text-center">
-                    <button className="btn btn-primary google-login-btn" type='button' onClick={signInwithGoogle}>
-                      <img
-                        className="px-2 mb-1"
-                        src={googlePlus}
-                        alt="google image"
-                      />
-                      Login with Google
-                    </button>
+                  <div className="pb-0 mt-1 mb-3 bg-transparent d-flex text-center">
+                    <LoginWithGoogleButton {...props} {...{ validating, setValidating }} />
                   </div>
                 </form>
-                <div className="pb-3 pt-4 text-center">
+                <div className="pb-3 mb-2 pt-4 text-center">
                   have an account?
                   <a className="px-1 mt-1" onClick={() => props.navigate(URLS.LOGIN)}>
                     Login
@@ -160,7 +152,7 @@ const SignupComponent: React.FC<
               </div>
             </div>
             <p className="text-white fs-12 pt-3 mt-1 mb-4">
-              © 2023 Benchwick ALL RIGHTS RESERVED.
+              © {new Date().getFullYear()} Benchwick ALL RIGHTS RESERVED.
             </p>
           </div>
         </div>

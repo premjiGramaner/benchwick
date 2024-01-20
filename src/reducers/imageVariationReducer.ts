@@ -8,7 +8,7 @@ export const imageVariation: any = createAsyncThunk(
   async (payload: any = {}) => {
     return new Promise((resolve: any) => {
       api.imageEnvision
-        .post(payload)
+        .post(payload.body)
         .then((response: any) => {
           const { data, error } = response
           if (!error) {
@@ -17,11 +17,13 @@ export const imageVariation: any = createAsyncThunk(
           } else {
             toast.error('Facing issue while uploading')
           }
+          if (payload.setFetching) payload.setFetching(false);
         })
         .catch(({ response }) => {
+          if (payload.setFetching) payload.setFetching(false);
           if (response.status === 501 && response.data) {
             const { data: { error: { message } } } = response.data || { data: { data: { error: { message: 'Please try again with different format.' } } } };
-            toast.error(message);
+            toast.error(typeof message === 'string' ? message : "Service is busy right now, Plese try again after sometimes.");
             resolve({ data: null })
           } else {
             resolve({ data: null })

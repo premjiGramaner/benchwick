@@ -2,6 +2,7 @@ import React from 'react'
 import { useFormik } from 'formik'
 import { useDispatch } from 'react-redux'
 import { Toaster } from 'react-hot-toast'
+import { EnvLogo } from '@Assets/images'
 import {
   IDefaultPageProps,
   IForgotPasswordProps,
@@ -9,6 +10,7 @@ import {
 import TextBox from '@Components/TextBox/TextBox'
 import schema from '@Utils/schema/forgotPasswordValidation'
 import { forgotPassword } from 'src/reducers/forgotPasswordReducer'
+import { URLS } from '@Utils/constants'
 
 const ForgotPasswordComponent: React.FC<IDefaultPageProps & IForgotPasswordProps> = (props) => {
   const dispatch = useDispatch()
@@ -18,7 +20,7 @@ const ForgotPasswordComponent: React.FC<IDefaultPageProps & IForgotPasswordProps
         navigation: props.navigate,
         body: {
           email: data.email,
-          redirect_URL: 'http://localhost:8080/resetPassword',
+          redirect_URL: window.location.href,
         }
       })
     )
@@ -38,9 +40,10 @@ const ForgotPasswordComponent: React.FC<IDefaultPageProps & IForgotPasswordProps
     <div className="bg-forgot-password vh-100">
       <section className="d-flex w-100 align-items-center justify-content-center h-100">
         <div className="card rounded p-4 mt-0 card-width">
-          <div className="card-header px-2 pt-4 pb-5 bg-transparent border-0">
-            <figure className="mb-0 pb-3">{/* <img src={logo} /> */}</figure>
-            <h1 className="px-5 py-0 fw-bold mb-0">Logo envision</h1>
+          <div className="card-header px-2 pt-4 pb-4 bg-transparent border-0">
+            <figure className="mb-0 pb-3">
+              <img src={EnvLogo} alt="envision logo" className='app-logo' />
+            </figure>
           </div>
 
           <p className="recoveryText fs-12 pt-1 mt-2 mb-1 text-center">
@@ -55,7 +58,7 @@ const ForgotPasswordComponent: React.FC<IDefaultPageProps & IForgotPasswordProps
                 value={values.email}
                 labelname="Email"
                 placeholder="Please enter the registered email"
-                handleChange={handleChange}
+                handlechange={handleChange}
               />
 
               {touched.email && errors.email ? (
@@ -69,6 +72,10 @@ const ForgotPasswordComponent: React.FC<IDefaultPageProps & IForgotPasswordProps
                 <button className="btn btn-primary login-btn upper-case">
                   Send Link
                 </button>
+              </div>
+              <div className="pb-3 pt-4 text-center">
+                back to
+                <a className="px-1 mt-1" onClick={() => props.navigate(URLS.LOGIN)}>Login?</a>
               </div>
             </form>
           </div>

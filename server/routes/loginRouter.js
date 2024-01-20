@@ -3,6 +3,7 @@ const router = express.Router();
 
 const {
     login,
+    authGoogle,
     signUp,
     forgotPassword,
     passwordUpdate
@@ -10,6 +11,7 @@ const {
 
 router.post("/", login);
 router.post("/signup", signUp);
+router.post("/google-signin", authGoogle);
 router.post("/forgot-password", forgotPassword);
 router.post("/password-update", passwordUpdate);
 

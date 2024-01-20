@@ -6,6 +6,25 @@ const { JWT_SECRET_KEY } = require('../global_keys')
 const { User } = require("../models");
 const { encryptPassword, validatePassword, response, getDatesObj, errorLogger, sendEmail, uuid } = require('../helper/utils')
 
+const countinueSuccessLogin = (res, userData) => {
+    const user_info = {
+        id: userData.dataValues.id,
+        uuid: userData.dataValues.identifier,
+        name: userData.dataValues.name,
+        email: userData.dataValues.email,
+        role: userData.dataValues.role
+    };
+
+    let tokenReq = {
+        expire: new Date(moment().add(4, "hours")).getTime(),
+        canUpdateToken: new Date(moment().add(200, "minutes")).getTime(),
+        user_info: user_info,
+    }
+
+    const token = jwt.sign(tokenReq, JWT_SECRET_KEY);
+    response({ res, code: 200, data: user_info, optionalData: { user_token: token }, message: 'User Logged in Successfully!' })
+}
+
 const login = async (req, res, next) => {
     const { userName, password } = req.body;
     try {
@@ -18,22 +37,7 @@ const login = async (req, res, next) => {
             if (userData?.dataValues) {
                 const isUserValid = await validatePassword(password, userData.dataValues.password)
                 if (isUserValid) {
-                    const user_info = {
-                        id: userData.dataValues.id,
-                        uuid: userData.dataValues.identifier,
-                        name: userData.dataValues.name,
-                        email: userData.dataValues.email,
-                        role: userData.dataValues.role
-                    };
-
-                    let tokenReq = {
-                        expire: new Date(moment().add(4, "hours")).getTime(),
-                        canUpdateToken: new Date(moment().add(200, "minutes")).getTime(),
-                        user_info: user_info,
-                    }
-
-                    const token = jwt.sign(tokenReq, JWT_SECRET_KEY);
-                    response({ res, code: 200, data: user_info, optionalData: { user_token: token }, message: 'User Logged in Successfully!' })
+                    return countinueSuccessLogin(res, userData);
                 } else {
                     response({ res, code: 400, data: { userInfo: null }, message: 'Password is Invalid!' })
                 }
@@ -42,7 +46,32 @@ const login = async (req, res, next) => {
             }
         }
     } catch (e) {
-        errorLogger(next, 'image/login', e)
+        errorLogger(next, 'login/login', e)
+    }
+};
+
+const authGoogle = async (req, res, next) => {
+    const { name, email, client_id } = req.body;
+    try {
+        const userData = await User.getUserByUserEmail(email), encPass = await encryptPassword(name);
+        if (!userData?.dataValues) {
+            const userObj = {
+                email: email,
+                client_id: client_id,
+                password: encPass,
+                name: name,
+                identifier: uuid(),
+                role: 'user',
+                ...(getDatesObj() || {})
+            }
+
+            await User.createUser(userObj);
+        }
+
+        const userInfo = await User.getUserByUserEmail(email);
+        if (userInfo?.dataValues) return countinueSuccessLogin(res, userInfo);
+    } catch (e) {
+        errorLogger(next, 'login/authGoogle', e)
     }
 };
 
@@ -71,7 +100,7 @@ const signUp = async (req, res, next) => {
             response({ res, code: 400, data: { user: null }, message: 'User form is not valid!' })
         }
     } catch (e) {
-        errorLogger(next, 'image/createUserInfo', e)
+        errorLogger(next, 'login/signUp', e)
     }
 };
 
@@ -94,7 +123,7 @@ const forgotPassword = async (req, res, next) => {
             response({ res, code: 400, data: { status: null }, message: 'User is invalid!' })
         }
     } catch (e) {
-        errorLogger(next, 'image/passwordUpdate', e)
+        errorLogger(next, 'login/forgotPassword', e)
     }
 };
 
@@ -109,13 +138,14 @@ const passwordUpdate = async (req, res, next) => {
             response({ res, code: 400, data: null, message: 'UserId or password is not valid!' })
         }
     } catch (e) {
-        errorLogger(next, 'image/passwordUpdate', e)
+        errorLogger(next, 'login/passwordUpdate', e)
     }
 };
 
 module.exports = {
     login,
     signUp,
+    authGoogle,
     forgotPassword,
     passwordUpdate
 };

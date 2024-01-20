@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
@@ -14,29 +14,31 @@ import {
 } from '@Interface/StoreInterface'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
 import { getFileNameFromURL } from '@Utils/utils'
+import { ImageContext } from "src/router/context-provider";
+// import { uuid, postReq, GET_QUEUE_STATUS, UPDATE_QUEUE_STATUS } from "@Sw/index";
+import Loader from "react-js-loader";
 
 
 const Dashboard: React.FC<IDefaultPageProps> = props => {
-  const [file, setFile] = useState('')
-  const [image, setImage] = useState<File | null>(null)
-  const [range, setRange] = useState(localStorage.getItem('variation_range') || '0')
-  const [name, setName] = useState('')
-  const [modal, setModal] = useState(false)
-  const [variationmodal, setvariationModal] = useState<IVarientModal>({
-    status: false,
-  })
-  const [saveVariationDetails, setsaveVariationDetails] = useState([])
-  const { imageInfo } = useSelector(
-    (state: IReducerState) => state.imageVariationReducer
-  )
-  const isFormValidToUpload = (!range || range && range.toString() == "0") || !image;
-  let selectedVariation = saveVariationDetails
+  const { dashboardResult, setDashboardResult, fetching, setFetching } = useContext(ImageContext);
+  const { image, file, range, name } = dashboardResult || {};
 
-  const handleViewHistory = e => {
+  const [modal, setModal] = useState(false)
+  const [variationmodal, setvariationModal] = useState<IVarientModal>({ status: false })
+  const [saveVariationDetails, setsaveVariationDetails] = useState([])
+
+  const { imageInfo } = useSelector((state: IReducerState) => state.imageVariationReducer)
+
+  const isFormValidToUpload = (!range || range && range.toString() == "0") || !image;
+  let selectedVariation = saveVariationDetails;
+
+  /* useEffect(() => {
+    postReq(GET_QUEUE_STATUS); // check is there any current queue
+  }, []); */
+
+  const handleViewHistory = (e) => {
     e.preventDefault();
-    setFile('');
-    setImage(null);
-    setsaveVariationDetails([]);
+    setModal(false);
     setvariationModal({ status: false });
     props.navigate(URLS.VIEWHISTORY)
   }
@@ -48,37 +50,52 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       let formData = new FormData()
       formData.append('image', image)
       formData.append('variants', range)
-      props.dispatch(imageVariation(formData))
+      // formData.append('uuid', uuid)
+      props.dispatch(imageVariation({ body: formData, setFetching }));
+
+      /* encodeImageFileAsURL(image).then((result) => {
+        postReq(UPDATE_QUEUE_STATUS, {
+          variants: range,
+          fileInfo: {
+            name: image.name,
+            size: image.size,
+            contentType: splitImage(image.type),
+          },
+          image: result
+        })
+      }) */
+
+      setFetching(true);
     }
   }
 
   const handleImage = (data: File) => {
-    setFile(URL.createObjectURL(data))
-    setImage(data)
+    handleImageClose(); // reset Existing image
+    setsaveVariationDetails([]);
+    setDashboardResult({ image: data, file: URL.createObjectURL(data) })
   }
 
-  const handleRange = e => {
-    setRange(e.target.value)
+  const handleRange = (e) => {
+    setDashboardResult({ range: e.target.value })
     localStorage.setItem('variation_range', e.target.value)
   }
 
-  const handleSaveSelection = e => {
+  const handleSaveSelection = (e) => {
     e.preventDefault()
     setModal(!modal)
   }
 
-  const handleCancel = e => {
+  const handleCancel = (e) => {
     e.preventDefault()
-    setName("");
+    setDashboardResult({ name: '' })
     setModal(!modal)
   }
 
   const handleImageClose = () => {
-    setFile('');
-    setImage(null)
+    setDashboardResult({ image: null, file: '' })
     props.dispatch(imageVariation({}))
   }
- 
+
   const handleSelectedVariation = event => {
     var formData
     if (event.target.checked) {
@@ -130,10 +147,10 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     formData.append('variantList', JSON.stringify(saveVariationDetails))
     formData.append('name', name)
     props.dispatch(saveEnvision(formData))
-    setName("");
+    setDashboardResult({ name: '' })
     setModal(false)
   }
-  
+
   return (
     <div className="dashboard-page-main-container">
       <div className="d-flex">
@@ -179,19 +196,27 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                   className="form-range form-control"
                   min="0"
                   max="9"
-                  value={range}
+                  value={range || 0}
                   onChange={handleRange}
                 ></input>
                 <div>{range}</div>
               </div>
             </div>
-            <div className="btn-height pt-5" onClick={envisionUploadHandle}>
-              <button className="btn btn-envision" disabled={isFormValidToUpload}>
-                Generate Variations
-              </button>
+            <div className={`btn-height pt-5 ${fetching && 'loading'}`}>
+              {fetching ? (
+                <span className='dash-loader'>
+                  <Loader type="spinner-default" bgColor='#7b7878' size={25} />
+                  Procceing your request...
+                </span>
+              ) : (
+                <button className="btn btn-envision" disabled={isFormValidToUpload} onClick={envisionUploadHandle}>
+                  Generate Variations
+                </button>
+              )}
             </div>
             <div className="btn-height">
               <button
+                disabled={(!saveVariationDetails.length || fetching)}
                 className="btn btn-envision"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
@@ -316,7 +341,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                 className="name-style"
                 type="text"
                 placeholder="Selection Name 1"
-                onChange={e => setName(e.target.value)}
+                onChange={e => setDashboardResult({ name: e.target.value })}
                 value={name}
               />
             </div>
@@ -351,7 +376,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
         className="modal mt-5"
         style={{ display: variationmodal.status ? 'block' : 'none' }}
       >
-        <div className="modal-dialog ">
+        <div className="modal-dialog modal-lg">
           <div className="variation-modal-container">
             <div className="d-flex justify-content-between">
               <div>
@@ -385,7 +410,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
                 ></button>
               </div>
             </div>
-            <div className="variation-modal mt-3">
+            <div className="variation-modal">
               <img
                 className="variation-style"
                 src={`${API_URL.host}/${variationmodal?.imageURL}`}
@@ -401,4 +426,4 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   )
 }
 
-export default Dashboard
+export default React.memo(Dashboard)
