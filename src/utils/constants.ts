@@ -1,7 +1,8 @@
+const url = process.env.name === 'prod' ? window.location.origin : 'http://localhost:5001';
 export const API_URL = {
   wss: 'ws://localhost:5003/',
-  host: window.location.origin,
-  baseURL: `${window.location.origin}/api`,
+  host: url,
+  baseURL: `${url}/api`,
 }
 
 export const STORAGE_KEY = {

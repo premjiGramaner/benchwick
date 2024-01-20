@@ -13,6 +13,7 @@ import {
 } from '@Assets/images'
 import icon from '../../assets/svg/fa-eye.svg'
 import { userHistory, deleteHistory } from '@Reducers/userHistoryReducer'
+import Loader from "react-js-loader";
 import Download from '@Assets/svg/variant-download.svg'
 
 import { IReducerState } from '@Interface/StoreInterface'
@@ -30,7 +31,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
   const [sortOrder, setSortOrder] = useState<string>('asc') // or 'desc'
   const [sortBy, setSortBy] = useState<string>('name')
 
-  const { data = [], isError } = useSelector(
+  const { data = [], isLoading } = useSelector(
     (state: IReducerState) => state.userHistoryReducer
   )
 
@@ -299,42 +300,52 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                   <th scope="col">Action</th>
                 </tr>
               </thead>
-              <tbody>
-                {!!currentDataPage &&
-                  currentDataPage?.map((value, index) => (
-                    <tr key={getKey()} className="body-style">
-                      <td>{value.name}</td>
-                      <td>{value.created_date}</td>
-                      <td>{value.created_time}</td>
-                      <td>
-                        <img
-                          className="vimage-style"
-                          src={`${API_URL.host}/${value.original_url}`}
-                          alt="original image"
-                        />
-                      </td>
-
-                      <td>{value.variants}</td>
-                      <td
-                        onClick={e => handleViewClick(value, e)}
-                        className="pointer pl-35"
-                      >
-                        <img className="eye-icon" src={icon} alt="eye image" />
-                      </td>
-                      {isAdmin && <td>{value.isActive === 'true' ? 'Active' : 'In Active'}</td>}
-                      {!isAdmin && <td className='display-td-center'>
-                        <span className="glyphicon glyphicon-trash" onClick={() => setDeleteModal(value.id)}></span>
-                      </td>}
-                    </tr>
-                  ))}
-                {currentDataPage?.length === 0 && (
-                  <tr className="body-style">
-                    <td colSpan={7} className="no-data-found">
-                      No Data available
+              {isLoading ? (
+                <tbody>
+                  <tr>
+                    <td colSpan={7}>
+                      <Loader type="spinner-default" bgColor='#7b7878' size={30} />
                     </td>
                   </tr>
-                )}
-              </tbody>
+                </tbody>) : (
+                <tbody>
+                  {!!currentDataPage &&
+                    currentDataPage?.map((value, index) => (
+                      <tr key={getKey()} className="body-style">
+                        <td>{value.name}</td>
+                        <td>{value.created_date}</td>
+                        <td>{value.created_time}</td>
+                        <td>
+                          <img
+                            className="vimage-style"
+                            src={`${API_URL.host}/${value.original_url}`}
+                            alt="original image"
+                          />
+                        </td>
+
+                        <td>{value.variants}</td>
+                        <td
+                          onClick={e => handleViewClick(value, e)}
+                          className="pointer pl-35"
+                        >
+                          <img className="eye-icon" src={icon} alt="eye image" />
+                        </td>
+                        {isAdmin && <td>{value.isActive === 'true' ? 'Active' : 'In Active'}</td>}
+                        {!isAdmin && <td className='display-td-center'>
+                          <span className="glyphicon glyphicon-trash" onClick={() => setDeleteModal(value.id)}></span>
+                        </td>}
+                      </tr>
+                    ))}
+                  {currentDataPage?.length === 0 && (
+                    <tr className="body-style">
+                      <td colSpan={7} className="no-data-found">
+                        No Data available
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              )}
+
             </table>
           </div>
           <div className="pb-5">
