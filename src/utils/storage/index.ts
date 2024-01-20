@@ -52,7 +52,6 @@ export const updateStorages = (data?: { name?: string, user_token?: string, auth
         IS_USER_AUTHENTICATED(localStorage.getItem('isUserAuthenticated'))
         sessionStorage.setItem('persist:envision', localStorage.getItem('persist:envision'));
     } else if (data.user_token) {
-        console.log('** updateStorages', data)
         getAuthToken(data.user_token)
         getLoggedUserName(data.name)
         IS_USER_AUTHENTICATED(data.auth)

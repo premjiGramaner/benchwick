@@ -26,7 +26,6 @@ export default function App(props: any) {
 
     gapi.load('client:auth2', initGetTokenInstance);
     loadGApi();
-    console.log('process.env', process.env.name)
   }, [])
 
   return (

@@ -1,6 +1,6 @@
 {
   "name": "envision",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Envision Web application by Gramener",
   "main": "index.js",
   "scripts": {

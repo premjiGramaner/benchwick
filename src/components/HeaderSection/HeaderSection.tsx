@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { URLS } from '@Utils/constants'
 import { logout } from '../../reducers/loginReducer'
 import { getLoggedUserName } from '@Utils/storage'
-import { EnvHeaderLogo } from '@Assets/images'
+import { EnvLogo } from '@Assets/images'
 // import { socket } from '@Sw/default'
 
 const HeaderSection: React.FC<{}> = () => {
@@ -25,7 +25,7 @@ const HeaderSection: React.FC<{}> = () => {
   return (
     <div className="header-section">
       <section className="bg-placeholder">
-        <img src={EnvHeaderLogo} alt="envision logo" className='app-logo' />
+        <img src={EnvLogo} alt="envision logo" className='app-logo' />
         <div className="mb-0 px-5 d-flex justify-content-end align-middle user-section">
           <p className="mb-0 fs-12 text-white user-align">Welcome, {userName}</p>
           <img className="icon-size mt-1 px-2" alt="icons" src={user} />
