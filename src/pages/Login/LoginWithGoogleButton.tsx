@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import toast from 'react-hot-toast'
 
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
+import googlePlus from '@Assets/svg/google-plus.svg'
 
 import { getUserInfoFromGoogle } from "@Reducers/signUpReducer";
 import { login_with_google } from "@Reducers/loginReducer";
@@ -14,6 +15,7 @@ import { IReducerState } from "@Interface/StoreInterface";
 
 // btn btn-primary google-login-btn
 export const LoginWithGoogleButton = (props: IDefaultPageProps & { validating: boolean, setValidating: (arg: boolean) => void }) => {
+    const enableSSO = false;
     const { validating, setValidating } = props;
     const [useOneTap, setUseOneTap] = useState(true);
     const [gapi, setGapi] = useState(null);
@@ -65,25 +67,39 @@ export const LoginWithGoogleButton = (props: IDefaultPageProps & { validating: b
         setAuth2();
     }, [gapi, validating]);
 
+    const SSO_Action = () => {
+        toast('Google SSO is under development!.')
+    }
 
     return (
         <div className="pb-0 pt-4 bg-transparent d-flex text-center">
-            {validating ? (
-                <div className="btn google-login-btn">
-                    <Loader type="spinner-default" bgColor='#7b7878' size={25} /> Validating your request.
-                </div>
-            ) : (
-                <GoogleLogin
-                    width="334px"
-                    text="signin_with"
-                    shape="pill"
-                    useOneTap={useOneTap}
-                    logo_alignment="center"
-                    onSuccess={onSuccess}
-                    onError={() => {
-                        toast.error('Failed to authorize your request!')
-                    }}
-                />
+            {enableSSO ? (<div>
+                {validating ? (
+                    <div className="btn google-login-btn">
+                        <Loader type="spinner-default" bgColor='#7b7878' size={25} /> Validating your request.
+                    </div>
+                ) : (
+                    <GoogleLogin
+                        width="334px"
+                        text="signin_with"
+                        shape="pill"
+                        useOneTap={useOneTap}
+                        logo_alignment="center"
+                        onSuccess={onSuccess}
+                        onError={() => {
+                            toast.error('Failed to authorize your request!')
+                        }}
+                    />
+                )}
+            </div>) : (
+                <button className="btn btn-primary google-login-btn" type="button" onClick={SSO_Action}>
+                    <img
+                        className="px-2 mb-1"
+                        src={googlePlus}
+                        alt="google image"
+                    />
+                    Login with Google
+                </button>
             )}
         </div>
     )
