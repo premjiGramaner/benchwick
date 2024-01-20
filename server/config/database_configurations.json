@@ -1,11 +1,12 @@
 {
   "development": {
-    "username": "root",
-    "password": "",
+    "username": "user",
+    "password": "Envision@1",
     "database": "benchwick_db",
     "host": "localhost",
     "dialect": "mysql",
-    "timezone": "-05:00"
+    "timezone": "-05:00",
+    "port": 3306
   },
   "production": {
     "username": "user",
