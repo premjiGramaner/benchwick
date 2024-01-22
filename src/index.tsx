@@ -8,8 +8,8 @@ import { persistor, store } from '@Store/storeConfig';
 import { PersistGate } from 'redux-persist/integration/react';
 
 
-const benchWickContainer = document.getElementById('root')
-const root = ReactDOM.createRoot(benchWickContainer)
+const envisionContainer = document.getElementById('root')
+const root = ReactDOM.createRoot(envisionContainer)
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

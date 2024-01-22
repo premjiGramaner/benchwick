@@ -411,7 +411,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
         </div>
       </div>}
 
-      {deleteModal && <div className="modal delete-confirm-modal animate__animated animate__fadeIn">
+      {!!deleteModal && <div className="modal delete-confirm-modal animate__animated animate__fadeIn">
         <div className="modal-dialog modal-sm">
           <div className="modal-content">
             <div className="modal-header">

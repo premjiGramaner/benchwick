@@ -78,8 +78,8 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
                     type="text"
                     name="user"
                     value={values.user}
-                    labelname="Username"
-                    placeholder="Please enter the user name"
+                    labelname="Email Id"
+                    placeholder="Please enter the Email Id"
                     handlechange={handleChange}
                   />
 
@@ -156,7 +156,7 @@ const LoginComponent: React.FC<IDefaultPageProps & ILoginPageProps> = props => {
               </div>
             </div>
             <p className="mb-0 text-white fs-12 pt-3 mt-2 mb-1">
-              © {new Date().getFullYear()} Benchwick ALL RIGHTS RESERVED.
+              © {new Date().getFullYear()} ENVISION Engine ALL RIGHTS RESERVED.
             </p>
           </div>
         </div>
