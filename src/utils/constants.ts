@@ -1,5 +1,5 @@
 const url = process.env.name === 'prod' ? window.location.origin : 'http://localhost:5001';
-const socket = process.env.name === 'prod1' ? `ws${window.location.origin}/socket` : 'ws://localhost:5003/';
+const socket = process.env.name === 'prod' ? `ws${window.location.origin}/socket` : 'ws://localhost:5003/';
 export const API_URL = {
   wss: socket,
   host: url,
