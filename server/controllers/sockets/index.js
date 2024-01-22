@@ -1,4 +1,5 @@
 const users = require('./users');
+var zlib = require('zlib')
 const { createQueueInfo, deleteQueueInfo, getQueueInfo, updateQueueInfo } = require('./cache');
 
 const RECEIVE_QUEUE_INFO = "receiveQueueInfo";
@@ -8,11 +9,16 @@ const UPDATE_QUEUE_STATUS = "updateQueueStatus";
 
 const formatResponse = async (req, socket) => {
     const id = req.uuid;
-    if (!users.get(id)) {
+    if (!users.get(id) || (users.get(id) && users.get(id).id !== socket.id)) {
         await users.create(socket, id)
     }
 
     return { userSocket: users.get(id), id, body: req.body };
+}
+
+const formatReq = (arg) => {
+    const reqData = zlib.deflateSync(JSON.stringify(arg)).toString('base64');
+    return reqData;
 }
 
 const loadInstance = (socket) => {
@@ -27,23 +33,26 @@ const loadInstance = (socket) => {
     });
 
     socket.on('disconnected', async (info) => {
-        console.log('user disconnected token', info);
-        if (info) await users.remove(info.uuid)
+        if (info.uuid) await users.remove(info.uuid)
     });
 
     socket.on(GET_QUEUE_STATUS, async (req) => {
-        console.log('user GET_QUEUE_STATUS', req, socket.id);
         const fr = await formatResponse(req, socket);
         const formatedResponse = getQueueInfo(fr.id);
-        console.log('user RECEIVE_QUEUE_INFO', fr.userSocket.id);
-        fr.userSocket.emit(RECEIVE_QUEUE_INFO, JSON.stringify(formatedResponse || { message: 'No Data' }));
+        fr.userSocket.emit(RECEIVE_QUEUE_INFO, formatReq({
+            type: formatedResponse ? 2 : 1,
+            data: (formatedResponse || { message: 'No Data' })
+        }));
     });
 
     socket.on(UPDATE_QUEUE_STATUS, async (req) => {
         const { id, body, userSocket } = await formatResponse(req, socket);
         if (body) {
             createQueueInfo(id, body);
-            userSocket.emit(RECEIVE_QUEUE_INFO, getQueueInfo(id));
+            userSocket.emit(RECEIVE_QUEUE_INFO, formatReq({
+                type: 2,
+                data: getQueueInfo(id)
+            }));
         }
     });
 }
@@ -51,8 +60,16 @@ const loadInstance = (socket) => {
 const queueCompleted = (uuid, APIResponse, isError) => {
     const socket = users.get(uuid);
     deleteQueueInfo(uuid);
-    console.log('queueCompleted', uuid, APIResponse)
-    socket.emit(RECEIVE_QUEUE_INFO, JSON.stringify({ status: isError ? 'Error' : 'Completed', message: 'Image variations generated successfully', data: APIResponse }))
+    if (socket) {
+        socket.emit(RECEIVE_QUEUE_INFO, formatReq({
+            type: 3,
+            data: {
+                status: isError ? 'Error' : 'Completed',
+                message: 'Image variations generated successfully',
+                data: APIResponse
+            }
+        }))
+    }
 }
 
 

@@ -44,6 +44,8 @@ const imageEnvision = async (req, res, next) => {
                     isError = { message: error?.response?.data?.detail || true, code: error?.response?.status };
                 }).finally(function () {
                     if (isError) {
+                        queueCompleted(uuid, { info: [], variants: variants }, isError);
+
                         if (mockError) {
                             return response({
                                 res,
@@ -100,10 +102,9 @@ const imageEnvision = async (req, res, next) => {
                             })
                         }
 
-                        // queueCompleted(uuid, { info: [], variants: variants }, isError);
                     } else {
                         formatImageCollection(finalImageList, imageName, path).then((finalList) => {
-                            // queueCompleted(uuid, { info: finalList, variants: variants });
+                            queueCompleted(uuid, { info: finalList, variants: variants });
                             response({
                                 res,
                                 code: 200,

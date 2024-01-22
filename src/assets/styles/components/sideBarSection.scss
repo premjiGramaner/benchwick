@@ -2,6 +2,7 @@
   padding: 40px 42px !important;
   background-color: $sidebar-bg;
   box-shadow: 0 1px 4px 0 $card-bx-shadow;
+  min-height: calc(100vh - 200px);
 
   .upload-image {
     padding-top: 14px;

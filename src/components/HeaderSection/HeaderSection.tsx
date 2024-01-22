@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import user from '@Assets/svg/user.svg'
 import logoutIcon from '@Assets/svg/logout.svg'
 import { useNavigate } from 'react-router-dom'
-import { URLS } from '@Utils/constants'
+import { STORAGE_KEY, URLS } from '@Utils/constants'
 import { logout } from '../../reducers/loginReducer'
 import { getLoggedUserName } from '@Utils/storage'
 import { EnvLogo } from '@Assets/images'
-// import { socket } from '@Sw/default'
+
+import { initateWS, socket } from '@Sw/default'
 
 const HeaderSection: React.FC<{}> = () => {
   const dispatch = useDispatch()
@@ -15,12 +16,31 @@ const HeaderSection: React.FC<{}> = () => {
   const userName = getLoggedUserName() || "Unknow user";
 
   const handleLogout = () => {
+    const uuid = localStorage.getItem(STORAGE_KEY.USER_KEY)
     dispatch(logout({}));
     localStorage.clear();
     sessionStorage.clear();
+    localStorage.setItem(STORAGE_KEY.USER_KEY, uuid)
     navigate(URLS.LOGIN);
-    // socket.disconnect()
+    socket.disconnect()
   }
+
+  useEffect(() => {
+    console.log('** loading again')
+    initateWS();
+
+    window.addEventListener("beforeunload", captureReload);
+    return () => {
+      window.removeEventListener("beforeunload", captureReload);
+    };
+  }, [])
+
+  const captureReload = (e) => {
+    e.preventDefault();
+    e.returnValue = "";
+    socket.disconnect()
+    console.log('Reloaded')
+  };
 
   return (
     <div className="header-section">
