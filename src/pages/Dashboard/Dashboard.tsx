@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
@@ -13,9 +13,9 @@ import {
   IVarientModal,
 } from '@Interface/StoreInterface'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
-import { getFileNameFromURL } from '@Utils/utils'
+import { encodeImageFileAsURL, getFileNameFromURL, splitImage } from '@Utils/utils'
 import { ImageContext } from "src/router/context-provider";
-// import { uuid, postReq, GET_QUEUE_STATUS, UPDATE_QUEUE_STATUS } from "@Sw/index";
+import { uuid, postReq, GET_QUEUE_STATUS, UPDATE_QUEUE_STATUS } from "@Sw/index";
 import Loader from "react-js-loader";
 
 
@@ -31,9 +31,9 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
 
   const isFormValidToUpload = (!range || range && range.toString() == "0") || !image;
 
-  /* useEffect(() => {
-    postReq(GET_QUEUE_STATUS); // check is there any current queue
-  }, []); */
+  useEffect(() => {
+    postReq(GET_QUEUE_STATUS);
+  }, []);
 
   const handleViewHistory = (e) => {
     e.preventDefault();
@@ -49,20 +49,20 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       let formData = new FormData()
       formData.append('image', image)
       formData.append('variants', range)
-      // formData.append('uuid', uuid)
+      formData.append('uuid', uuid)
       props.dispatch(imageVariation({ body: formData, range, setFetching }));
 
-      /* encodeImageFileAsURL(image).then((result) => {
+      encodeImageFileAsURL(image).then((result) => {
         postReq(UPDATE_QUEUE_STATUS, {
           variants: range,
           fileInfo: {
             name: image.name,
             size: image.size,
-            contentType: splitImage(image.type),
+            contentType: image.type,
           },
           image: result
         })
-      }) */
+      })
 
       setFetching(true);
     }
@@ -229,8 +229,8 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
         </div>
         <div className="variation-image-container">
           <div className="variationcontent">
-            {imageInfo?.data?.data?.info.length > 0 ? (
-              imageInfo?.data?.data?.info.map((value, index) => {
+            {imageInfo?.info?.length > 0 ? (
+              imageInfo?.info.map((value, index) => {
                 return (
                   <div className="variation-image" key={index + value.key}>
                     <div className="variation-image-index-circle">

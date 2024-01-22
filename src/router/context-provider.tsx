@@ -1,9 +1,9 @@
 import { IReducerState } from "@Interface/StoreInterface";
-import { resetImages } from "@Reducers/imageVariationReducer";
+import { resetImages, updateImages } from "@Reducers/imageVariationReducer";
+import { urltoFile } from "@Utils/utils";
 import React, { useState, createContext, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-// import { initateWS } from '../socket';
 
 export type ICurrentQueue = {
     variants: string,
@@ -43,15 +43,31 @@ export type IImageContext = {
 export const ImageContext = createContext<IImageContext>(null);
 export const ConsumerContext = ({ children }: { children: JSX.Element }) => {
     const [dashboardResult, setDashboardResult] = useState<IDashboardStateInfo>(initalState);
-    const { imageInfo } = useSelector((state: IReducerState) => state.imageVariationReducer)
+    const { imageInfo, socketData } = useSelector((state: IReducerState) => state.imageVariationReducer)
     const [fetching, setFetching] = useState<boolean>(false);
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!dashboardResult.image && imageInfo?.data?.data?.info.length) {
+        if (!dashboardResult.image && imageInfo?.info?.length) {
             dispatch(resetImages())
         }
     }, [])
+
+    useEffect(() => {
+        if (socketData) {
+            if (socketData.response) {
+                dispatch(updateImages(socketData.response))
+            }
+
+            if (socketData.uploadedFile) {
+                const { data } = socketData.uploadedFile;
+                urltoFile(data.image, data.fileInfo.name, data.fileInfo.contentType)
+                    .then((file) => {
+                        setDashboardResult({ image: file, file: URL.createObjectURL(file), range: data.variants })
+                    });
+            }
+        }
+    }, [socketData])
 
     return (
         <ImageContext.Provider value={{

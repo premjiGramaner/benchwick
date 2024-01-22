@@ -4,22 +4,23 @@
 var app = require('../app'),
   debug = require('debug')('reactnode:server'),
   http = require('http'),
-  sequlizer = require('../models/index');
-  // { Server } = require("socket.io"),
-  // { loadInstance } = require('../controllers/sockets');
+  sequlizer = require('../models/index'),
+  { Server } = require("socket.io"),
+  { loadInstance } = require('../controllers/sockets');
 
 var port = normalizePort(process.env.APP_PORT || '5001');
 app.Sequlizer_port = port;
 
 var server = http.createServer(app);
-// var io = new Server({ server });
-// io.listen(process.env.WS_PORT);
+var io = new Server({ server });
+io.listen('5003');
 
 sequlizer.sequelize.sync({ force: false }).then(() => {
   app.listen(app.Sequlizer_port, () => {
-    // io.on('connection', function (socket) {
-    //   loadInstance(socket)
-    // });
+    io.on('connection', function (socket) {
+      loadInstance(socket)
+    });
+
     console.log(`server listening on PORT ${app.Sequlizer_port}`);
   });
 });
@@ -72,5 +73,5 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-// module.exports = { io };
+module.exports = { io };
 exports = app;

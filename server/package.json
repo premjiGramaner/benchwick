@@ -1,6 +1,6 @@
 {
   "name": "envision-server",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Envision API Service",
   "main": "app.js",
   "scripts": {
@@ -36,7 +36,8 @@
     "sequelize": "^5.21.5",
     "socket.io": "^4.7.3",
     "uuid-node": "^1.0.1",
-    "ws": "^8.16.0"
+    "ws": "^8.16.0",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"

@@ -1,7 +1,12 @@
 import io from "socket.io-client";
+import { inflate } from 'react-zlib';
+
 import { API_URL } from "@Utils/constants";
 import { getAuthToken } from "@Utils/storage";
 import { STORAGE_KEY } from "@Utils/constants";
+
+import { store } from "../store/storeConfig";
+import { updateSocketInfo } from "@Reducers/imageVariationReducer";
 
 export const RECEIVE_QUEUE_INFO = "receiveQueueInfo";
 export const GET_QUEUE_STATUS = "getQueueStatus";
@@ -24,7 +29,20 @@ export const initateWS = () => {
     });
 
     socket.on(RECEIVE_QUEUE_INFO, (info) => {
-        console.log('** initateWS info', info)
+        const queue = JSON.parse(inflate(info));
+        switch (queue?.type) {
+            case 1:
+                store.dispatch(updateSocketInfo({ type: null, data: queue }))
+                break;
+
+            case 2:
+                store.dispatch(updateSocketInfo({ type: "uploadedFile", data: queue }))
+                break;
+
+            default:
+                store.dispatch(updateSocketInfo({ type: "response", data: queue }))
+                break;
+        }
     });
 }
 

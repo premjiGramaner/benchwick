@@ -38,7 +38,8 @@ export const imageVariation: any = createAsyncThunk(
 )
 
 export const imageVariationInitialState: IImageVariationReducerState = {
-  imageInfo: [],
+  imageInfo: null,
+  socketData: null,
   isError: false,
   isLoading: false,
   statusCode: null,
@@ -50,33 +51,53 @@ const imageVariationReducer = createSlice({
   reducers: {
     resetImages(state) {
       state.imageInfo = null;
+      state.statusCode = 200;
+      state.isLoading = false;
+      state.isError = false;
+    },
+    updateImages(state, action) {
+      state.imageInfo = action.payload?.data?.data || null;
       state.statusCode = null;
       state.isError = false;
+    },
+    updateSocketInfo(state, action) {
+      if (action.payload.type === null) {
+        state.socketData = null;
+      } else {
+        state.isLoading = true;
+        if (state.socketData) {
+          state.socketData[action.payload.type] = action.payload.data;
+        } else {
+          state.socketData = {
+            [action.payload.type]: action.payload.data
+          } as any;
+        }
+      }
     },
   },
   extraReducers: {
     [imageVariation.pending]: (state: IImageVariationReducerState) => {
-      state.isLoading = true
+      state.isLoading = true;
     },
     [imageVariation.fulfilled]: (
       state: IImageVariationReducerState,
       action: IDispatchState
     ) => {
-      state.imageInfo = action.payload || null
-      state.statusCode = action?.payload?.data?.statusCode
-      state.isLoading = false
-      state.isError = false
+      state.imageInfo = action.payload?.data?.data || null
+      state.statusCode = action?.payload?.data?.statusCode;
+      state.isLoading = false;
+      state.isError = false;
     },
     [imageVariation.failed]: (
       state: IImageVariationReducerState,
       action: IDispatchState
     ) => {
-      state.imageInfo = null
-      state.isLoading = false
-      state.isError = true
+      state.imageInfo = null;
+      state.isLoading = false;
+      state.isError = true;
     },
   },
 })
 
-export const { resetImages } = imageVariationReducer.actions;
+export const { resetImages, updateSocketInfo, updateImages } = imageVariationReducer.actions;
 export default imageVariationReducer.reducer
