@@ -152,7 +152,7 @@ const SignupComponent: React.FC<
               </div>
             </div>
             <p className="text-white fs-12 pt-3 mt-1 mb-4">
-              © {new Date().getFullYear()} Benchwick ALL RIGHTS RESERVED.
+              © {new Date().getFullYear()} ENVISION Engine ALL RIGHTS RESERVED.
             </p>
           </div>
         </div>

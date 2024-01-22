@@ -72,7 +72,7 @@ export const LoginWithGoogleButton = (props: IDefaultPageProps & { validating: b
     }
 
     return (
-        <div className="pb-0 pt-4 bg-transparent d-flex text-center">
+        <div className="pb-0 w-100 pt-4 bg-transparent d-flex text-center">
             {enableSSO ? (<div>
                 {validating ? (
                     <div className="btn google-login-btn">
