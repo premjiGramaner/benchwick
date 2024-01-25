@@ -206,7 +206,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
               {fetching ? (
                 <span className='dash-loader'>
                   <Loader type="spinner-default" bgColor='#7b7878' size={25} />
-                  Procceing your request...
+                  Processing your request...
                 </span>
               ) : (
                 <button className="btn btn-envision" disabled={isFormValidToUpload} onClick={envisionUploadHandle}>
