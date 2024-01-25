@@ -12,6 +12,7 @@ const api = {
   login: {
     post: arg => instance.post('/login', arg),
     google_sign_in: arg => instance.post('/login/google-signin', arg),
+    logout: () => instance.get('/user/logout'),
   },
   forgotPassword: {
     post: arg => instance.post('/login/forgot-password', arg),

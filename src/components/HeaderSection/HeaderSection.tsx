@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import user from '@Assets/svg/user.svg'
 import logoutIcon from '@Assets/svg/logout.svg'
 import { useNavigate } from 'react-router-dom'
-import { STORAGE_KEY, URLS } from '@Utils/constants'
 import { logout } from '../../reducers/loginReducer'
 import { getLoggedUserName } from '@Utils/storage'
 import { EnvLogo } from '@Assets/images'
@@ -16,12 +15,7 @@ const HeaderSection: React.FC<{}> = () => {
   const userName = getLoggedUserName() || "Unknow user";
 
   const handleLogout = () => {
-    const uuid = localStorage.getItem(STORAGE_KEY.USER_KEY)
-    dispatch(logout({}));
-    localStorage.clear();
-    sessionStorage.clear();
-    localStorage.setItem(STORAGE_KEY.USER_KEY, uuid)
-    navigate(URLS.LOGIN);
+    dispatch(logout({ state: true, navigate }));
     socket.disconnect()
   }
 

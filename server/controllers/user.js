@@ -1,5 +1,5 @@
 const { User, Images } = require("../models");
-const { response, errorLogger } = require("../helper/utils");
+const { response, removePath, errorLogger } = require("../helper/utils");
 
 const getUserInfo = async (req, res, next) => {
     try {
@@ -53,6 +53,9 @@ const getUserHistory = async (req, res, next) => {
 
 const userLogout = async (req, res, next) => {
     try {
+        const { tokenInfo } = res.locals || {};
+        const path = 'varients-generated/' + (tokenInfo.user_info || { uuid: 'default_001' }).uuid + '/';
+        removePath(path)
         res.status(200).send({ status: null, message: 'User Logged out successfully.' })
     } catch (e) {
         errorLogger(next, 'user/userLogout', e)
