@@ -36,13 +36,16 @@ const imageEnvision = async (req, res, next) => {
 
             axios.post(`http://localhost:8000/regenerate_images/?num_images=${variants}&use_sd=true`, formData, headers)
                 .then((response) => {
-                    // console.log('Python Response count', (response.data || []).length)
+                    console.log('Python Response count', (response.data || []).length)
                     finalImageList.push(...(response.data || []))
+                    return finalImageList;
                 })
                 .catch(function (error) {
+                    console.log('** Python Response error', error)
                     // handle error
                     isError = { message: error?.response?.data?.detail || true, code: error?.response?.status };
-                }).finally(function () {
+                }).finally(function (_respose) {
+                    console.log('Python Response finally', finalImageList.length)
                     if (isError) {
                         queueCompleted(uuid, { info: [], variants: variants }, isError);
 

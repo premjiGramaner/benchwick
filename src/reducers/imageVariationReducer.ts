@@ -12,7 +12,8 @@ export const imageVariation: any = createAsyncThunk(
         .then((response: any) => {
           const { data, error } = response
           if (!error) {
-            if (data?.data?.data?.info.length == payload.range) {
+            console.log('***', data?.data?.info.length, ' === ', data?.data?.variants)
+            if (data?.data?.info.length == data?.data?.variants) {
               toast.success('​Variations generated successfully')
             } else {
               toast('Some of the generate images are Invalid and skipped!')
@@ -61,16 +62,26 @@ const imageVariationReducer = createSlice({
       state.isError = false;
     },
     updateSocketInfo(state, action) {
-      if (action.payload.type === null) {
-        state.socketData = null;
-      } else {
-        state.isLoading = true;
+      const actionCallback = (isLoading: boolean) => {
         if (state.socketData) {
           state.socketData[action.payload.type] = action.payload.data;
         } else {
           state.socketData = {
             [action.payload.type]: action.payload.data
           } as any;
+        }
+        state.isLoading = isLoading;
+      }
+
+      if (action.payload.type === null) {
+        state.socketData = null;
+      } else {
+        if (action.payload.type === 'response') {
+          if (state.isLoading) {
+            actionCallback(false);
+          }
+        } else {
+          actionCallback(true);
         }
       }
     },

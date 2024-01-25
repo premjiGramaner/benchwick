@@ -2,7 +2,7 @@ import toast from 'react-hot-toast'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { ILoginReducerState, IDispatchState } from '@Interface/index'
 import { updateStorages } from '@Utils/storage'
-import { URLS } from '@Utils/constants'
+import { STORAGE_KEY, URLS } from '@Utils/constants'
 import api from '@API/index'
 import { Cookies } from 'react-cookie'
 
@@ -49,10 +49,21 @@ export const login_with_google: any = createAsyncThunk(
   }
 )
 
-export const logout: any = createAsyncThunk('loginReducer/logout', async () => {
-  return new Promise((resolve: any) => {
-    resolve({})
-  })
+export const logout: any = createAsyncThunk('loginReducer/logout', async (payload: any = {}) => {
+  try {
+    if (payload.state) {
+      const response: any = await api.login.logout();
+
+      const uuid = localStorage.getItem(STORAGE_KEY.USER_KEY)
+      localStorage.clear();
+      sessionStorage.clear();
+      localStorage.setItem(STORAGE_KEY.USER_KEY, uuid)
+      payload.navigate(URLS.LOGIN);
+      return { response };
+    }
+  } catch (error) {
+    console.warn('Failed you logout.')
+  }
 })
 
 export const loginReducerInitialState: ILoginReducerState = {

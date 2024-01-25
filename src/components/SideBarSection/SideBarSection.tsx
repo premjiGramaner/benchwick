@@ -1,7 +1,7 @@
-import React, { useContext } from 'react'
+import React, { useContext, useRef } from 'react'
 import { ISideBarInterface } from '@Utils/interface/ReusableComponentInterface/SideBarInterface'
 import upload from '@Assets/svg/upload.svg'
-import { useRef } from 'react';
+import { URLS } from '@Utils/constants'
 import { IDefaultPageProps } from '@Interface/PagesInterface';
 import { imageVariation } from '@Reducers/imageVariationReducer';
 import { ImageContext } from "src/router/context-provider";
@@ -20,10 +20,16 @@ const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props =>
   }
 
   const { isFormValid } = props;
-  const isFormDisabled = (fetching) ? fetching : (isFormValid === undefined ? !image : isFormValid);
+  const isFormDisabled = () => {
+    if (window.location.pathname === URLS.VIEWHISTORY) {
+      return true;
+    }
+
+    return (fetching) ? fetching : (isFormValid === undefined ? !image : isFormValid);
+  }
 
   const imageEnvision = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    if (!isFormDisabled) {
+    if (!isFormDisabled()) {
       if (props?.envisionUploadHandle) {
         props.envisionUploadHandle(e);
       } else {
@@ -66,7 +72,7 @@ const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props =>
 
             <p className="card-text fs-10">Limit 200MB per file | PNG</p>
             <div className="btn-height" onClick={imageEnvision}>
-              <a href="#" className={`btn btn-envision ${(isFormDisabled) && 'disabled'}`}>
+              <a href="#" className={`btn btn-envision ${(isFormDisabled()) && 'disabled'}`}>
                 ENVISION
               </a>
             </div>

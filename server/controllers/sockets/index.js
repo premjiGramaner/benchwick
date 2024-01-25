@@ -46,13 +46,9 @@ const loadInstance = (socket) => {
     });
 
     socket.on(UPDATE_QUEUE_STATUS, async (req) => {
-        const { id, body, userSocket } = await formatResponse(req, socket);
+        const { id, body } = await formatResponse(req, socket);
         if (body) {
             createQueueInfo(id, body);
-            userSocket.emit(RECEIVE_QUEUE_INFO, formatReq({
-                type: 2,
-                data: getQueueInfo(id)
-            }));
         }
     });
 }

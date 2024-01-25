@@ -13,7 +13,7 @@ import {
   IVarientModal,
 } from '@Interface/StoreInterface'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
-import { encodeImageFileAsURL, getFileNameFromURL, splitImage } from '@Utils/utils'
+import { encodeImageFileAsURL, getFileNameFromURL } from '@Utils/utils'
 import { ImageContext } from "src/router/context-provider";
 import { uuid, postReq, GET_QUEUE_STATUS, UPDATE_QUEUE_STATUS } from "@Sw/index";
 import Loader from "react-js-loader";

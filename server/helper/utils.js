@@ -160,6 +160,14 @@ const makeDir = (path, resolve) => {
     });
 }
 
+const removePath = async (path) => {
+    fs.rmdir(path, { recursive: true, force: true }, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+}
+
 const validatePath = async (path) => {
     const valida_path = await new Promise((resolve) => {
         fs.access(path, (error) => {
@@ -200,6 +208,7 @@ const formatImageCollection = (imageList = [], base_file_name, path) => {
     const finalList = [];
     return new Promise((resolve) => {
         try {
+            if (imageList.length === 0) resolve([]);
             imageList.forEach(async (image, index) => {
                 // if (!index) console.log('image: ', image)
                 const file_name = `${path}0${(index + 1) + '_' + getTypeFromURL(base_file_name)}`
@@ -239,6 +248,7 @@ module.exports = {
     sendEmail,
     getDatesObj,
     validatePath,
+    removePath,
     formatImageCollection,
     response
 };
