@@ -3,16 +3,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { IImageVariationReducerState, IDispatchState } from '@Interface/index'
 import api from '@API/index'
 
+const controller = new AbortController();
+
 export const imageVariation: any = createAsyncThunk(
   'imageVariationReducer/imageVariation',
   async (payload: any = {}) => {
     return new Promise((resolve: any) => {
       api.imageEnvision
-        .post(payload.body)
+        .post(payload.body, { signal: payload.signal })
         .then((response: any) => {
           const { data, error } = response
           if (!error) {
-            console.log('***', data?.data?.info.length, ' === ', data?.data?.variants)
             if (data?.data?.info.length == data?.data?.variants) {
               toast.success('​Variations generated successfully')
             } else {
@@ -22,11 +23,9 @@ export const imageVariation: any = createAsyncThunk(
           } else {
             toast.error('Facing issue while uploading')
           }
-          if (payload.setFetching) payload.setFetching(false);
         })
         .catch(({ response }) => {
-          if (payload.setFetching) payload.setFetching(false);
-          if (response.status === 501 && response.data) {
+          if (response?.status === 501 && response?.data) {
             const { data: { error: { message } } } = response.data || { data: { data: { error: { message: 'Please try again with different format.' } } } };
             toast.error(typeof message === 'string' ? message : "Service is busy right now, Plese try again after sometimes.");
             resolve({ data: null })
@@ -77,8 +76,17 @@ const imageVariationReducer = createSlice({
         state.socketData = null;
       } else {
         if (action.payload.type === 'response') {
+          const _state = action.payload._state;
           if (state.isLoading) {
-            actionCallback(false);
+            const id = _state?.imageId;
+            if (id && id === action.payload.data?.data?.data?.imageId) {
+              if (action.payload.data?.data?.data?.info.length == action.payload.data?.data?.data?.variants) {
+                toast.success('​Variations generated successfully')
+              } else {
+                toast('Some of the generate images are Invalid and skipped!')
+              }
+              actionCallback(false);
+            }
           }
         } else {
           actionCallback(true);

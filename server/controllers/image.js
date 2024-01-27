@@ -9,7 +9,7 @@ const imgPath = 'varients-images/', tmp_path = 'varients-generated/';
 
 const imageEnvision = async (req, res, next) => {
     try {
-        const { variants, uuid, mockError = false } = req.body;
+        const { variants, uuid, imageId, mockError = false } = req.body;
         if (req.files && variants) {
             const { image } = req.files;
             const { tokenInfo } = res.locals || {};
@@ -47,7 +47,7 @@ const imageEnvision = async (req, res, next) => {
                 }).finally(function (_respose) {
                     console.log('Python Response finally', finalImageList.length)
                     if (isError) {
-                        queueCompleted(uuid, { info: [], variants: variants }, isError);
+                        queueCompleted(uuid, { info: [], variants: variants, imageId }, isError);
 
                         if (mockError) {
                             return response({
@@ -100,18 +100,18 @@ const imageEnvision = async (req, res, next) => {
                             response({
                                 res,
                                 code: 501,
-                                data: { info: [], variants: variants, error: isError },
+                                data: { info: [], variants: variants, imageId, error: isError },
                                 message: 'Image variations generate Failed!'
                             })
                         }
 
                     } else {
                         formatImageCollection(finalImageList, imageName, path).then((finalList) => {
-                            queueCompleted(uuid, { info: finalList, variants: variants });
+                            queueCompleted(uuid, { info: finalList, variants: variants, imageId });
                             response({
                                 res,
                                 code: 200,
-                                data: { info: finalList, variants: variants },
+                                data: { info: finalList, variants: variants, imageId },
                                 message: 'Image variations generated successfully!'
                             })
                         });
@@ -155,7 +155,7 @@ const saveEnvision = async (req, res, next) => {
         envisionObj.original_url = (path + imageName);
 
         JSON.parse(variantList).forEach(async (item, index) => {
-            const image_path = path + (`varient_${index + 1}`) + getTypeFromURL(item.image_url);
+            const image_path = path + (`variant_${index + 1}`) + getTypeFromURL(item.image_url);
             envisionObj.variant_list.push({
                 key: item.key,
                 image_url: image_path

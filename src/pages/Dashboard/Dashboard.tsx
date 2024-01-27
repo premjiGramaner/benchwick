@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
@@ -6,14 +6,14 @@ import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS, API_URL } from '@Utils/constants'
 import close from '@Assets/svg/close.svg'
 import Download from '@Assets/svg/variant-download.svg'
-import { imageVariation, resetImages } from '@Reducers/imageVariationReducer'
+import { imageVariation, resetImages, updateSocketInfo } from '@Reducers/imageVariationReducer'
 import {
   IImageVarient,
   IReducerState,
   IVarientModal,
 } from '@Interface/StoreInterface'
 import { saveEnvision } from 'src/reducers/saveEnvisionReducer'
-import { encodeImageFileAsURL, getFileNameFromURL } from '@Utils/utils'
+import { encodeImageFileAsURL, getFileNameFromURL, getKey } from '@Utils/utils'
 import { ImageContext } from "src/router/context-provider";
 import { uuid, postReq, GET_QUEUE_STATUS, UPDATE_QUEUE_STATUS } from "@Sw/index";
 import Loader from "react-js-loader";
@@ -21,6 +21,8 @@ import Loader from "react-js-loader";
 
 const Dashboard: React.FC<IDefaultPageProps> = props => {
   const { dashboardResult, setDashboardResult, fetching, setFetching } = useContext(ImageContext);
+  const abortControllerRef = useRef<AbortController>(new AbortController());
+  const controller = abortControllerRef.current;
   const { image, file, range, name } = dashboardResult || {};
 
   const [modal, setModal] = useState(false)
@@ -43,6 +45,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   }
 
   const envisionUploadHandle = () => {
+    const key = getKey();
     if (!image) {
       toast.error('Please select an image!')
     } else {
@@ -50,18 +53,22 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       formData.append('image', image)
       formData.append('variants', range)
       formData.append('uuid', uuid)
-      props.dispatch(imageVariation({ body: formData, range, setFetching }));
-
+      formData.append('imageId', key)
+      props.dispatch(imageVariation({ body: formData, range, signal: controller.signal }));
+      setDashboardResult({ imageId: key })
       encodeImageFileAsURL(image).then((result) => {
-        postReq(UPDATE_QUEUE_STATUS, {
+        const imageConvertion = {
           variants: range,
+          imageId: key,
           fileInfo: {
             name: image.name,
             size: image.size,
             contentType: image.type,
           },
           image: result
-        })
+        };
+        props.dispatch(updateSocketInfo({ type: "uploadedFile", data: imageConvertion }))
+        postReq(UPDATE_QUEUE_STATUS, imageConvertion)
       })
 
       setFetching(true);
@@ -91,8 +98,11 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   }
 
   const handleImageClose = () => {
-    setDashboardResult({ image: null, file: '' })
+    setDashboardResult({ image: null, file: '', imageId: null })
     props.dispatch(resetImages())
+    controller?.abort();
+    setFetching(false);
+    abortControllerRef.current = new AbortController();
   }
 
   const handleSelectedVariation = event => {

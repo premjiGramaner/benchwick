@@ -1,6 +1,6 @@
 {
   "name": "envision-server",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Envision API Service",
   "main": "app.js",
   "scripts": {

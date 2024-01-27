@@ -24,7 +24,7 @@ const api = {
     post: arg => instance.post('/login/signup', arg),
   },
   imageEnvision: {
-    post: arg => instance.post('/image/image-envision', arg, config),
+    post: (arg, _config?) => instance.post('/image/image-envision', arg, { ...config, ...(_config || {}) }),
   },
   saveEnvision: {
     post: arg => instance.post('/image/save-envision', arg, config),
