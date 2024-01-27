@@ -1,5 +1,5 @@
 .dashboard-page-main-container {
-  
+
   .original-image-container {
     padding: 40px 30px !important;
     margin-left: 30px;
@@ -43,6 +43,8 @@
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
+    border-radius: 7px;
+    border: 2px solid #fff;
   }
 
   .close-style {
@@ -64,6 +66,7 @@
     border-radius: 8px;
     box-shadow: 0 0 1px 0 $image-box-shadow;
     position: relative;
+    padding: 2px;
   }
 
   .variation-image-index-circle {
@@ -74,21 +77,22 @@
     background-color: $white;
     position: absolute;
     z-index: 99;
-    margin-top: -0.5rem;
-    margin-left: -0.625rem;
     border-radius: 75%;
     font-weight: bold;
-    border: thin solid #bec8d0
+    border: thin solid #bec8d0;
+    left: -8px;
+    top: -8px;
   }
 
   .circle-style {
     display: inline-block;
-    align-items: center !important;
     height: 28px;
     width: 28px;
     background-color: $white;
     position: absolute;
     z-index: 99;
+    left: 10px;
+    bottom: 15px;
     margin-top: 137px;
     margin-left: 10px;
     border-radius: 50%;
@@ -99,6 +103,7 @@
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
+    border-radius: 6px;
   }
 
   .image-text {
@@ -296,7 +301,8 @@
 
   .variation-modal-container {
     padding: 40px 50px !important;
-    min-height: calc(100vh / 1.2);
+    padding-bottom: 55px !important;
+    min-height: calc(100vh / 1.26);
     border-radius: 8px;
     background-color: $white;
     box-shadow: 0 1px 4px 0 $card-bx-shadow;
@@ -310,7 +316,7 @@
       .variation-style {
         box-sizing: border-box;
         height: auto;
-        width: 630px;
+        min-width: 575px;
         border: 1px solid #ffffff;
         border-radius: 8px;
         box-shadow: 0 0 1px 0 $image-box-shadow;

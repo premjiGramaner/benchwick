@@ -40,7 +40,11 @@ export const initateWS = () => {
                 break;
 
             default:
-                store.dispatch(updateSocketInfo({ type: "response", data: queue }))
+                store.dispatch(updateSocketInfo({
+                    type: "response",
+                    _state: store.getState()?.imageVariationReducer?.socketData?.uploadedFile?.data || {},
+                    data: queue
+                }))
                 break;
         }
     });
@@ -48,7 +52,7 @@ export const initateWS = () => {
 
 export const postReq = (name, body = undefined) => {
     const token = getAuthToken();
-    console.log('Emit done', name, { token: token, uuid, body })
+    console.log(`--- Emitted for ${name} via socket ---`)
     if (token && token != null && token != "") {
         return socket.emit(name, { token: token, uuid, body });
     }

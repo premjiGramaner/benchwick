@@ -7,6 +7,11 @@
   .upload-image {
     padding-top: 14px;
     cursor: pointer;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.4;
+    }
   }
 
   .btn-envision {
@@ -90,5 +95,10 @@
     color: $defaultTextColor !important;
     padding-top: 10px;
     cursor: pointer;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.4;
+    }
   }
 }

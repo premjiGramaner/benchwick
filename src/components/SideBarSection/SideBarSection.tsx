@@ -20,11 +20,9 @@ const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props =>
   }
 
   const { isFormValid } = props;
+  const locaitonDisable = window.location.pathname === URLS.VIEWHISTORY;
   const isFormDisabled = () => {
-    if (window.location.pathname === URLS.VIEWHISTORY) {
-      return true;
-    }
-
+    if (locaitonDisable) return locaitonDisable;
     return (fetching) ? fetching : (isFormValid === undefined ? !image : isFormValid);
   }
 
@@ -46,7 +44,7 @@ const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props =>
       <div className="card card-section">
         <div className="text-center inner-card-section">
           <div className="fs-19">Upload Images</div>
-          <label htmlFor="input-file" className="text-center upload-image">
+          <label htmlFor="input-file" className={`text-center upload-image ${locaitonDisable && 'disabled'}`}>
             <img src={upload} alt="img" />
           </label>
 
@@ -55,11 +53,11 @@ const SideBarSection: React.FC<ISideBarInterface & IDefaultPageProps> = props =>
               <h5 className="px-2 card-title">or</h5>
               <h5 className="card-title">Drag files to</h5>
               <div>
-                <label htmlFor="input-file" className="px-2 upload-text">
+                <label htmlFor="input-file" className={`px-2 upload-text ${locaitonDisable && 'disabled'}`}>
                   upload
                 </label>
                 <input
-                  disabled={fetching}
+                  disabled={fetching || locaitonDisable}
                   value=""
                   ref={fileInput}
                   id="input-file"

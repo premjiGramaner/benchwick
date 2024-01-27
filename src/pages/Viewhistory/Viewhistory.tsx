@@ -11,7 +11,6 @@ import {
   RightLastArrowIcon,
   SortIcon,
 } from '@Assets/images'
-import icon from '../../assets/svg/fa-eye.svg'
 import { userHistory, deleteHistory } from '@Reducers/userHistoryReducer'
 import Loader from "react-js-loader";
 import Download from '@Assets/svg/variant-download.svg'
@@ -286,7 +285,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                       aria-hidden="true"
                     />
                   </th>
-                  <th scope="col">Image</th>
+                  <th scope="col">View</th>
                   <th scope="col" onClick={() => sortHandle('variants')}>
                     Saved Variation
                     <img
@@ -296,8 +295,7 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                       aria-hidden="true"
                     />
                   </th>
-                  <th scope="col">View</th>
-                  <th scope="col">Action</th>
+                  <th scope="col">{isAdmin ? 'Status' : 'Delete'}</th>
                 </tr>
               </thead>
               {isLoading ? (
@@ -310,26 +308,22 @@ const Viewhistory: React.FC<IDefaultPageProps> = props => {
                 </tbody>) : (
                 <tbody>
                   {!!currentDataPage &&
-                    currentDataPage?.map((value, index) => (
+                    currentDataPage?.map((value) => (
                       <tr key={getKey()} className="body-style">
                         <td>{value.name}</td>
                         <td>{value.created_date}</td>
                         <td>{value.created_time}</td>
-                        <td>
+                        <td
+                          onClick={e => handleViewClick(value, e)}
+                          className="pointer"
+                        >
                           <img
                             className="vimage-style"
                             src={`${API_URL.host}/${value.original_url}`}
                             alt="original image"
                           />
                         </td>
-
                         <td>{value.variants}</td>
-                        <td
-                          onClick={e => handleViewClick(value, e)}
-                          className="pointer pl-35"
-                        >
-                          <img className="eye-icon" src={icon} alt="eye image" />
-                        </td>
                         {isAdmin && <td>{value.isActive === 'true' ? 'Active' : 'In Active'}</td>}
                         {!isAdmin && <td className='display-td-center'>
                           <span className="glyphicon glyphicon-trash" onClick={() => setDeleteModal(value.id)}></span>

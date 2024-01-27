@@ -27,6 +27,7 @@ export interface ISocketType2 {
 
 export interface IType2Data {
   variants: string
+  imageId: string
   fileInfo: ITypeFileInfo
   image: string
 }

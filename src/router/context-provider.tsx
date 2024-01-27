@@ -18,6 +18,7 @@ export type ICurrentQueue = {
 export type IDashboardStateInfo = {
     image?: File,
     range?: string,
+    imageId?: string,
     name?: string,
     file?: string,
     reset?: boolean,
@@ -26,6 +27,7 @@ export type IDashboardStateInfo = {
 
 const initalState: IDashboardStateInfo = {
     image: null,
+    imageId: null,
     range: localStorage.getItem('variation_range') || '4',
     name: '',
     file: '',
@@ -43,7 +45,7 @@ export type IImageContext = {
 export const ImageContext = createContext<IImageContext>(null);
 export const ConsumerContext = ({ children }: { children: JSX.Element }) => {
     const [dashboardResult, setDashboardResult] = useState<IDashboardStateInfo>(initalState);
-    const { imageInfo, socketData } = useSelector((state: IReducerState) => state.imageVariationReducer)
+    const { imageInfo, socketData, isLoading } = useSelector((state: IReducerState) => state.imageVariationReducer)
     const [fetching, setFetching] = useState<boolean>(false);
     const dispatch = useDispatch()
 
@@ -54,12 +56,18 @@ export const ConsumerContext = ({ children }: { children: JSX.Element }) => {
     }, [])
 
     useEffect(() => {
+        if (isLoading !== fetching) {
+            setFetching(isLoading)
+        }
+    }, [isLoading])
+
+    useEffect(() => {
         if (socketData) {
             if (socketData.response) {
                 dispatch(updateImages(socketData.response))
             }
 
-            if (socketData.uploadedFile) {
+            if (socketData.uploadedFile?.data) {
                 const { data } = socketData.uploadedFile;
                 urltoFile(data.image, data.fileInfo.name, data.fileInfo.contentType)
                     .then((file) => {
