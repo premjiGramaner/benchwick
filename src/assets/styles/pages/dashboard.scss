@@ -301,11 +301,13 @@
 
   .variation-modal-container {
     padding: 40px 50px !important;
-    padding-bottom: 55px !important;
-    min-height: calc(100vh / 1.26);
     border-radius: 8px;
     background-color: $white;
     box-shadow: 0 1px 4px 0 $card-bx-shadow;
+
+    &.auto-width {
+      width: calc(100vw/2.6);
+    }
 
     .variation-modal {
       align-items: center;
@@ -316,7 +318,7 @@
       .variation-style {
         box-sizing: border-box;
         height: auto;
-        min-width: 575px;
+        min-width: 100%;
         border: 1px solid #ffffff;
         border-radius: 8px;
         box-shadow: 0 0 1px 0 $image-box-shadow;
