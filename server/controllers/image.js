@@ -149,7 +149,8 @@ const saveEnvision = async (req, res, next) => {
             ...(getDatesObj() || {})
         };
 
-        const path = await validatePath(imgPath + (tokenInfo.user_info || { uuid: 'default_001' }).uuid + '/' + name + '/');
+        var timeStampMoment = moment(moment()).valueOf();
+        const path = await validatePath(imgPath + (tokenInfo.user_info || { uuid: 'default_001' }).uuid + '/' + name + "_" + timeStampMoment + '/');
         const imageName = (`original_image${getTypeFromURL(image.name)}`)
         image.mv(path + imageName);
         envisionObj.original_url = (path + imageName);

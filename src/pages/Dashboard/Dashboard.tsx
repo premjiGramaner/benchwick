@@ -386,8 +386,8 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
         className="modal mt-5 pos-right"
         style={{ display: variationmodal.status ? 'block' : 'none' }}
       >
-        <div className="modal-dialog modal-lg">
-          <div className="variation-modal-container">
+        <div className="modal-dialog">
+          <div className="variation-modal-container auto-width">
             <div className="d-flex justify-content-between">
               <div>
                 <div>
