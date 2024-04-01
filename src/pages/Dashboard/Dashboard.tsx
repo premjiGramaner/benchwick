@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import SideBarSection from '@Components/SideBarSection/SideBarSection'
+import AlertComponent from '@Components/Alert'
 import { IDefaultPageProps } from '@Utils/interface/PagesInterface'
 import { URLS, API_URL } from '@Utils/constants'
 import close from '@Assets/svg/close.svg'
@@ -26,6 +27,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
   const { image, file, range, name } = dashboardResult || {};
 
   const [modal, setModal] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
   const [variationmodal, setvariationModal] = useState<IVarientModal>({ status: false })
   const [saveVariationDetails, setsaveVariationDetails] = useState([])
 
@@ -44,6 +46,10 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     props.navigate(URLS.VIEWHISTORY)
   }
 
+  const errorvalidation = (arg: { code: number, message: string }) => {
+    setErrorMessage(arg.message);
+  }
+
   const envisionUploadHandle = () => {
     const key = getKey();
     if (!image) {
@@ -54,7 +60,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       formData.append('variants', range)
       formData.append('uuid', uuid)
       formData.append('imageId', key)
-      props.dispatch(imageVariation({ body: formData, range, signal: controller.signal }));
+      props.dispatch(imageVariation({ body: formData, range, signal: controller.signal, errorvalidation }));
       setDashboardResult({ imageId: key })
       encodeImageFileAsURL(image).then((result) => {
         const imageConvertion = {
@@ -432,6 +438,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       </div>
 
       <Toaster position="top-right" reverseOrder={false} />
+      <AlertComponent message={errorMessage} />
     </div>
   )
 }

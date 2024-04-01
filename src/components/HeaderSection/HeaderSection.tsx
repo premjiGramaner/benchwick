@@ -20,7 +20,6 @@ const HeaderSection: React.FC<{}> = () => {
   }
 
   useEffect(() => {
-    console.log('** loading again')
     initateWS();
 
     window.addEventListener("beforeunload", captureReload);
