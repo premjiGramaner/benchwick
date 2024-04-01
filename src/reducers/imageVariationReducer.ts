@@ -3,8 +3,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { IImageVariationReducerState, IDispatchState } from '@Interface/index'
 import api from '@API/index'
 
-const controller = new AbortController();
-
 export const imageVariation: any = createAsyncThunk(
   'imageVariationReducer/imageVariation',
   async (payload: any = {}) => {
@@ -25,7 +23,10 @@ export const imageVariation: any = createAsyncThunk(
           }
         })
         .catch(({ response }) => {
-          if (response?.status === 501 && response?.data) {
+          if (response?.status === 500 && response?.data) {
+            payload.errorvalidation(response.data?.data?.error)
+            resolve({ data: null })
+          } else if (response?.status === 501 && response?.data) {
             const { data: { error: { message } } } = response.data || { data: { data: { error: { message: 'Please try again with different format.' } } } };
             toast.error(typeof message === 'string' ? message : "Service is busy right now, Plese try again after sometimes.");
             resolve({ data: null })
