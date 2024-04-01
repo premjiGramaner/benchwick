@@ -43,7 +43,11 @@ const imageEnvision = async (req, res, next) => {
                 .catch(function (error) {
                     console.log('** Python Response error', error)
                     // handle error
-                    isError = { message: error?.response?.data?.detail || true, code: error?.response?.status };
+                    if (error?.response?.status == '500' || error?.response?.data?.code == '500') {
+                        isError = { message: error?.response?.data?.message, code: error?.response?.data?.code };
+                    } else {
+                        isError = { message: error?.response?.data?.detail || true, code: error?.response?.status };
+                    }
                 }).finally(function (_respose) {
                     console.log('Python Response finally', finalImageList.length)
                     if (isError) {
@@ -99,7 +103,7 @@ const imageEnvision = async (req, res, next) => {
                         } else {
                             response({
                                 res,
-                                code: 501,
+                                code: isError.code,
                                 data: { info: [], variants: variants, imageId, error: isError },
                                 message: 'Image variations generate Failed!'
                             })

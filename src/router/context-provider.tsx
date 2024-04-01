@@ -45,12 +45,12 @@ export type IImageContext = {
 export const ImageContext = createContext<IImageContext>(null);
 export const ConsumerContext = ({ children }: { children: JSX.Element }) => {
     const [dashboardResult, setDashboardResult] = useState<IDashboardStateInfo>(initalState);
-    const { imageInfo, socketData, isLoading } = useSelector((state: IReducerState) => state.imageVariationReducer)
+    const { socketData, isLoading } = useSelector((state: IReducerState) => state.imageVariationReducer)
     const [fetching, setFetching] = useState<boolean>(false);
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!dashboardResult.image && imageInfo?.info?.length) {
+        if (!dashboardResult.image && !isLoading && fetching) {
             dispatch(resetImages())
         }
     }, [])
