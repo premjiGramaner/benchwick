@@ -46,8 +46,8 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     props.navigate(URLS.VIEWHISTORY)
   }
 
-  const errorvalidation = (arg: { code: number, message: string }) => {
-    setErrorMessage(arg.message);
+  const errorvalidation = (arg: string) => {
+    setErrorMessage(arg);
   }
 
   const envisionUploadHandle = () => {
