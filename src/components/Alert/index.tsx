@@ -7,7 +7,7 @@ const AlertComponent: React.FC<{ message: string }> = (props) => {
         setPreview(!!props.message);
         setTimeout(() => {
             setPreview(false);
-        }, 300000);
+        }, 3000);
     }
 
     useEffect(() => {
