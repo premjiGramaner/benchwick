@@ -23,8 +23,8 @@ export const imageVariation: any = createAsyncThunk(
           }
         })
         .catch(({ response }) => {
-          if (response?.status === 500 && response?.data) {
-            payload.errorvalidation(response.data?.data?.error)
+          if (response.data?.data?.error.code === 413 && response?.data) {
+            payload.errorvalidation("CUDA Out of Memory. Please try again with a smaller image or reduce the complexity of your request.")
             resolve({ data: null })
           } else if (response?.status === 501 && response?.data) {
             const { data: { error: { message } } } = response.data || { data: { data: { error: { message: 'Please try again with different format.' } } } };
