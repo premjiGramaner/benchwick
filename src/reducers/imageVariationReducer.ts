@@ -24,7 +24,7 @@ export const imageVariation: any = createAsyncThunk(
         })
         .catch(({ response }) => {
           if (response.status === 413) {
-            payload.errorvalidation("CUDA Out of Memory. Please try again with a smaller image or reduce the complexity of your request.")
+            payload.errorvalidation("Oops! The image is too large to process. Try uploading a smaller one.")
             resolve({ data: null })
           } else if (response?.status === 501 && response?.data) {
             const { data: { error: { message } } } = response.data || { data: { data: { error: { message: 'Please try again with different format.' } } } };
