@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 
-const AlertComponent: React.FC<{ message: string }> = (props) => {
+const AlertComponent: React.FC<{ message: string | null, errorvalidation: (arg: null) => void }> = (props) => {
     const [preview, setPreview] = useState(false)
 
     const loadPreview = () => {
         setPreview(!!props.message);
         setTimeout(() => {
             setPreview(false);
+            props.errorvalidation(null)
         }, 3000);
     }
 

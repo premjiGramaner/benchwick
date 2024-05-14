@@ -46,7 +46,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
     props.navigate(URLS.VIEWHISTORY)
   }
 
-  const errorvalidation = (arg: string) => {
+  const errorvalidation = (arg: string | null) => {
     setErrorMessage(arg);
   }
 
@@ -438,7 +438,7 @@ const Dashboard: React.FC<IDefaultPageProps> = props => {
       </div>
 
       <Toaster position="top-right" reverseOrder={false} />
-      <AlertComponent message={errorMessage} />
+      <AlertComponent message={errorMessage} errorvalidation={errorvalidation} />
     </div>
   )
 }

@@ -31,6 +31,8 @@ export const imageVariation: any = createAsyncThunk(
             toast.error(typeof message === 'string' ? message : "Service is busy right now, Plese try again after sometimes.");
             resolve({ data: null })
           } else {
+            const { data: { error: { message } } } = response.data || { data: { data: { error: { message: 'Please try again with different format.' } } } };
+            toast.error(typeof message === 'string' ? message : "Please try again with different format.");
             resolve({ data: null })
           }
         })
