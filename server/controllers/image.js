@@ -103,7 +103,7 @@ const imageEnvision = async (req, res, next) => {
                         } else {
                             response({
                                 res,
-                                code: isError.code,
+                                code: isError.code || 501,
                                 data: { info: [], variants: variants, imageId, error: isError },
                                 message: 'Image variations generate Failed!'
                             })
